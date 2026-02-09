@@ -23,7 +23,11 @@ public class Role {
     @Column(name = "title",nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "role")
+    @ManyToMany
+    @JoinTable(
+            name = "users_role",
+            joinColumns = @JoinColumn(name = "fk_role_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
     private List<User> users;
 }
 

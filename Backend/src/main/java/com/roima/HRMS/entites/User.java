@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,15 +28,15 @@ public class User {
     private String userName;
 
     @Email
-    @Column(name = "personal_email", length=60, nullable = false)
+    @Column(name = "personal_email", length=60, nullable = false,unique = true)
     private String personalEmail;
 
     @JsonIgnore
-    @Column(name = "password", length=25, nullable = false)
+    @Column(name = "password", length=100, nullable = false)
     private String password;
 
     @Email
-    @Column(name = "company_email", length=60,nullable = false)
+    @Column(name = "company_email", length=60,nullable = false,unique = true)
     private String companyEmail;
 
     @Column(name = "designation")
@@ -51,6 +52,12 @@ public class User {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
+    @Column(name = "expiry_date")
+    private LocalDateTime expiryDate;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -62,17 +69,16 @@ public class User {
 
 
 
-    @OneToOne
-    @JoinColumn(name="fk_user_id")
-    private User managerId;
+//    @OneToOne
+//    @JoinColumn(name="fk_user_id")
+//    private User managerId;
+//
+//    @OneToOne(mappedBy = "managerId")
+//    private User manager;
 
-    @OneToOne(mappedBy = "managerId")
-    private User manager;
 
-    @ManyToOne
-    @JoinColumn(name="fk_user_role_id")
-    private Role role;
-
+    @ManyToMany(mappedBy = "users")
+    private List<Role> roles;
 
     @ManyToOne
     @JoinColumn(name="fk_user_department_id")
