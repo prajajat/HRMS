@@ -41,14 +41,14 @@ public class TravelService {
 
     public BasicResponce createTravelDetail(TravelDetailDTO dto)
     {
-        User createdBy=userRepo.findById(dto.getCreadtedBy()).orElseThrow(()->new RuntimeException("user not found "));
+        User createdBy=findUserById(dto.getCreadtedBy());
         TravelDetail travelDetail=modelMapper.map(dto,TravelDetail.class);
         travelDetail.setCreadtedBy(createdBy);
         travelDetailRepository.save(travelDetail);
         return new BasicResponce("created successfully");
     }
     public BasicResponce updateTravelDetails(Long id,TravelDetailDTO dto) {
-        User createdBy=userRepo.findById(dto.getCreadtedBy()).orElseThrow(()->new RuntimeException("user not found "));
+        User createdBy=findUserById(dto.getCreadtedBy());
         TravelDetail travelDetail= findTravelDetailById(id);
         travelDetail.setCreadtedBy(createdBy);
         modelMapper.map(dto,travelDetail);
@@ -65,7 +65,7 @@ public class TravelService {
     {
         TravelDetail travelDetail= findTravelDetailById(dto.getTravelDetailsId());
         List<User> allEmp=dto.getEmployees().stream().map(
-                i->userRepo.findById(i).orElseThrow(()-> new RuntimeException("user not found"))
+                i->findUserById(i)
         ).toList();
         for (User user:allEmp) {
             if(!travelDetail.getUsers().contains(user))
@@ -80,7 +80,7 @@ public class TravelService {
     }
     public BasicResponce removeEmployee(Long id,Long userId) {
         TravelDetail travelDetail=findTravelDetailById(id);
-        User emp=userRepo.findById(userId).orElseThrow(()->new RuntimeException("user not found"));
+        User emp= findUserById(userId);
         travelDetail.getUsers().remove(emp);
         travelDetailRepository.save(travelDetail);
         return new BasicResponce("deleted sucessfully");
@@ -89,6 +89,11 @@ public class TravelService {
     public TravelDetail findTravelDetailById(Long id)
     {
         return travelDetailRepository.findById(id).orElseThrow(()-> new RuntimeException("Travel details not found"));
+    }
+
+    public User findUserById(Long id)
+    {
+        return userRepo.findById(id).orElseThrow(()-> new RuntimeException("user  not found"));
     }
 
 }
