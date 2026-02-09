@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String path=request.getRequestURI();
-        if(path.equals("/auth/**"))
+        if(path.equals("/auth/**")||path.equals("/swagger-ui/**")||path.equals("/v3/api-docs/**"))
         {
             log.info("req come in for auth");
             UsernamePasswordAuthenticationToken auth = new  UsernamePasswordAuthenticationToken("public", null, Collections.emptyList() );

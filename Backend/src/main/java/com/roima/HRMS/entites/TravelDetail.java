@@ -1,5 +1,8 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
@@ -19,6 +22,9 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "tarvel_details")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "tarvelDetailId")
 public class TravelDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +57,7 @@ public class TravelDetail {
     private LocalDateTime updatedAt;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="created_by")
     private User creadtedBy;
 

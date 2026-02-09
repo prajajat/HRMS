@@ -1,6 +1,8 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Data
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId")
 @Table(name = "users")
 public class User {
     @Id
@@ -76,7 +81,6 @@ public class User {
 //    @OneToOne(mappedBy = "managerId")
 //    private User manager;
 
-
     @ManyToMany(mappedBy = "users")
     private List<Role> roles;
 
@@ -90,7 +94,8 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<TravelDetail> travelDetails;
 
-
+    @OneToMany(mappedBy = "uploadedBy")
+    private List<Document> Documents;
 }
 
 
