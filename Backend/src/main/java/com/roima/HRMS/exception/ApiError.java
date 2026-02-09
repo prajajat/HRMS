@@ -1,5 +1,10 @@
-package com.example.demo.exception;
+package com.roima.HRMS.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ApiError
 {
     public int status;
@@ -12,5 +17,5 @@ public class ApiError
         this.msg=msg;
         this.status=status;
     }
-    public int  getStatus(){return this.status;}
+
 }

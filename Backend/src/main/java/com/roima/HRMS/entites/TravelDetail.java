@@ -36,11 +36,11 @@ public class TravelDetail {
     private Long maxAmoutPerDay;
 
     @Column(name = "start_date", length=25,nullable = false)
-    private Date startDate;
+    private LocalDateTime startDate;
 
 
     @Column(name = "end_date", length=25,nullable = false)
-    private Date endDate;
+    private LocalDateTime endDate;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
