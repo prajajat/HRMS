@@ -18,7 +18,8 @@ public class UserService {
 
     public List<UserResponceForEmailDTO> getAllUserWithNameAndEmail()
     {
-        List<User> user = userRepo.findAll();
+        List<User> user = userRepo.findByRolesTitle("emp");
+
         List<UserResponceForEmailDTO> responce = user.stream()
                                         .map(a ->
                                                 modelMapper.map(a, UserResponceForEmailDTO.class)

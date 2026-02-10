@@ -2,6 +2,8 @@ package com.roima.HRMS.filter;
 
 
 import com.roima.HRMS.Config.Security.JwtUtil;
+import com.roima.HRMS.exception.ApiError;
+import com.roima.HRMS.exception.JwtInvalidException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 Long userId = jwtUtil.getUserId(token);
                 List<GrantedAuthority> authorities = jwtUtil.getAuthorities(token);
-
+                log.info("roles>>>> {}",authorities);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userId,
@@ -60,6 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext()
                         .setAuthentication(authentication);
             }
+            else{
+                throw new JwtInvalidException("invalid jwt token");
+            }
+
         }
 
         filterChain.doFilter(request, response);

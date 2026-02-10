@@ -1,9 +1,9 @@
 package com.roima.HRMS.entites;
 
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,27 +11,31 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Data
 @Entity
-@Table(name = "documents")
+@Table(name = "travel_expences")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "documentId")
-public class Document {
+        property = "pk_travel_expences_id")
+public class TravelExpense {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pk_document_id")
-    private Long documentId;
+    @Column(name = "pk_travel_expences_id")
+    private Long travelExpencesId;
 
-    @Column(name = "file_name",nullable = false )
-    private String fileName;
+    @PositiveOrZero
+    @Column(name = "amount",nullable = false)
+    private Long amount;
 
-    @Column(name = "owner_type",nullable = false )
-    private String ownerType;
+    @Column(name = "expence_date")
+    private LocalDateTime expenceDate;
 
-    @Column(name = "document_type",nullable = false )
-    private String documentType;
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name = "remark", nullable = true)
+    private String remark;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -42,15 +46,17 @@ public class Document {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "fk_user_id")
-    private User uploadedBy ;
+    @JoinColumn(name = "fk_traveler_id")
+    private Traveler traveler;
 
-    @OneToMany(mappedBy = "document")
-    private List<TravelerDocument> travelerDocuments;
+    @OneToMany(mappedBy ="travelExpence")
+    private List<Document> documents;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_travel_expence_id",nullable = true)
-    private TravelExpense travelExpence ;
 
 }
+
+
+
+
+
 

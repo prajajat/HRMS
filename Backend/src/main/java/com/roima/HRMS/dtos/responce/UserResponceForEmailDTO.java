@@ -11,7 +11,7 @@ public class UserResponceForEmailDTO {
     @NotNull
     private Long userId;
     @NotBlank
-    private String Email;
+    private String companyEmail;
     @NotBlank
     private String name;
 }
