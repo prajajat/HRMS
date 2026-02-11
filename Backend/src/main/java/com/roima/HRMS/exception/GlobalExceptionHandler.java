@@ -12,17 +12,17 @@ import java.io.IOException;
 public class GlobalExceptionHandler {
 
         @ExceptionHandler(RuntimeException.class)
-        public ApiError handleRuntimeException(RuntimeException ex) {
-            ApiError error =new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "something worng happend ",ex.getMessage()
+        public ResponseEntity<ApiError> handleRuntimeException(RuntimeException ex) {
+            ApiError error =new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "something wrong happend ",ex.getMessage()
             );
-            return  error;
+            return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
         }
 
     @ExceptionHandler(JwtInvalidException.class)
-    public ApiError handleRuntimeException1(JwtInvalidException ex) {
-        ApiError error =new ApiError(5001, "something worng happend ",ex.getMessage()
+    public ResponseEntity<ApiError> handleJwtInvalidException(JwtInvalidException ex) {
+        ApiError error =new ApiError(5001, "something wrong happend ",ex.getMessage()
         );
-        return  error;
+        return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
 
 }

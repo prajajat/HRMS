@@ -2,6 +2,7 @@ package com.roima.HRMS.entites;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -49,8 +50,8 @@ public class Document {
     private List<TravelerDocument> travelerDocuments;
 
     @ManyToOne
-    @JoinColumn(name = "fk_travel_expence_id",nullable = true)
-    private TravelExpense travelExpence ;
+    @JoinColumn(name = "fk_travel_expense_id",nullable = true)
+    private TravelExpense travelExpense ;
 
 }
 

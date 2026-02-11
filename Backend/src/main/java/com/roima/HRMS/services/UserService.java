@@ -1,7 +1,7 @@
 package com.roima.HRMS.services;
 
 
-import com.roima.HRMS.dtos.responce.UserResponceForEmailDTO;
+import com.roima.HRMS.dtos.responce.UserResponseForEmailDTO;
 import com.roima.HRMS.entites.User;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ public class UserService {
     private final UserRepository userRepo;
     private final ModelMapper modelMapper;
 
-    public List<UserResponceForEmailDTO> getAllUserWithNameAndEmail()
+    public List<UserResponseForEmailDTO> getAllUserWithNameAndEmail()
     {
         List<User> user = userRepo.findByRolesTitle("emp");
 
-        List<UserResponceForEmailDTO> responce = user.stream()
+        List<UserResponseForEmailDTO> responce = user.stream()
                                         .map(a ->
-                                                modelMapper.map(a, UserResponceForEmailDTO.class)
+                                                modelMapper.map(a, UserResponseForEmailDTO.class)
                                         ).collect(Collectors.toList());
         return responce;
     }

@@ -1,7 +1,8 @@
 package com.roima.HRMS.services;
 
 import com.roima.HRMS.dtos.request.TravelDetailDTO;
-import com.roima.HRMS.dtos.request.TravelExpenceDTO;
+import com.roima.HRMS.dtos.request.TravelExpenseDTO;
+import com.roima.HRMS.dtos.request.TravelerDocumentDTO;
 import com.roima.HRMS.dtos.responce.*;
 import com.roima.HRMS.dtos.request.AddEmployeeDTO;
 import com.roima.HRMS.entites.*;
@@ -27,6 +28,9 @@ public class TravelService {
     private final TravelerRepository travelerRepository;
     private final TravelExpenseRepository travelExpenseRepository;
     private final DocumentRepository documentRepository;
+    private final TravelerDocumentRepository travelerDocumentRepository;
+
+    // travel details
 
     public List<TravelDetailResponseWithOutTravelerIdDTO> getAllTravelDetails()
     {
@@ -39,15 +43,6 @@ public class TravelService {
     public TravelDetailResponseWithOutTravelerIdDTO getTravelDetails(Long id)
     {
        return modelMapper.map( findTravelDetailById(id), TravelDetailResponseWithOutTravelerIdDTO.class);
-    }
-
-    public List<TravelExpenceResponceDTO> getAllTravelExpenseByTravelerId(Long travelerId)
-    {
-        Traveler traveler=findTravelerById(travelerId);
-
-        return traveler.getTravelExpences().stream().map(
-                 a->modelMapper.map(a,TravelExpenceResponceDTO.class)
-        ) .toList();
     }
 
     public List<TravelDetailResponseWithTravelerIdDTO> getTravelDetailsByCreater(Long id)
@@ -70,6 +65,30 @@ public class TravelService {
         ).toList();
     }
 
+    public BasicResponse createTravelDetail(TravelDetailDTO dto)
+    {
+        User createdBy=findUserById(dto.getCreadtedBy());
+        TravelDetail travelDetail=modelMapper.map(dto,TravelDetail.class);
+        travelDetail.setCreatedBy(createdBy);
+        travelDetailRepository.save(travelDetail);
+        return new BasicResponse("created successfully");
+    }
+
+    public BasicResponse updateTravelDetails(Long id, TravelDetailDTO dto) {
+        User createdBy=findUserById(dto.getCreadtedBy());
+        TravelDetail travelDetail= findTravelDetailById(id);
+        travelDetail.setCreatedBy(createdBy);
+        modelMapper.map(dto,travelDetail);
+        travelDetailRepository.save(travelDetail);
+        return new BasicResponse("updated  sucessfully");
+    }
+    public BasicResponse deleteTravelDetails(Long id) {
+        travelDetailRepository.deleteById(id);
+        return new BasicResponse("deleted successfully");
+    }
+
+
+   // traveler
     public Long getTravelerInfo(Long id,Long userId)
     {
         TravelDetail travelDetail=findTravelDetailById(id);
@@ -79,16 +98,16 @@ public class TravelService {
     }
 
 
-    public BasicResponce createTravelDetail(TravelDetailDTO dto)
+    //travel expense
+    public List<TravelExpenseResponseDTO> getAllTravelExpenseByTravelerId(Long travelerId)
     {
-        User createdBy=findUserById(dto.getCreadtedBy());
-        TravelDetail travelDetail=modelMapper.map(dto,TravelDetail.class);
-        travelDetail.setCreatedBy(createdBy);
-        travelDetailRepository.save(travelDetail);
-        return new BasicResponce("created successfully");
-    }
+        Traveler traveler=findTravelerById(travelerId);
 
-    public BasicResponce createUpdateTravelExpense(TravelExpenceDTO dto,Long id)
+        return traveler.getTravelExpenses().stream().map(
+                a->modelMapper.map(a, TravelExpenseResponseDTO.class)
+        ) .toList();
+    }
+    public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, Long id)
     {
         Traveler traveler=findTravelerById(dto.getTraveler());
         long maxAmount=maxRemaingAount(traveler);
@@ -112,39 +131,28 @@ public class TravelService {
         List<Document> documents=new ArrayList<>();
         for(Long i:dto.getDocumentList())
         {
-             documents.add(findDocumentById(i));
+            documents.add(findDocumentById(i));
         }
         TravelExpense travelExpense=modelMapper.map(dto,TravelExpense.class);
         travelExpense.setTraveler(traveler);
         travelExpense.setDocuments(documents);
         if(id!=-1){
-             //userId -> travelerId baki chhe
-             travelExpense.setTravelExpencesId(findTravelExpenseById(id).getTravelExpencesId());
+            //userId -> travelerId baki chhe
+            travelExpense.setTravelExpensesId(findTravelExpenseById(id).getTravelExpensesId());
 
         }
         travelExpenseRepository.save(travelExpense);
         travelerRepository.save(traveler);
-        return new BasicResponce(id==-1 ?"created successfully":"updated successfully");
+        return new BasicResponse(id==-1 ?"created successfully":"updated successfully");
     }
-    public BasicResponce updateTravelDetails(Long id,TravelDetailDTO dto) {
-        User createdBy=findUserById(dto.getCreadtedBy());
-        TravelDetail travelDetail= findTravelDetailById(id);
-        travelDetail.setCreatedBy(createdBy);
-        modelMapper.map(dto,travelDetail);
-        travelDetailRepository.save(travelDetail);
-        return new BasicResponce("updated  sucessfully");
-    }
-
-    public BasicResponce deleteTravelDetails(Long id) {
-        travelDetailRepository.deleteById(id);
-        return new BasicResponce("deleted sucessfully");
-    }
-    public BasicResponce deleteTravelExpense(Long id) {
+    public BasicResponse deleteTravelExpense(Long id) {
         travelExpenseRepository.deleteById(id);
-        return new BasicResponce("deleted sucessfully");
+        return new BasicResponse("deleted successfully");
     }
 
-    public BasicResponce addEmployees(AddEmployeeDTO dto)
+
+    // travel details with employee
+    public BasicResponse addEmployees(AddEmployeeDTO dto)
     {
         TravelDetail travelDetail= findTravelDetailById(dto.getTravelDetailsId());
 
@@ -169,10 +177,10 @@ public class TravelService {
         }
 
         travelDetailRepository.save(travelDetail);
-        return new BasicResponce("All employee added sucessfully");
+        return new BasicResponse("All employee added successfully");
 
     }
-    public BasicResponce removeEmployee(Long id,Long userId) {
+    public BasicResponse removeEmployee(Long id, Long userId) {
         TravelDetail travelDetail=findTravelDetailById(id);
         User emp= findUserById(userId);
         for(Traveler traveler: travelDetail.getTravelers())
@@ -185,12 +193,74 @@ public class TravelService {
                break;
            }
         }
-        return new BasicResponce("deleted sucessfully");
+        return new BasicResponse("deleted successfully");
     }
 
+     //traveler document
+
+    public List<TravelerDocumentResponseDTO> getAllTravelerDocumentByTravelerId(Long id)
+    {
+        return travelerDocumentRepository.findByTraveler(findTravelerById(id)).stream().map(
+                a->modelMapper.map(a, TravelerDocumentResponseDTO.class)
+        ).toList();
+    }
+
+    public List<DocumentResponseDTO> getAllTravelerDocumentByUploadedId(Long userId)
+    {
+       ;
+        return  documentRepository.findByUploadedBy(findUserById(userId)).stream().map(
+                a->modelMapper.map(a, DocumentResponseDTO.class)
+        ).toList();
+    }
+    public BasicResponse createTravelerDocument(TravelerDocumentDTO dto)
+    {
+        Document document=findDocumentById(dto.getDocumentId());
+        if(dto.getVisibility().equals("All"))
+        {
+            List<Traveler> travelerAlreadyPrsent=new ArrayList<>();
+            for (TravelerDocument travelerDocument:travelerDocumentRepository.findByDocumentAndVisibility(document,"All"))
+            {
+                travelerAlreadyPrsent.add(travelerDocument.getTraveler());
+            }
+            for(Traveler traveler:findTravelDetailById(dto.getTravelDetailId()).getTravelers())
+            {
+                if(travelerAlreadyPrsent.contains(traveler))
+                {
+                    continue;
+                }
+                TravelerDocument travelerDocument=new TravelerDocument();
+                travelerDocument.setTraveler(traveler);
+                travelerDocument.setDocument(document);
+                travelerDocument.setVisibility(dto.getVisibility());
+                travelerDocumentRepository.save(travelerDocument);
+            }
+        }
+        else{
+
+            Traveler traveler=findTravelerById(dto.getTravelerId());
+            List<TravelerDocument> travelerDocuments=travelerDocumentRepository.findByDocumentAndVisibilityAndTraveler(document,dto.getVisibility(),traveler);
+            if(travelerDocuments.isEmpty()) {
+                TravelerDocument travelerDocument = new TravelerDocument();
+                travelerDocument.setTraveler(traveler);
+                travelerDocument.setDocument(document);
+                travelerDocument.setVisibility(dto.getVisibility());
+                travelerDocumentRepository.save(travelerDocument);
+            }
+            else{
+                throw new RuntimeException("This data can't be duplicate");
+            }
+         }
+         return new BasicResponse("Created successfully");
+    }
+    public BasicResponse deleteTravelerDocument(Long id) {
+        travelerDocumentRepository.deleteById(id);
+        return new BasicResponse("deleted successfully");
+    }
+
+    // repeated code
     public long maxRemaingAount(Traveler traveler)
     {
-        List<TravelExpense>travelExpenses=traveler.getTravelExpences();
+        List<TravelExpense>travelExpenses=traveler.getTravelExpenses();
         Long maxAmount=traveler.getTravelDetail().getMaxAmoutPerDay();
         log.info("{}",maxAmount);
         for(TravelExpense travelExpense:travelExpenses)
@@ -200,10 +270,7 @@ public class TravelService {
         log.info("{}",maxAmount);
         return maxAmount;
     }
-    public void checkValidation(TravelExpenceDTO dto)
-    {
 
-    }
     public TravelDetail findTravelDetailById(Long id)
     {
         return travelDetailRepository.findById(id).orElseThrow(()-> new RuntimeException("Travel details not found"));

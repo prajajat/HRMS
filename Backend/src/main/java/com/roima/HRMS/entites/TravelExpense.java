@@ -1,6 +1,8 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -13,23 +15,23 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "travel_expences")
+@Table(name = "travel_expenses")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "pk_travel_expences_id")
+        property = "pk_travel_expenses_id")
 public class TravelExpense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pk_travel_expences_id")
-    private Long travelExpencesId;
+    @Column(name = "pk_travel_expenses_id")
+    private Long travelExpensesId;
 
     @PositiveOrZero
     @Column(name = "amount",nullable = false)
     private Long amount;
 
-    @Column(name = "expence_date")
-    private LocalDateTime expenceDate;
+    @Column(name = "expense_date")
+    private LocalDateTime expenseDate;
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -49,7 +51,7 @@ public class TravelExpense {
     @JoinColumn(name = "fk_traveler_id")
     private Traveler traveler;
 
-    @OneToMany(mappedBy ="travelExpence")
+    @OneToMany(mappedBy ="travelExpense")
     private List<Document> documents;
 
 

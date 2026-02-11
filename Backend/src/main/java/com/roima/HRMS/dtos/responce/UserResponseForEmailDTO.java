@@ -7,7 +7,7 @@ import lombok.Data;
 
 
 @Data
-public class UserResponceForEmailDTO {
+public class UserResponseForEmailDTO {
     @NotNull
     private Long userId;
     @NotBlank

@@ -3,9 +3,9 @@ package com.roima.HRMS.dtos.responce;
 import lombok.Data;
 
 @Data
-public class BasicResponce {
+public class BasicResponse {
  private String message;
- public BasicResponce(String msg)
+ public BasicResponse(String msg)
  {
      this.message=msg;
  }

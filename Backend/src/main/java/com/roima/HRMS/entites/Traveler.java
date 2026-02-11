@@ -33,6 +33,6 @@ public class Traveler {
     private List<TravelerDocument> travelerDocuments;
 
     @OneToMany(mappedBy = "traveler")
-    private List<TravelExpense> travelExpences;
+    private List<TravelExpense> travelExpenses;
 
 }

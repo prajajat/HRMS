@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TravelExpenceDTO {
+public class TravelExpenseDTO {
     @PositiveOrZero
     private Long amount;
     @NotNull
-    private LocalDateTime expenceDate;
+    private LocalDateTime expenseDate;
     private String status;
     private String remark;
     private Long traveler;

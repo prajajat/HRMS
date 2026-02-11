@@ -1,6 +1,6 @@
 package com.roima.HRMS.controllers;
 
-import com.roima.HRMS.dtos.responce.UserResponceForEmailDTO;
+import com.roima.HRMS.dtos.responce.UserResponseForEmailDTO;
 import com.roima.HRMS.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/employee/all")
-    public ResponseEntity<List<UserResponceForEmailDTO>> getAllEmployee(){
+    public ResponseEntity<List<UserResponseForEmailDTO>> getAllEmployee(){
         return ResponseEntity.ok(userService.getAllUserWithNameAndEmail());
     }
 }
