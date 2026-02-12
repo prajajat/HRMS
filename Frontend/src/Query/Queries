@@ -1,7 +1,0 @@
-import { useQuery } from "@tanstack/react-query";
-import { login } from "../Api/Axios";
-
-
-
-export const useLogin = () =>
-  useQuery({ queryKey: ["login"], queryFn: login ,staleTime :4*60*1000});
