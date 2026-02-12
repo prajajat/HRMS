@@ -19,19 +19,19 @@ import java.time.Duration;
 public class AuthController {
 
     private final AuthService authService;
-    @CrossOrigin("http://localhost:5173")
+
     @PostMapping("/login")
-    public LoginResponseDTO login(@RequestBody LoginDTO request, HttpServletResponse responce ) {
+    public LoginResponseDTO login(@RequestBody LoginDTO request, HttpServletResponse response ) {
         LoginResponseDTO loginResponseDTO= authService.login(request);
         ResponseCookie cookie = ResponseCookie.from("REFRESH_TOKEN",loginResponseDTO.getRefreshToken())
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
                 .sameSite("Lax")
-                .maxAge(Duration.ofMinutes(90))
+                .maxAge(Duration.ofDays(30))
                 .build();
 
-        responce.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return  loginResponseDTO;
     }
     @PostMapping("/refreshToken/{token}")

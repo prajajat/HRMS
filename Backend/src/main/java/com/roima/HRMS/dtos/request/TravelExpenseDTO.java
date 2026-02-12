@@ -13,8 +13,7 @@ public class TravelExpenseDTO {
     private Long amount;
     @NotNull
     private LocalDateTime expenseDate;
-    private String status;
-    private String remark;
+
     private Long traveler;
     private List<Long> documentList;
 }

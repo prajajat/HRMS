@@ -33,7 +33,7 @@ public class TravelExpense {
     @Column(name = "expense_date")
     private LocalDateTime expenseDate;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
     @Column(name = "remark", nullable = true)
@@ -46,6 +46,10 @@ public class TravelExpense {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "update_by_pk_user_id")
+    private User UpdateBy;
 
     @ManyToOne
     @JoinColumn(name = "fk_traveler_id")

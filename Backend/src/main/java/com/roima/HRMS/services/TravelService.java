@@ -1,10 +1,7 @@
 package com.roima.HRMS.services;
 
-import com.roima.HRMS.dtos.request.TravelDetailDTO;
-import com.roima.HRMS.dtos.request.TravelExpenseDTO;
-import com.roima.HRMS.dtos.request.TravelerDocumentDTO;
+import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.responce.*;
-import com.roima.HRMS.dtos.request.AddEmployeeDTO;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
 import lombok.RequiredArgsConstructor;
@@ -145,6 +142,19 @@ public class TravelService {
         travelerRepository.save(traveler);
         return new BasicResponse(id==-1 ?"created successfully":"updated successfully");
     }
+    public BasicResponse patchTravelExpense(TravelExpenceStatusDTO dto,Long id,Long useId)
+    {
+        TravelExpense travelExpense=findTravelExpenseById(id);
+        User user=findUserById(useId);
+        if(dto.getStatus().equals("Rejected")&&dto.getRemark().isEmpty())
+        {
+            throw new RuntimeException("For reject status remark can't be empty");
+        }
+        modelMapper.map(dto,travelExpense);
+        travelExpense.setUpdateBy(user);
+        travelExpenseRepository.save(travelExpense);
+        return new BasicResponse("Updated sucessfully");
+    }
     public BasicResponse deleteTravelExpense(Long id) {
         travelExpenseRepository.deleteById(id);
         return new BasicResponse("deleted successfully");
@@ -205,10 +215,23 @@ public class TravelService {
         ).toList();
     }
 
-    public List<DocumentResponseDTO> getAllTravelerDocumentByUploadedId(Long userId)
+    public List<DocumentResponseDTO> getAllTravelerDocumentByTravelAndUser(Long id,Long userId)
     {
-       ;
-        return  documentRepository.findByUploadedBy(findUserById(userId)).stream().map(
+        TravelDetail travelDetail=findTravelDetailById(id);
+        List<Document> documents= documentRepository.findByUploadedBy(findUserById(userId));
+        List<Document> response=new ArrayList<>();
+        log.info(" i>>>>{}",documents.get(0).getDocumentId());
+        for(Document document:documents)
+        {log.info(" i2>>>>{}",document.getDocumentId());
+            if(document.getTravelerDocuments().isEmpty()
+                    ||
+                    !document.getTravelerDocuments().get(0).getTraveler().getTravelDetail().equals(travelDetail))
+            {
+                 documents.remove(document);
+            }
+        }
+        log.info(" i>>>>{}",documents.size());
+        return  documents.stream().map(
                 a->modelMapper.map(a, DocumentResponseDTO.class)
         ).toList();
     }

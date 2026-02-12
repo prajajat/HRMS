@@ -1,10 +1,7 @@
 package com.roima.HRMS.controllers;
 
 
-import com.roima.HRMS.dtos.request.AddEmployeeDTO;
-import com.roima.HRMS.dtos.request.TravelDetailDTO;
-import com.roima.HRMS.dtos.request.TravelExpenseDTO;
-import com.roima.HRMS.dtos.request.TravelerDocumentDTO;
+import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.responce.*;
 import com.roima.HRMS.services.TravelService;
 import lombok.RequiredArgsConstructor;
@@ -118,6 +115,12 @@ public class TravelController {
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PatchMapping("/expense/{id}/user/{userId}")
+    public ResponseEntity<BasicResponse> patchTravelExpense(@RequestBody TravelExpenceStatusDTO dto, @PathVariable long id, @PathVariable long userId) {
+        return ResponseEntity.ok(travelService.patchTravelExpense(dto,id,userId));
+    }
+
+    @PreAuthorize("hasAuthority('DML-travel-detail')")
     @DeleteMapping("/expense/{id}")
     public ResponseEntity<BasicResponse> deleteTravelExpense(@PathVariable long id)
     {
@@ -127,9 +130,9 @@ public class TravelController {
 
     //travel document
     @PreAuthorize("hasAuthority('All-User')")
-    @GetMapping("/document/uploader/all/{userId}")
-    public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocumentByUploadedId(@PathVariable long userId){
-        return ResponseEntity.ok(travelService.getAllTravelerDocumentByUploadedId(userId));
+    @GetMapping("/{id}/document/uploader/all/{userId}")
+    public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocumentByUploadedId(@PathVariable long id,@PathVariable long userId){
+        return ResponseEntity.ok(travelService.getAllTravelerDocumentByTravelAndUser(id,userId));
     }
 
     @PreAuthorize("hasAuthority('All-User')")
