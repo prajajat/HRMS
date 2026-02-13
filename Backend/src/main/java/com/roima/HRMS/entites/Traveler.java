@@ -4,6 +4,7 @@ package com.roima.HRMS.entites;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.util.List;
@@ -29,10 +30,10 @@ public class Traveler {
     @JoinColumn(name = "fk_user_id")
     private User user;
 
-    @OneToMany(mappedBy = "traveler")
+    @OneToMany(mappedBy = "traveler",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TravelerDocument> travelerDocuments;
 
-    @OneToMany(mappedBy = "traveler")
+    @OneToMany(mappedBy = "traveler" ,cascade = CascadeType.MERGE)
     private List<TravelExpense> travelExpenses;
 
 }

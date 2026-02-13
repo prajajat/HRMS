@@ -18,7 +18,7 @@ public class UserService {
 
     public List<UserResponseForEmailDTO> getAllUserWithNameAndEmail()
     {
-        List<User> user = userRepo.findByRolesTitle("emp");
+        List<User> user = userRepo.findByRolesTitle("employee");
 
         List<UserResponseForEmailDTO> responce = user.stream()
                                         .map(a ->

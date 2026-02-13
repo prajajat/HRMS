@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class TravelDetailResponseBaseDTO {
+
     private Long tarvelDetailId;
     private String title;
     private String description;

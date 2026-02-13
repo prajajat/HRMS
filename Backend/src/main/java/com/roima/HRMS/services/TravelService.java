@@ -7,7 +7,9 @@ import com.roima.HRMS.repos.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class TravelService {
     private final TravelExpenseRepository travelExpenseRepository;
     private final DocumentRepository documentRepository;
     private final TravelerDocumentRepository travelerDocumentRepository;
+    private final CloudinaryService cloudinaryService;
 
     // travel details
 
@@ -52,14 +55,19 @@ public class TravelService {
         ).toList();
     }
 
-    public List<TravelDetailResponseWithOutTravelerIdDTO> getTravelDetailsByTraveler(Long id)
+    public List<TravelDetailsResponseWithInTeavelerIdDTO> getTravelDetailsByTraveler(Long id)
     {
         User user=findUserById(id);
         List<TravelDetail> travelDetailList=travelDetailRepository.findByTravelersUser(user);
-
-        return travelDetailList.stream().map(
-                a->modelMapper.map(a, TravelDetailResponseWithOutTravelerIdDTO.class)
-        ).toList();
+        List<TravelDetailsResponseWithInTeavelerIdDTO> travelDetailsResponseWithInTeavelerIdDTOS=new ArrayList<>();
+        for(TravelDetail travelDetail:travelDetailList)
+        {
+            TravelDetailsResponseWithInTeavelerIdDTO travelDetailsResponseWithInTeavelerIdDTO =modelMapper.map(travelDetail,TravelDetailsResponseWithInTeavelerIdDTO.class);
+            travelDetailsResponseWithInTeavelerIdDTO.setTravelerId(
+             travelerRepository.findByUserAndTravelDetail(user,travelDetail).get().getTravelerId());
+            travelDetailsResponseWithInTeavelerIdDTOS.add(travelDetailsResponseWithInTeavelerIdDTO);
+        }
+        return  travelDetailsResponseWithInTeavelerIdDTOS;
     }
 
     public BasicResponse createTravelDetail(TravelDetailDTO dto)
@@ -104,11 +112,12 @@ public class TravelService {
                 a->modelMapper.map(a, TravelExpenseResponseDTO.class)
         ) .toList();
     }
-    public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, Long id)
+    public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, List<MultipartFile> documents, Long id)
     {
         Traveler traveler=findTravelerById(dto.getTraveler());
         long maxAmount=maxRemaingAount(traveler);
-        if(dto.getDocumentList().isEmpty())
+        log.info("req in service");
+        if(documents.isEmpty())
         {
             throw new RuntimeException("expense need atleast one document");
         }
@@ -124,22 +133,47 @@ public class TravelService {
         {
             throw new RuntimeException("you reach max amount per day. your can add till "+maxAmount);
         }
-
-        List<Document> documents=new ArrayList<>();
-        for(Long i:dto.getDocumentList())
+        User user=findUserById((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        List<String> urls=new ArrayList<>();
+        for(MultipartFile multipartFile:documents )
         {
-            documents.add(findDocumentById(i));
+            urls.add( cloudinaryService.uploadFile(multipartFile));
         }
+        List<Document>newDocuments=new ArrayList<>();
+        for(String url:urls)
+        {
+            Document document=new Document();
+            document.setUploadedBy(user);
+            document.setFileName(url);
+            document.setOwnerType(dto.getOwnerType());
+            document.setDocumentType(dto.getDocumentType());
+            newDocuments.add(document);
+        }
+
+        documentRepository.saveAll(newDocuments);
+
+
         TravelExpense travelExpense=modelMapper.map(dto,TravelExpense.class);
+        travelExpense.setStatus("pending");
         travelExpense.setTraveler(traveler);
-        travelExpense.setDocuments(documents);
+        travelExpense.setDocuments(newDocuments);
+
         if(id!=-1){
-            //userId -> travelerId baki chhe
+            //todo userId -> travelerId baki chhe
             travelExpense.setTravelExpensesId(findTravelExpenseById(id).getTravelExpensesId());
 
         }
+
         travelExpenseRepository.save(travelExpense);
         travelerRepository.save(traveler);
+        newDocuments.forEach(x->
+            x.setTravelExpense(travelExpense)
+        );
+        documentRepository.saveAll(newDocuments);
+
+
+
+
         return new BasicResponse(id==-1 ?"created successfully":"updated successfully");
     }
     public BasicResponse patchTravelExpense(TravelExpenceStatusDTO dto,Long id,Long useId)

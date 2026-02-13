@@ -1,14 +1,22 @@
 package com.roima.HRMS.controllers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.responce.*;
+import com.roima.HRMS.entites.TravelExpense;
+import com.roima.HRMS.entites.User;
 import com.roima.HRMS.services.TravelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,9 +51,10 @@ public class TravelController {
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
-    @GetMapping("/details/traveler/all/{id}")
-    public ResponseEntity<List<TravelDetailResponseWithOutTravelerIdDTO>> getDetailByTraveler(@PathVariable long id) {
-        return ResponseEntity.ok(travelService.getTravelDetailsByTraveler(id));
+    @GetMapping("/details/traveler/all")
+    public ResponseEntity<List<TravelDetailsResponseWithInTeavelerIdDTO>> getDetailByTraveler() {
+
+        return ResponseEntity.ok(travelService.getTravelDetailsByTraveler((Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
@@ -103,16 +112,23 @@ public class TravelController {
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
-    @PostMapping("/expense")
-    public ResponseEntity<BasicResponse> createTravelExpense(@RequestBody TravelExpenseDTO dto) {
-        return ResponseEntity.ok(travelService.createUpdateTravelExpense(dto,(long)-1));
+    @PostMapping(value = "/expense",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BasicResponse> createTravelExpense(
+            @RequestParam("expenseData") String dto,
+            @RequestParam(value="documents")List<MultipartFile> documents) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        TravelExpenseDTO newDTO = mapper.readValue(dto, TravelExpenseDTO.class);
+        log.info("req in controller");
+        return ResponseEntity.ok(travelService.createUpdateTravelExpense(newDTO,documents,(long)-1));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
-    @PutMapping("/expense/{id}")
-    public ResponseEntity<BasicResponse> updateTravelExpense(@RequestBody TravelExpenseDTO dto, @PathVariable long id) {
-        return ResponseEntity.ok(travelService.createUpdateTravelExpense(dto,id));
-    }
+//    @PreAuthorize("hasAuthority('DML-travel-detail')")
+//    @PutMapping("/expense/{id}")
+//    public ResponseEntity<BasicResponse> updateTravelExpense(@RequestBody TravelExpenseDTO dto, @PathVariable long id) {
+//        return ResponseEntity.ok(travelService.createUpdateTravelExpense(dto,id));
+//    }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
     @PatchMapping("/expense/{id}/user/{userId}")
