@@ -1,4 +1,4 @@
- import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "../Pages/Login";
 import Error from "../Pages/Error";
@@ -14,24 +14,22 @@ import HRDocument from "../Pages/HRDocument";
 import HRUpdate from "../Pages/HRUpdate";
 import Unauthorized from "../Pages/Unauthorized";
 import Header from "../Components/Header";
- 
 
 const router = createBrowserRouter([
- 
   {
-    path: '/login',
+    path: "/login",
     element: <Login />,
   },
   {
-    path: '/unauthorized',
+    path: "/unauthorized",
     element: <Unauthorized />,
   },
- 
+
   {
-    element: <ProtectedRoute allowedRoles={['hr', 'admin']} />,
+    element: <ProtectedRoute allowedRoles={["hr", "admin"]} />,
     children: [
       {
-        path: '/hr',
+        path: "/hr",
         element: <HRLayout />,
         children: [
           {
@@ -39,26 +37,26 @@ const router = createBrowserRouter([
             element: <Navigate to="/hr/dashboard" replace />,
           },
           {
-            path: 'dashboard',
+            path: "dashboard",
             element: <HRDashboard />,
           },
           {
-            path: 'travel',
+            path: "travel",
             children: [
               {
-                path: 'details',
+                path: "details",
                 element: <HRTravelDetails />,
               },
               {
-                path: 'expense',
+                path: "expense",
                 element: <HRExpense />,
               },
               {
-                path: 'document',
+                path: "document",
                 element: <HRDocument />,
               },
-               {
-                path: 'details/update/:id',
+              {
+                path: "details/update/:id",
                 element: <HRUpdate />,
               },
             ],
@@ -68,12 +66,11 @@ const router = createBrowserRouter([
     ],
   },
 
- 
   {
-    element: <ProtectedRoute allowedRoles={['employee', 'hr', 'admin']} />,
+    element: <ProtectedRoute allowedRoles={["employee", "hr", "admin"]} />,
     children: [
       {
-        path: '/employee',
+        path: "/employee",
         element: <EmployeeLayout />,
         children: [
           {
@@ -81,21 +78,20 @@ const router = createBrowserRouter([
             element: <Navigate to="/employee/dashboard" replace />,
           },
           {
-            path: 'dashboard',
+            path: "dashboard",
             element: <EmployeeDashboard />,
           },
           {
-            path: 'travel',
+            path: "travel",
             children: [
               {
-                path: 'details',
+                path: "details",
                 element: <EmpTravelDetails />,
               },
               {
-                path: 'details/:id',
+                path: "details/:id",
                 element: <EmpExpenseDocument />,
               },
-               
             ],
           },
         ],
@@ -103,18 +99,15 @@ const router = createBrowserRouter([
     ],
   },
 
- 
   {
-    path: '/',
+    path: "/",
     element: <Header />,
   },
 
- 
   {
-    path: '*',
+    path: "*",
     element: <Error />,
   },
 ]);
 
 export default router;
- 

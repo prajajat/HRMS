@@ -1,24 +1,29 @@
-import { List, ListItem } from "@mui/material";
-import { useGetAllTravel } from "../Query/useQueries";
-import TravelDetailCard from "../Components/TravelDetailCard";
+import { Grid, List, ListItem, Typography } from "@mui/material";
+import { useGetAllTravel, useGetTravelByUser } from "../Query/useQueries";
 
-function EmpTravelDetails(){
-    const {isLoading,data,isError } =useGetAllTravel();
-   console.log(data);
-   console.log(isError);
+import EmpTravelDetailCard from "../Components/EmpTravelDetailCard";
 
-    return (<>Dashboard
-    { !isLoading&&
-       <List>
-        {
-        data.data.map((td)=>{
-                       return <ListItem><TravelDetailCard data={td} /> </ListItem>;
-                            }
-                     )
-       }
-       </List>
+function EmpTravelDetails() {
+  const { isLoading, data, isError } = useGetTravelByUser();
+  console.log(data);
+  console.log(isError);
+
+  return (
+    <div >
+      <Typography variant='h3'>Travels for you</Typography>
+      {!isLoading && (
+           <Grid container spacing={2}>
+          {data.data.map((td) => {
+            return (
+              <Grid item xs={12} md={4} key={td.travelDetailsId}>
+                <EmpTravelDetailCard data={td} />{" "}
+             </Grid>
+            );
+          })}
+          </Grid>
+        
+      )}
+    </div>
+  );
 }
-          
-    </>);
-}  
 export default EmpTravelDetails;

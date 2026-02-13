@@ -3,26 +3,19 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardMedia,
   Grid,
   List,
   ListItem,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+ 
 
-import TravelerCard from "./TravelerCard";
-import { Navigate, useNavigate } from "react-router-dom";
-
-function TravelDetailCard({
-  data,
-  isSeeMore = true,
-  isDelete = false,
-  refetch,
-}) {
-  const navigate = useNavigate();
-
-  console.log(data);
+function TravelExpenseCard({ data }) {
+  const navigator = useNavigate();
   return (
-    <Grid item xs={12} md={4}>
+  <Grid item xs={12} md={4}>
       <Card sx={{ maxWidth: 345 }}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -95,29 +88,27 @@ function TravelDetailCard({
               return (
                 <ListItem key={t.travelerUserId}>
                   <TravelerCard
-                    data={t}
-                    isDelete={isDelete}
-                    travelDetailsId={data.tarvelDetailId}
-                    refetch={refetch}
+                    data={t} travelDetailsId={undefined} refetch={undefined}      
                   />
                 </ListItem>
               );
             })}
           </List>
-          </div>
+           </div>
         </CardContent>
         <CardActions>
-          {isSeeMore && (
-            <Button
-              size="small"
-              onClick={() => navigate("update/" + data.tarvelDetailId)}
-            >
-              see more
-            </Button>
-          )}
+          
+             <Button
+            size="small"
+            onClick={() =>
+              navigator("/employee/travel/details/" + data.travelerId)
+            }
+          >
+            see more
+          </Button>
         </CardActions>
       </Card>
     </Grid>
   );
 }
-export default TravelDetailCard;
+export default TravelExpenseCard;

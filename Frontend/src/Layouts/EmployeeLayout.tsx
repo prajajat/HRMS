@@ -1,14 +1,14 @@
-import { Outlet } from 'react-router-dom';
-import EmployeeSidebar from './EmployeeSidebar';
-import Header from '../Components/Header';
+import { Outlet } from "react-router-dom";
+import EmployeeSidebar from "./EmployeeSidebar";
+import Header from "../Components/Header";
 
 const EmployeeLayout = () => {
   return (
-    <div className="employee-layout">
-      <Header />
-      <div className="layout-container">
+    <div className="flex flex-col">
+         <Header />
+        <div className="flex flex-row">
         <EmployeeSidebar />
-        <main className="main-content">
+        <main className="w-full">
           <Outlet />
         </main>
       </div>
