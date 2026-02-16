@@ -9,6 +9,16 @@ import {
   getTravelByUser,
   CreateTravel,
   getExpenceBytraveler,
+  getDocumentsBytraveler,
+  CreateExpense,
+  CreateDocument,
+  getDocuments,
+  getAllExpence,
+  patchExpense,
+  getALLUser,
+  getUserById,
+  getDocumentsByManager,
+  Refresh,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -23,6 +33,8 @@ export const useLogin = () => {
     },
   });
 };
+
+ 
 
 export const useCreateTravel = () => {
   return useMutation({
@@ -40,7 +52,25 @@ export const useAssignTravelEmp = () => {
     onSuccess: (response) => {
       console.log(response);
 
-      queryClient.invalidateQueries(["travel"]);
+      //queryClient.invalidateQueries(["travel"]);
+    },
+  });
+};
+
+export const useCreateExpense = () => {
+  return useMutation({
+    mutationFn: CreateExpense,
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useCreateDocument = () => {
+  return useMutation({
+    mutationFn: CreateDocument,
+    onSuccess: (response) => {
+      console.log(response);
     },
   });
 };
@@ -55,9 +85,25 @@ export const useRemoveTravelEmp = () => {
   });
 };
 
+
+export const usePatchExpense = () => {
+  console.log("patch expense");
+  return useMutation<any,any,any>({
+    mutationFn:({eId ,userId,dto}) =>patchExpense(eId,userId,dto),
+    onSuccess: (response) => {
+      console.log(response);
+      // queryClient.invalidateQueries("expences");
+    },
+  });
+};
+
 export const useGetAllTravel = () => {
   return useQuery({ queryKey: ["travel"], queryFn: getAllTravelDetails });
 };
+export const useRefresh = () => {
+  return useQuery({ queryKey: ["refresh",Date.now], queryFn:Refresh });
+};
+
 
 export const useGetTravelByUser = () => {
   return useQuery({ queryKey: ["traveler-travel"], queryFn: getTravelByUser });
@@ -70,10 +116,38 @@ export const useGetAllEmp = () => {
 export const useGetExpenceBytraveler = (id) => {
   return useQuery({ queryKey: ["expenses",id], queryFn:()=> getExpenceBytraveler(id),enabled: !!id, });
 };
+
+
+export const useGetDocumentByManager = (id) => {
+  return useQuery({ queryKey: ["documentsByManager",id], queryFn:()=> getDocumentsByManager(id),enabled: !!id, });
+};
+
+export const useGetAllExpence = (id) => {
+  return useQuery({ queryKey: ["expenses"], queryFn: getAllExpence });
+};
+
+export const useGetDocumentsBytraveler = (id) => {
+  return useQuery({ queryKey: ["travelerDoc",id], queryFn:()=> getDocumentsBytraveler(id),enabled: !!id, });
+};
+
+export const useGetDocuments = () => {
+  return useQuery({ queryKey: ["travelerDoc",], queryFn:getDocuments });
+};
 export const useGetTravelById = (id) => {
   return useQuery({
     queryKey: ["travel", id],
     queryFn: () => getTravelDetailsById(id),
     enabled: !!id,
   });
+};
+
+
+
+export const useGetALLUser = () => {
+  return useQuery({ queryKey: ["user",], queryFn:getALLUser });
+};
+
+  
+export const useGetUserById = (id) => {
+  return useQuery({ queryKey: ["user",id], queryFn: ()=>getUserById(id), enabled: !!id, });
 };

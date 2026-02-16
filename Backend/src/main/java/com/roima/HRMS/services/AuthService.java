@@ -3,9 +3,9 @@ package com.roima.HRMS.services;
 
 import com.roima.HRMS.Config.Security.JwtUtil;
 import com.roima.HRMS.dtos.request.LoginDTO;
-import com.roima.HRMS.dtos.responce.LoginResponseDTO;
-import com.roima.HRMS.dtos.responce.RefreshTokenResponseDTO;
-import com.roima.HRMS.dtos.responce.RoleDTO;
+import com.roima.HRMS.dtos.response.LoginResponseDTO;
+import com.roima.HRMS.dtos.response.RefreshTokenResponseDTO;
+import com.roima.HRMS.dtos.response.RoleDTO;
 import com.roima.HRMS.entites.User;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;

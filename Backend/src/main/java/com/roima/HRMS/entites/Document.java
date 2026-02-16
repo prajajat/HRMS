@@ -28,6 +28,9 @@ public class Document {
     @Column(name = "file_name",nullable = false )
     private String fileName;
 
+    @Column(name = "url" )
+    private String url;
+
     @Column(name = "owner_type",nullable = false )
     private String ownerType;
 

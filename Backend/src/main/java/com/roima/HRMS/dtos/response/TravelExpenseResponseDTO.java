@@ -1,4 +1,4 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
 import lombok.Data;
 
@@ -12,7 +12,10 @@ public class TravelExpenseResponseDTO {
     private LocalDateTime expenseDate;
     private String status;
     private String remark;
-    private Long travelerId;
+    private Long travelerUserId;
+    private  String travelerUserName;
+    private Long travelerTravelDetailId;
+    private String travelerTravelDetailTitle;
     private List<DocDto> documents;
 }
 

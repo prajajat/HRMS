@@ -12,8 +12,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import TravelerCard from "./TravelerCard";
 
-function EmpTravelDetailCard({ data }) {
+function EmpTravelDetailCard({ data,isSeeMore=true }) {
   const navigator = useNavigate();
+  console.log(data);
   return (
   <Grid item xs={12} md={4}>
       <Card sx={{ maxWidth: 345 }}>
@@ -97,15 +98,16 @@ function EmpTravelDetailCard({ data }) {
            </div>
         </CardContent>
         <CardActions>
-          
+           {isSeeMore&&
              <Button
             size="small"
             onClick={() =>
-              navigator("/employee/travel/details/" + data.travelerId)
+              navigator("/employee/travel/details/" + data.travelerId+"?tid="+data.tarvelDetailId)
             }
           >
             see more
           </Button>
+             }
         </CardActions>
       </Card>
     </Grid>

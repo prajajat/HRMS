@@ -5,9 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.roima.HRMS.dtos.request.*;
-import com.roima.HRMS.dtos.responce.*;
-import com.roima.HRMS.entites.TravelExpense;
-import com.roima.HRMS.entites.User;
+import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.services.TravelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -111,6 +109,13 @@ public class TravelController {
         return ResponseEntity.ok(travelService.getAllTravelExpenseByTravelerId(travelerId));
     }
 
+    // travel expence
+    @PreAuthorize("hasAuthority('All-User')")
+    @GetMapping("/expense/all")
+    public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense(){
+        return ResponseEntity.ok(travelService.getAllTravelExpense());
+    }
+
     @PreAuthorize("hasAuthority('DML-travel-detail')")
     @PostMapping(value = "/expense",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicResponse> createTravelExpense(
@@ -146,9 +151,9 @@ public class TravelController {
 
     //travel document
     @PreAuthorize("hasAuthority('All-User')")
-    @GetMapping("/{id}/document/uploader/all/{userId}")
-    public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocumentByUploadedId(@PathVariable long id,@PathVariable long userId){
-        return ResponseEntity.ok(travelService.getAllTravelerDocumentByTravelAndUser(id,userId));
+    @GetMapping("/document/uploader/all/")
+    public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocument(){
+        return ResponseEntity.ok(travelService.getAllTravelerDocuments());
     }
 
     @PreAuthorize("hasAuthority('All-User')")
@@ -158,9 +163,16 @@ public class TravelController {
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
-    @PostMapping("/document")
-    public ResponseEntity<BasicResponse> createTravelerDocument(@RequestBody TravelerDocumentDTO dto) {
-        return ResponseEntity.ok(travelService.createTravelerDocument(dto));
+    @PostMapping(value = "/document",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BasicResponse> createTravelerDocument(
+            @RequestParam("tarvelerDocumentData") String dto,
+            @RequestParam(value="document")MultipartFile document) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        TravelerDocumentDTO newDTO = mapper.readValue(dto, TravelerDocumentDTO.class);
+        log.info("req in controller");
+        return ResponseEntity.ok(travelService.createTravelerDocument(newDTO,document,(Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
     @PreAuthorize("hasAuthority('DML-travel-detail')")
@@ -168,6 +180,12 @@ public class TravelController {
     public ResponseEntity<BasicResponse> deleteTravelerDocument(@PathVariable long id)
     {
         return ResponseEntity.ok(travelService.deleteTravelerDocument(id));
+    }
+
+    @PreAuthorize("hasAuthority('All-User')")
+    @GetMapping("/document/manager/{id}")
+    public ResponseEntity<List<TravelerDocumentResponseDTO>> getAllTravelerDocumentForManager(@PathVariable Long id){
+        return ResponseEntity.ok(travelService.getAllTravelerDocumentForManager(id));
     }
 
 }

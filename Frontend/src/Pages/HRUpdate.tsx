@@ -2,10 +2,11 @@ import { useParams, useSearchParams } from "react-router-dom";
 import {
   useAssignTravelEmp,
   useGetAllEmp,
+  useGetALLUser,
   useGetTravelById,
 } from "../Query/useQueries";
 import TravelDetailCard from "../Components/TravelDetailCard";
-import { Button, List, ListItem } from "@mui/material";
+import { Button, List, ListItem, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
@@ -16,7 +17,7 @@ function HRUpdate() {
     isLoading: isEmpLoading,
     data: Empdata,
     isError: isEmpError,
-  } = useGetAllEmp();
+  } = useGetALLUser();
   const { userId, roles } = useSelector((state) => state.user);
   const [emp, setEmp] = useState([]);
   const {
@@ -48,8 +49,10 @@ function HRUpdate() {
     });
   };
 
+  console.log(emp);
+
   return (
-    <div  >
+    <>
       HRUpdate
       {!isLoading && (
         <div>
@@ -74,19 +77,22 @@ function HRUpdate() {
               <br />
               Add Employee to travel
               {!isEmpLoading && (
-                <div>
-                  <List>
-                    {Empdata.data.map((e) => {
-                      return (
-                        <ListItem
-                          key={e.userId}
-                          onClick={() => handleAddEmp(e)}
-                        >
-                          {e.name}-{e.companyEmail}
-                        </ListItem>
-                      );
-                    })}
-                  </List>
+                 <div>
+                  
+       <Select
+          type="text"
+          defaultValue=""
+          className="mt-10 mb-10"
+          onChange={(e)=> handleAddEmp(e.target.value)}
+           
+        > 
+        { 
+         Empdata.data.map((e)=>{
+          return  <MenuItem value={e}>{e.name}- {e.companyEmail}</MenuItem>
+        })
+        } 
+          </Select>
+
                   added :
                   {emp.length > 0 && (
                     <List>
@@ -106,7 +112,7 @@ function HRUpdate() {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 export default HRUpdate;

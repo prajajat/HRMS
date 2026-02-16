@@ -19,8 +19,8 @@ function Header() {
 
   return (
     
-        <div className="flex justify-between items-center bg-gray-300 ">
-          <div>Roima HRMS{userId}</div>
+        <div className="flex justify-between items-center bg-gray-300 w-full ">
+          <div>Roima HRMS</div>
           <div className="flex felx-row justify-end">
             <List className="flex felx-row">
               {roles.map((r) => {
@@ -34,6 +34,10 @@ function Header() {
                 );
               })}
             </List>
+             
+              
+               {userId!=-1&&     <Button onClick={() => navigator("/org-chart/"+userId)}>Org. Chart</Button>
+}
             <Button onClick={handleClick}>
               {userId == -1 ? "login" : "logout"}
             </Button>

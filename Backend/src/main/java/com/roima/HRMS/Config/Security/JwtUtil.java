@@ -49,7 +49,7 @@ public class JwtUtil {
                 .claim("permissions", permissions)
                 .setIssuedAt(new Date())
                 .setExpiration(
-                        new Date(System.currentTimeMillis() +  1001111*1000)
+                        new Date(System.currentTimeMillis() +  140*1000)
                 )
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()))
                 .compact();

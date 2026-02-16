@@ -3,8 +3,8 @@ import { store } from "../Store/Store.ts";
 
 const instance = axios.create({
   baseURL: "http://localhost:8089",
-  timeout: 5000,
-  headers: { "Content-Type": "application/json" },
+  timeout: 10000,
+  
   withCredentials: true,
 });
 
@@ -16,6 +16,15 @@ export const CreateTravel = async (data: any) =>
 
 export const AssignTravelEmp = async (data: any) =>
   await instance.post("/api/travel/details/employee", data).then((res) => res);
+
+export const CreateExpense = async (data: any) =>
+  await instance.post("/api/travel/expense", data).then((res) => res);
+
+export const Refresh = async () =>
+  await instance.get("/auth/refreshToken/").then((res) => res);
+
+export const CreateDocument = async (data: any) =>
+  await instance.post("/api/travel/document", data).then((res) => res);
 
 export const RemoveTravelEmp = async (data) =>
   await instance
@@ -37,9 +46,34 @@ export const getTravelByUser = async () =>
 export const getExpenceBytraveler = async (id) => 
   await instance.get("/api/travel/expense/all/"+id).then((res) => res);
 
+export const getAllExpence = async () => 
+  await instance.get("/api/travel/expense/all").then((res) => res);
+
+export const patchExpense = async (eId,userId,dto) => 
+  await instance.patch(`/api/travel/expense/${eId}/user/${userId}`,dto).then((res) => res);
+
+export const getDocumentsBytraveler = async (id) => 
+  await instance.get("/api/travel/document/traveler/all/"+id).then((res) => res);
+
+export const getDocumentsByManager = async (id) => 
+  await instance.get("/api/travel/document/manager/"+id).then((res) => res);
+
+export const getDocuments = async () => 
+  await instance.get("/api/travel/document/uploader/all/").then((res) => res);
+
+
+export const getUserById = async (id) => 
+  await instance.get(`/api/user/${id}`).then((res) => res);
+
+
+export const getALLUser = async () => 
+  await instance.get(`/api/user/all`).then((res) => res);
+
+
 instance.interceptors.request.use((config) => {
+  console.log(config.url);
   const state = store.getState();
-  if (state.tokens.token != null) {
+  if (state.tokens.token != null&&config.url!="/auth/login"&&config.url!="/auth/refreshToken/") {
     console.log("set");
     config.headers.Authorization = `Bearer ${state.tokens.token}`;
     console.log(config.headers.Authorization);
@@ -47,11 +81,13 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-//  instance.interceptors.response.use((response) => response,
-//                                      (error) => { if (error.response?.status == 5001 ) {
-
-//                                       console.log(error.response);
-
-//                                     }
-//                                     return Promise.reject(error);
-//                                   } );
+ instance.interceptors.response.use((response) =>  response,
+                                     (error) =>
+                                       {
+                                        if (error.response.data.status==5001 ) {
+                                          console.log("error");
+                                        window.open("http://localhost:5173/refresh");
+                                        return Promise.reject(error);
+                                  }
+                                  }
+                                   );

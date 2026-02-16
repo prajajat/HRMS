@@ -1,18 +1,19 @@
 import { Outlet } from "react-router-dom";
-import HRSidebar from "./HRSidebar";
 import Header from "../Components/Header";
+import OrgChartSidebar from "./OrgChartSidebar";
 
-const HRLayout = () => {
+const OrgChartLayout = () => {
   return (
     <div className="flex flex-col">
          <Header />
         <div className="flex flex-row h-screen">
-       <HRSidebar />
-        <main className="w-full">
+        <OrgChartSidebar />
+        <main className="w-full flex flex-col justify-items-center aline-item-center">
           <Outlet />
         </main>
       </div>
     </div>
   );
 };
-export default HRLayout;
+
+export default OrgChartLayout;

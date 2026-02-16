@@ -19,7 +19,7 @@ public class TravelExpenseDTO {
     private LocalDateTime expenseDate;
 
     private Long traveler;
-
+    private List<String> fileNameList;
     private String ownerType;
 
     private String documentType;

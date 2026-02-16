@@ -1,12 +1,6 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
-import com.roima.HRMS.entites.TravelExpense;
-import com.roima.HRMS.entites.TravelerDocument;
-import com.roima.HRMS.entites.User;
-import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +9,7 @@ import java.util.List;
 public class DocumentResponseDTO {
     private Long documentId;
     private String fileName;
+    private String url;
     private String ownerType;
     private String documentType;
     private LocalDateTime createdAt;
@@ -32,4 +27,7 @@ class UserDto
 class TravelerDocDto{
     private String visibility;
     private UserDto traveler;
+    private String travelerTravelDetailTarvelDetailId;
+    private String travelerTravelDetailTitle;
+
 }

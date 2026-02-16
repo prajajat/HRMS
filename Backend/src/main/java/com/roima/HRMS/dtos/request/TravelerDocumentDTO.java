@@ -8,10 +8,12 @@ import lombok.Data;
 public class TravelerDocumentDTO {
     @NotEmpty
     private String visibility;
-    @NotNull
-    private Long  documentId;
 
     private Long travelerId;
+    private String fileName;
+    private String ownerType;
 
+    private String documentType;
     private Long travelDetailId;
+
 }

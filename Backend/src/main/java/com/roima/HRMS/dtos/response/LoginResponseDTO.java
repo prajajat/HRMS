@@ -1,4 +1,4 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

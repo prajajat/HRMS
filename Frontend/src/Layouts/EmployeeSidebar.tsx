@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 function EmployeeSidebar() {
   return (
  
-      <div className="flex flex-col h-full max-h-screen bg-gray-100  w-30">
+      <div className="flex flex-col h-full bg-gray-100  w-30">
         EmployeeSidebar
         <NavLink
           to="/employee/travel/details"

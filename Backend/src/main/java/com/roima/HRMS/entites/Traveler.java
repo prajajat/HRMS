@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class Traveler {
     @OneToMany(mappedBy = "traveler",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TravelerDocument> travelerDocuments;
 
-    @OneToMany(mappedBy = "traveler" ,cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "traveler" ,cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TravelExpense> travelExpenses;
 
 }

@@ -1,7 +1,5 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
-import com.roima.HRMS.entites.Document;
-import com.roima.HRMS.entites.Traveler;
 import lombok.Data;
 
 @Data
@@ -11,7 +9,7 @@ public class TravelerDocumentResponseDTO {
 
     private String visibility;
 
-    private DocDto document;
+    private DocWithUploaderDTO document;
     private TravelerDocDto traveler;
 
 }

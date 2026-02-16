@@ -1,7 +1,7 @@
 package com.roima.HRMS.services;
 
 import com.roima.HRMS.dtos.request.*;
-import com.roima.HRMS.dtos.responce.*;
+import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -112,6 +113,13 @@ public class TravelService {
                 a->modelMapper.map(a, TravelExpenseResponseDTO.class)
         ) .toList();
     }
+
+    public List<TravelExpenseResponseDTO> getAllTravelExpense()
+    {
+        return travelExpenseRepository.findAll().stream().map(
+                a->modelMapper.map(a, TravelExpenseResponseDTO.class)
+        ) .toList();
+    }
     public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, List<MultipartFile> documents, Long id)
     {
         Traveler traveler=findTravelerById(dto.getTraveler());
@@ -139,17 +147,21 @@ public class TravelService {
         {
             urls.add( cloudinaryService.uploadFile(multipartFile));
         }
+        log.info("lll>>>{}",dto.getFileNameList());
         List<Document>newDocuments=new ArrayList<>();
         for(String url:urls)
         {
             Document document=new Document();
             document.setUploadedBy(user);
-            document.setFileName(url);
+            document.setUrl(url);
+
             document.setOwnerType(dto.getOwnerType());
             document.setDocumentType(dto.getDocumentType());
             newDocuments.add(document);
         }
-
+        IntStream.range(0,dto.getFileNameList().size()).forEach(
+                i->newDocuments.get(i).setFileName(dto.getFileNameList().get(i))
+        );
         documentRepository.saveAll(newDocuments);
 
 
@@ -227,17 +239,28 @@ public class TravelService {
     public BasicResponse removeEmployee(Long id, Long userId) {
         TravelDetail travelDetail=findTravelDetailById(id);
         User emp= findUserById(userId);
+        Traveler travelerToRemove=null;
         for(Traveler traveler: travelDetail.getTravelers())
         {
            if(traveler.getUser().equals(emp))
            {
-               travelDetail.getTravelers().remove(traveler);
-               travelDetailRepository.save(travelDetail);
-               travelerRepository.delete(traveler);
+
+                travelerToRemove=traveler;
                break;
            }
         }
-        return new BasicResponse("deleted successfully");
+        if(travelerToRemove==null)
+        {return new BasicResponse(" Emp not found");}
+
+            travelDetail.getTravelers().remove(travelerToRemove);
+            travelerToRemove.getTravelerDocuments().size();
+            travelerToRemove.getTravelExpenses().size();
+
+            travelDetailRepository.save(travelDetail);
+            travelerRepository.delete(travelerToRemove);
+            return new BasicResponse("Updated successfully");
+
+
     }
 
      //traveler document
@@ -249,57 +272,90 @@ public class TravelService {
         ).toList();
     }
 
-    public List<DocumentResponseDTO> getAllTravelerDocumentByTravelAndUser(Long id,Long userId)
+    public List<TravelerDocumentResponseDTO> getAllTravelerDocumentForManager(Long id)
     {
-        TravelDetail travelDetail=findTravelDetailById(id);
-        List<Document> documents= documentRepository.findByUploadedBy(findUserById(userId));
-        List<Document> response=new ArrayList<>();
-        log.info(" i>>>>{}",documents.get(0).getDocumentId());
-        for(Document document:documents)
-        {log.info(" i2>>>>{}",document.getDocumentId());
-            if(document.getTravelerDocuments().isEmpty()
-                    ||
-                    !document.getTravelerDocuments().get(0).getTraveler().getTravelDetail().equals(travelDetail))
-            {
-                 documents.remove(document);
-            }
-        }
-        log.info(" i>>>>{}",documents.size());
+        User user=findUserById(id);
+        List<TravelerDocument> travelerDocuments=new ArrayList<>();
+        List<Traveler> travelers=new ArrayList<>();
+                user.getTeamMember().forEach(
+                        a->travelers.addAll(a.getTravelers())
+                    );
+
+        travelers.forEach(
+                a->travelerDocuments.addAll(a.getTravelerDocuments())
+        );
+        log.info(" i>>{} i2>>{}",travelers.size(),user.getTeamMember().get(0).getTravelers().size());
+        return travelerDocuments.stream().map(
+                a->modelMapper.map(a, TravelerDocumentResponseDTO.class)
+        ).toList();
+    }
+
+    public List<DocumentResponseDTO> getAllTravelerDocuments()
+    {
+//        TravelDetail travelDetail=findTravelDetailById(id);
+//        List<Document> documents= documentRepository.findByUploadedBy(findUserById(userId));
+//        List<Document> response=new ArrayList<>();
+//        log.info(" i>>>>{}",documents.get(0).getDocumentId());
+//        for(Document document:documents)
+//        {log.info(" i2>>>>{}",document.getDocumentId());
+//            if(document.getTravelerDocuments().isEmpty()
+//                    ||
+//                    !document.getTravelerDocuments().get(0).getTraveler().getTravelDetail().equals(travelDetail))
+//            {
+//                 documents.remove(document);
+//            }
+//        }
+        List<Document> documents=documentRepository.findAllByTravelExpense(null);
         return  documents.stream().map(
                 a->modelMapper.map(a, DocumentResponseDTO.class)
         ).toList();
     }
-    public BasicResponse createTravelerDocument(TravelerDocumentDTO dto)
+    public BasicResponse createTravelerDocument(TravelerDocumentDTO dto,MultipartFile document,Long id)
     {
-        Document document=findDocumentById(dto.getDocumentId());
+        User user=findUserById(id);
+        Document newDocument=new Document();
+        newDocument.setUrl(cloudinaryService.uploadFile(document));
+        newDocument.setFileName(dto.getFileName());
+        newDocument.setDocumentType(dto.getDocumentType());
+        newDocument.setOwnerType(dto.getOwnerType());
+        newDocument.setUploadedBy(user);
+        documentRepository.save(newDocument);
         if(dto.getVisibility().equals("All"))
         {
-            List<Traveler> travelerAlreadyPrsent=new ArrayList<>();
-            for (TravelerDocument travelerDocument:travelerDocumentRepository.findByDocumentAndVisibility(document,"All"))
+            List<Traveler> travelerAlreadyPresent =new ArrayList<>();
+            for (TravelerDocument travelerDocument:travelerDocumentRepository.findByDocumentAndVisibility(newDocument,"All"))
             {
-                travelerAlreadyPrsent.add(travelerDocument.getTraveler());
+                travelerAlreadyPresent.add(travelerDocument.getTraveler());
             }
             for(Traveler traveler:findTravelDetailById(dto.getTravelDetailId()).getTravelers())
             {
-                if(travelerAlreadyPrsent.contains(traveler))
+                if(travelerAlreadyPresent.contains(traveler))
                 {
                     continue;
                 }
                 TravelerDocument travelerDocument=new TravelerDocument();
                 travelerDocument.setTraveler(traveler);
-                travelerDocument.setDocument(document);
+                travelerDocument.setDocument(newDocument);
                 travelerDocument.setVisibility(dto.getVisibility());
                 travelerDocumentRepository.save(travelerDocument);
             }
         }
         else{
+            Traveler traveler;
+            if(dto.getOwnerType().equals("HR"))
+            {
 
-            Traveler traveler=findTravelerById(dto.getTravelerId());
-            List<TravelerDocument> travelerDocuments=travelerDocumentRepository.findByDocumentAndVisibilityAndTraveler(document,dto.getVisibility(),traveler);
+                traveler=travelerRepository.findByUserAndTravelDetail(findUserById(dto.getTravelerId()),findTravelDetailById(dto.getTravelDetailId())).orElseThrow(()->new RuntimeException("no traveler found"));
+            }
+            else{
+                traveler=findTravelerById(dto.getTravelerId());
+            }
+
+            List<TravelerDocument> travelerDocuments=travelerDocumentRepository.findByDocumentAndVisibilityAndTraveler(newDocument,dto.getVisibility(),traveler);
             if(travelerDocuments.isEmpty()) {
                 TravelerDocument travelerDocument = new TravelerDocument();
                 travelerDocument.setTraveler(traveler);
-                travelerDocument.setDocument(document);
+                travelerDocument.setDocument(newDocument);
                 travelerDocument.setVisibility(dto.getVisibility());
                 travelerDocumentRepository.save(travelerDocument);
             }

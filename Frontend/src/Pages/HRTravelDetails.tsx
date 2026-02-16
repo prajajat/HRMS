@@ -40,12 +40,13 @@ function TravelDetails() {
       onSuccess: (response) => {
         console.log(response);
         refetch();
+        setAddState(!addState);
       },
     });
   };
 
   return (
-    <div  >
+   <>
       All Travels
       {addState && (
         <form
@@ -85,10 +86,13 @@ function TravelDetails() {
             />
           </FormControl>
 
-          <FormControl>
-            <InputLabel htmlFor="my-input">startDate</InputLabel>
+
+
+         
+          <FormControl >
+             <InputLabel htmlFor="my-input">startDate</InputLabel>
             <Input
-              type="datetime-local"
+              type="datetime-local" 
               className="mt-10 mb-10 "
               {...register("startDate", {
                 required: "Please enter startDate",
@@ -141,7 +145,7 @@ function TravelDetails() {
           </Grid>
         
       )}
-    </div>
+    </>
   );
 }
 export default TravelDetails;

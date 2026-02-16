@@ -14,6 +14,12 @@ import HRDocument from "../Pages/HRDocument";
 import HRUpdate from "../Pages/HRUpdate";
 import Unauthorized from "../Pages/Unauthorized";
 import Header from "../Components/Header";
+import OrgChart from "../Pages/OrgChart";
+import OrgChartLayout from "../Layouts/OrgChartLayout";
+import ManagerLayout from "../Layouts/ManagerLayout";
+import ManagerDashboard from "../Pages/ManagerDashboard";
+import ManagerDocDetails from "../Pages/ManagerDocDetails";
+import RefreshPage  from "../Pages/RefreshPage";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +32,7 @@ const router = createBrowserRouter([
   },
 
   {
-    element: <ProtectedRoute allowedRoles={["hr", "admin"]} />,
+    element: <ProtectedRoute allowedRoles={["hr"]} />,
     children: [
       {
         path: "/hr",
@@ -67,7 +73,7 @@ const router = createBrowserRouter([
   },
 
   {
-    element: <ProtectedRoute allowedRoles={["employee", "hr", "admin"]} />,
+    element: <ProtectedRoute allowedRoles={["employee"]} />,
     children: [
       {
         path: "/employee",
@@ -103,7 +109,48 @@ const router = createBrowserRouter([
     path: "/",
     element: <Header />,
   },
-
+   {
+    element: <ProtectedRoute allowedRoles={["employee", "hr", "manager"]} />,
+    children: [
+      {
+        path: "/org-chart",
+        element: <OrgChartLayout />,
+        children: [
+         
+           {
+              path: ":id",
+              element: <OrgChart  />,
+            },]
+          }
+        ]
+      },
+       {
+    element: <ProtectedRoute allowedRoles={["manager"]} />,
+    children: [
+      {
+        path: "/manager",
+        element: <ManagerLayout />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/manager/dashboard" replace />,
+          },
+          {
+            path: "dashboard",
+            element: <ManagerDashboard />,
+          },
+          {
+            path: "tarvel-document-detail",
+            element: <ManagerDocDetails />,
+          },
+        ]
+      }
+    ]
+  },
+ {
+    path: "/refresh",
+    element: <RefreshPage />,
+  },
   {
     path: "*",
     element: <Error />,

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { useRemoveTravelEmp } from "../Query/useQueries";
 
-function TravelerCard({ data, isDelete = false, travelDetailsId ,refetch}) {
+function TravelerCard({ data, isDelete = false, travelDetailsId=null ,refetch=null}) {
   const { mutate, isPending, isError, error } = useRemoveTravelEmp();
   const handleDelete = (id) => {
     var dto = { travelId: travelDetailsId, empId: id };
