@@ -1,4 +1,4 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
 
 import jakarta.validation.constraints.NotBlank;
@@ -7,11 +7,12 @@ import lombok.Data;
 
 
 @Data
-public class UserResponceForEmailDTO {
+public class UserResponseForEmailDTO {
     @NotNull
     private Long userId;
     @NotBlank
-    private String Email;
+    private String companyEmail;
     @NotBlank
     private String name;
+
 }

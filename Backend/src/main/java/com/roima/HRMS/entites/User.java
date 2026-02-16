@@ -1,6 +1,8 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Data
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId")
 @Table(name = "users")
 public class User {
     @Id
@@ -66,16 +71,12 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name="fk_manager_id")
+    private User manager;
 
-
-
-//    @OneToOne
-//    @JoinColumn(name="fk_user_id")
-//    private User managerId;
-//
-//    @OneToOne(mappedBy = "managerId")
-//    private User manager;
-
+    @OneToMany(mappedBy = "manager")
+    private List<User> teamMember;
 
     @ManyToMany(mappedBy = "users")
     private List<Role> roles;
@@ -84,13 +85,14 @@ public class User {
     @JoinColumn(name="fk_user_department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "creadtedBy")
+    @OneToMany(mappedBy = "createdBy")
     private List<TravelDetail> createdTravelDetails;
 
-    @ManyToMany(mappedBy = "users")
-    private List<TravelDetail> travelDetails;
+    @OneToMany(mappedBy = "user")
+    private List<Traveler> travelers;
 
-
+    @OneToMany(mappedBy = "uploadedBy")
+    private List<Document> Documents;
 }
 
 

@@ -1,22 +1,22 @@
-package com.roima.HRMS.dtos.responce;
+package com.roima.HRMS.dtos.response;
 
-import com.roima.HRMS.entites.User;
 import lombok.Data;
-import java.sql.Date;
+
 import java.time.LocalDateTime;
 
 @Data
-public class TravelDetailResponceDTO {
+public class TravelDetailResponseBaseDTO {
 
     private Long tarvelDetailId;
     private String title;
     private String description;
     private Long maxAmoutPerDay;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private User creadtedBy;
-
+    private long createdId;
+    private String createdName;
 }
+
 

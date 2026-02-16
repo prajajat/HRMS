@@ -1,17 +1,19 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.util.List;
 
 @Data
-@Setter
-@Getter
 @Entity
 @Table(name = "roles")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "roleId")
 public class Role {
 
     @Id
@@ -29,5 +31,16 @@ public class Role {
             joinColumns = @JoinColumn(name = "fk_role_id"),
             inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
     private List<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "role_permissions",
+            joinColumns = @JoinColumn(name = "fk_role_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_permission_id"))
+    private List<Permission> permissions;
+
+
+
+
 }
 

@@ -1,6 +1,10 @@
 package com.roima.HRMS.entites;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.Getter;
@@ -15,10 +19,11 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@Setter
-@Getter
 @Entity
 @Table(name = "tarvel_details")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "tarvelDetailId")
 public class TravelDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +37,14 @@ public class TravelDetail {
     private String description;
 
     @PositiveOrZero
-    @Column(name = "max_amout_per_day", length=25,nullable = false)
+    @Column(name = "max_amout_per_day",nullable = false)
     private Long maxAmoutPerDay;
 
-    @Column(name = "start_date", length=25,nullable = false)
+    @Column(name = "start_date",nullable = false)
     private LocalDateTime startDate;
 
 
-    @Column(name = "end_date", length=25,nullable = false)
+    @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
     @CreationTimestamp
@@ -51,15 +56,12 @@ public class TravelDetail {
     private LocalDateTime updatedAt;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="created_by")
-    private User creadtedBy;
+    private User createdBy;
 
-    @ManyToMany
-    @JoinTable(
-            name = "travel_users",
-            joinColumns = @JoinColumn(name = "fk_tarvel_detail_id"),
-            inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
-    private List<User> users;
+    @OneToMany(mappedBy = "travelDetail")
+    private List<Traveler> travelers;
 
 }
 
