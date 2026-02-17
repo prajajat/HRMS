@@ -1,6 +1,6 @@
 package com.roima.HRMS.entites;
 
-
+import com.roima.HRMS.componets.StatusType;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -22,7 +22,7 @@ public class GameBooking {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private BookingStatus status;
+    private StatusType.BookingStatus status;
 
     @OneToMany(mappedBy = "gameBooking")
     private List<GameSlot> gameSlots;
@@ -41,13 +41,11 @@ public class GameBooking {
     @ManyToOne
     @JoinColumn(name="fk_user_id")
     private User createdBy;
+
+
+    @OneToMany(mappedBy = "gameBooking")
+    private List<GameQueue> gameQueues;
 }
-enum BookingStatus{
-    BOOKED,
-    PENDING,
-    QUEUED,
-    REJECTED,
-    CANCELLED
-}
+
 
 

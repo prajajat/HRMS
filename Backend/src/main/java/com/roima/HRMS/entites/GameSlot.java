@@ -3,22 +3,24 @@ package com.roima.HRMS.entites;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.roima.HRMS.componets.StatusType;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "slots")
+@Table(name = "game_slots")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "slotId")
 public class GameSlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pk_game_queue_id")
+    @Column(name = "pk_game_slot_id")
     private Long gameSlotId;
 
     @Column(name = "slot_start_time")
@@ -32,10 +34,14 @@ public class GameSlot {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "slot_status")
-    private BookingStatus slotStatus;
+    private StatusType.BookingStatus slotStatus;
 
-    @Column(name = "last_assign_to")
-    private Long lastAssignTo;
+    @ManyToMany
+    @JoinTable(
+            name = "slot_cancellers",
+            joinColumns = @JoinColumn(name = "fk_slot_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
+    private List<User> cancellers;
 
     @ManyToOne
     @JoinColumn(name="fk_game_booking_id")
@@ -44,5 +50,5 @@ public class GameSlot {
     @ManyToOne
     @JoinColumn(name = "fk_game_id")
     private Game game;
-    //game
+
 }

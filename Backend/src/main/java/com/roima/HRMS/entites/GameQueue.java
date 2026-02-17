@@ -39,7 +39,12 @@ public class GameQueue {
     @JoinColumn(name="fk_user_id")
     private User player;
 
-    @OneToOne(mappedBy = "gameQueue")
+    @ManyToOne
+    @JoinColumn(name="fk_game_id")
     private Game game;
+
+    @ManyToOne
+    @JoinColumn(name="fk_game_book_id")
+    private GameBooking gameBooking;
 
 }

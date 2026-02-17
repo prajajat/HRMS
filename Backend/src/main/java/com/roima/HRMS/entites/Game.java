@@ -65,9 +65,8 @@ public class Game {
     @OneToMany(mappedBy = "game")
     private List<GameBooking> gameBookings;
 
-    @OneToOne
-    @JoinColumn(name="fk_game_queue_id")
-    private GameQueue gameQueue;
+    @OneToMany(mappedBy = "game")
+    private List<GameQueue> gameQueues;
 
     @OneToMany(mappedBy = "game")
     private List<GameSlot> gameSlots;

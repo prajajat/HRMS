@@ -101,6 +101,9 @@ public class User {
     @OneToMany(mappedBy = "player")
     private List<GameQueue> gameQueues;
 
+    @ManyToMany(mappedBy = "cancellers")
+    private List<GameSlot> cancelledSlots;
+
     @ManyToMany(mappedBy = "participants")
     private List<GameBooking> gameBookings;
 
