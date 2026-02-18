@@ -1,33 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "./Store";
 
- 
- 
-const initialState = 
- {  
-   token:null
- }
+const initialState = {
+  token: null,
+};
 
 export const tokenSlice = createSlice({
-  name: 'token',
+  name: "token",
   initialState,
   reducers: {
-    setToken: (state,action) => {
-      state.token=action.payload.token;
+    setToken: (state, action) => {
+      state.token = action.payload.token;
     },
-    removeToken: (state,action) => {
-      state.token=null;
-    }
-    
+    removeToken: (state, action) => {
+      state.token = null;
     },
-    
   },
-);
+});
 
-export const { setToken,removeToken } = tokenSlice.actions
+export const { setToken, removeToken } = tokenSlice.actions;
 export const selectToken = (state: RootState) => state.tokens;
 
-export default tokenSlice.reducer
-
-
- 
+export default tokenSlice.reducer;

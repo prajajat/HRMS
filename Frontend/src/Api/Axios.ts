@@ -69,6 +69,12 @@ export const getUserById = async (id) =>
 export const getALLUser = async () => 
   await instance.get(`/api/user/all`).then((res) => res);
 
+export const getALLGames = async () => 
+  await instance.get(`/game/all`).then((res) => res);
+
+export const getGameDetailsById = async (id) => 
+  await instance.get(`/game/`+id).then((res) => res);
+
 
 instance.interceptors.request.use((config) => {
   console.log(config.url);

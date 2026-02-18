@@ -10,18 +10,13 @@ function EmpTravelDetails() {
 
   return (
     <>
-      <Typography variant='h3'>Travels for you</Typography>
+      <Typography variant="h3">Travels for you</Typography>
       {!isLoading && (
-           <Grid container spacing={2}>
+        <Grid container spacing={2}>
           {data.data.map((td) => {
-            return (
-              
-                <EmpTravelDetailCard data={td} />
-           
-            );
+            return <EmpTravelDetailCard data={td} />;
           })}
-          </Grid>
-        
+        </Grid>
       )}
     </>
   );

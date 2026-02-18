@@ -22,6 +22,7 @@ function HRUpdate() {
   const [emp, setEmp] = useState([]);
   const {
     mutate,
+    
     isPending: assign,
     isError: isErrorAssign,
     error: errorAssign,
@@ -77,22 +78,21 @@ function HRUpdate() {
               <br />
               Add Employee to travel
               {!isEmpLoading && (
-                 <div>
-                  
-       <Select
-          type="text"
-          defaultValue=""
-          className="mt-10 mb-10"
-          onChange={(e)=> handleAddEmp(e.target.value)}
-           
-        > 
-        { 
-         Empdata.data.map((e)=>{
-          return  <MenuItem value={e}>{e.name}- {e.companyEmail}</MenuItem>
-        })
-        } 
-          </Select>
-
+                <div>
+                  <Select
+                    type="text"
+                    defaultValue=""
+                    className="mt-10 mb-10"
+                    onChange={(e) => handleAddEmp(e.target.value)}
+                  >
+                    {Empdata.data.map((e) => {
+                      return (
+                        <MenuItem value={e}>
+                          {e.name}- {e.companyEmail}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
                   added :
                   {emp.length > 0 && (
                     <List>

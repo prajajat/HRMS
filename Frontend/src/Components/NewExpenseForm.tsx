@@ -4,12 +4,12 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { original } from "@reduxjs/toolkit";
 
-function NewExpenseForm({ travelerId,ownerType}) {
+function NewExpenseForm({ travelerId, ownerType }) {
   const { register, handleSubmit } = useForm({
     shouldUseNativeValidation: true,
   });
   const [fileList, setFileList] = useState([]);
-  const { mutate, isPending, isError, error,  } = useCreateExpense();
+  const { mutate, isPending, isError, error } = useCreateExpense();
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -57,7 +57,7 @@ function NewExpenseForm({ travelerId,ownerType}) {
     mutate(formData, {
       onSuccess: (response) => {
         console.log("success");
-       alert("expense created");
+        alert("expense created");
       },
     });
   };
@@ -92,7 +92,7 @@ function NewExpenseForm({ travelerId,ownerType}) {
           type="text"
           hidden
           className="mt-10 mb-10"
-          value={{ownerType}}
+          value={{ ownerType }}
           {...register("ownerType")}
         />
       </FormControl>

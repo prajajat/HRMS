@@ -19,7 +19,9 @@ import OrgChartLayout from "../Layouts/OrgChartLayout";
 import ManagerLayout from "../Layouts/ManagerLayout";
 import ManagerDashboard from "../Pages/ManagerDashboard";
 import ManagerDocDetails from "../Pages/ManagerDocDetails";
-import RefreshPage  from "../Pages/RefreshPage";
+import RefreshPage from "../Pages/RefreshPage";
+import Game from "../Pages/Game";
+import GameDetails from "../Pages/GameDetails";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +102,19 @@ const router = createBrowserRouter([
               },
             ],
           },
+          {
+            path: "game",
+            children: [
+              {
+                path: "details",
+                element: <Game />,
+              },
+              {
+                path: "details/:id",
+                element: <GameDetails />,
+              },
+            ],
+          },
         ],
       },
     ],
@@ -109,22 +124,22 @@ const router = createBrowserRouter([
     path: "/",
     element: <Header />,
   },
-   {
+  {
     element: <ProtectedRoute allowedRoles={["employee", "hr", "manager"]} />,
     children: [
       {
         path: "/org-chart",
         element: <OrgChartLayout />,
         children: [
-         
-           {
-              path: ":id",
-              element: <OrgChart  />,
-            },]
-          }
-        ]
+          {
+            path: ":id",
+            element: <OrgChart />,
+          },
+        ],
       },
-       {
+    ],
+  },
+  {
     element: <ProtectedRoute allowedRoles={["manager"]} />,
     children: [
       {
@@ -143,11 +158,11 @@ const router = createBrowserRouter([
             path: "tarvel-document-detail",
             element: <ManagerDocDetails />,
           },
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
- {
+  {
     path: "/refresh",
     element: <RefreshPage />,
   },

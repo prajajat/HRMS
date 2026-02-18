@@ -65,7 +65,7 @@ public class Game {
     @OneToMany(mappedBy = "game")
     private List<GameBooking> gameBookings;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game",fetch = FetchType.EAGER)
     private List<GameQueue> gameQueues;
 
     @OneToMany(mappedBy = "game")

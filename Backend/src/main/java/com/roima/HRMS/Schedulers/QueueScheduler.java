@@ -17,8 +17,20 @@ public class QueueScheduler {
 
     @Scheduled(fixedDelay = 100*1000)//30 min
     public void runForAssignSlot(){
-        log.info("call auto assign");
-        gameService.assignSlot();
+        log.info("auto call assign");
+      //  gameService.assignSlot();
+    }
+
+    @Scheduled(fixedDelay = 100*1000)
+    public void runForGenerateSlot(){
+          log.info(" auto call  update cycle");
+//        if( gameService.updateCycle()) {
+//            log.info("auto call generate slot");
+//            gameService.generateSlot();
+//        }
+//        else{
+//            log.info("auto same slot");
+//        }
     }
 
 }

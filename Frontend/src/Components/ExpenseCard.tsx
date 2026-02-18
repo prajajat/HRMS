@@ -42,7 +42,7 @@ function ExpenseCard({ data, ownerType, refetch }) {
       },
     });
   };
-   console.log(ownerType);
+ 
   return (
     <TableRow
       key={data.travelExpensesId}

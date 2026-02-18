@@ -19,7 +19,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   if (ownerType == "HR") {
     fun = useGetAllExpence;
   }
-  
+
   const [view, SetView] = useState("");
   const {
     isLoading: isLoadingEp,
@@ -27,24 +27,26 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
     isError: isErrorEp,
     refetch: refetchEp,
   } = fun(travelerId);
-   
-   var totalClaimed=0
-   if(ownerType!="HR")
-   {
-    totalClaimed=dataEp?.data.reduce((acc,curr)=>{
-      if(curr.status="Approves")
-      {
-        return acc+curr.amount;
-      }
-      else acc;
-    },0)
-   }
- console.log(ownerType);
+
+  var totalClaimed = 0;
+  if (ownerType != "HR" && !isLoadingEp) {
+    totalClaimed = dataEp?.data.reduce((acc, curr) => {
+      if (curr.status == "APPROVED") return acc + curr.amount;
+      else return acc;
+    }, 0);
+    console.log(totalClaimed);
+    console.log(dataEp);
+  }
 
   return (
     <>
       <Typography variant="h3"> Travel expenses </Typography>
-      <Typography variant="h5" color="Green"> {ownerType!="HR"&& "Total claimed "+totalClaimed }</Typography>
+      {!isLoadingEp && (
+        <Typography variant="h5" color="Green">
+          {" "}
+          {ownerType != "HR" && "Total claimed " + totalClaimed}
+        </Typography>
+      )}
       {ownerType != "HR" && (
         <>
           <Button
@@ -60,33 +62,43 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
           )}
         </>
       )}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-               { ownerType === "HR"&& <TableCell>Action</TableCell>}
-              <TableCell> Amount</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Remark</TableCell>
 
-              {ownerType === "HR" && (
-                <>
-                  <TableCell align="right">Employee</TableCell>
-                  <TableCell align="right">Travel</TableCell>
-                </>
-              )}
-              <TableCell align="right">Documents</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {!isLoadingEp &&
-              dataEp.data.map((expense) => {
-                return <ExpenseCard data={expense} ownerType={ownerType} refetch={refetchEp} key={dataEp.data.travelExpensesId}/>;
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {!isLoadingEp && (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table" color="Green">
+            <TableHead>
+              <TableRow>
+                {ownerType === "HR" && <TableCell>Action</TableCell>}
+                <TableCell> Amount</TableCell>
+                <TableCell align="right">Date</TableCell>
+                <TableCell align="right">Status</TableCell>
+                <TableCell align="right">Remark</TableCell>
+
+                {ownerType === "HR" && (
+                  <>
+                    <TableCell align="right">Employee</TableCell>
+                    <TableCell align="right">Travel</TableCell>
+                  </>
+                )}
+                <TableCell align="right">Documents</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!isLoadingEp &&
+                dataEp.data.map((expense) => {
+                  return (
+                    <ExpenseCard
+                      data={expense}
+                      ownerType={ownerType}
+                      refetch={refetchEp}
+                      key={dataEp.data.travelExpensesId}
+                    />
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 }
