@@ -11,7 +11,7 @@ import {
 
 import { Navigate, useNavigate } from "react-router-dom";
 
-function GameCard({ data, isAllFields = false }) {
+function GameCard({ data, isAllFields = false,view}) {
   const navigate = useNavigate();
   var image = "";
   switch (data.gameId) {
@@ -28,7 +28,7 @@ function GameCard({ data, isAllFields = false }) {
       image = "/Carrom.jpg";
       break;
   }
-
+ 
   console.log(data);
   return (
     <Card sx={{ maxWidth: 250, margin: 5 }}>
@@ -84,6 +84,16 @@ function GameCard({ data, isAllFields = false }) {
             See More
           </Button>
         )}
+
+         {view=="hr" && (
+          <Button
+            onClick={() => navigate("/hr/game/details/" + data.gameId)}
+          >
+            Config
+          </Button>
+        )}
+
+        
 
         {isAllFields && (
           <div>

@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { useGetAllGames } from "../Query/useQueries";
 import GameCard from "../Components/GameCard";
 
-function Game() {
+function Game({view="all"}) {
   const { isLoading, data, isError, refetch } = useGetAllGames();
 
   return (
@@ -12,7 +12,7 @@ function Game() {
           {data.data.map((g) => {
             return (
               <Grid item xs={12} md={4} key={g.gameId}>
-                <GameCard data={g} isAllFields={false} />{" "}
+                <GameCard data={g} isAllFields={false} view={"hr"} />{" "}
               </Grid>
             );
           })}

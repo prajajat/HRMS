@@ -98,6 +98,9 @@ public class User {
     @OneToMany(mappedBy = "createdBy")
     private List<GameBooking> gameBookingsCreatedByMe;
 
+    @OneToMany(mappedBy = "user")
+    private List<Notification> notifications;
+
     @OneToMany(mappedBy = "player")
     private List<GameQueue> gameQueues;
 
@@ -108,8 +111,8 @@ public class User {
     private List<GameBooking> gameBookings;
 
 
-    @ManyToMany(mappedBy = "inerestedPlayers")
-    private List<Game> inerestedGames;
+    @ManyToMany(mappedBy = "interestedPlayers")
+    private List<Game> interestedGames;
 
 }
 

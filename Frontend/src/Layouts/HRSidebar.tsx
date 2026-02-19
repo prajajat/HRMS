@@ -28,6 +28,15 @@ function HRSidebar() {
       >
         document
       </NavLink>
+
+      <NavLink
+        to="/hr/game/details"
+        className={({ isActive }) =>
+          isActive ? "text-blue-700" : "text-blue-300"
+        }
+      >
+        Game Config
+      </NavLink>
     </div>
   );
 }

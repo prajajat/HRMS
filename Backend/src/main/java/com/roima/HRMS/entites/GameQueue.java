@@ -29,9 +29,6 @@ public class GameQueue {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "priority_score")
-    private Double priorityScore;
-
     @Column(name = "queue_time")
     private LocalDateTime queueTime;
 

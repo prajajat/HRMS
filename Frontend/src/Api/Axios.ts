@@ -23,8 +23,15 @@ export const CreateExpense = async (data: any) =>
 export const Refresh = async () =>
   await instance.get("/auth/refreshToken/").then((res) => res);
 
+export const getGameConfigById = async (id) =>
+  await instance.get("/game/config/"+id).then((res) => res);
+
 export const CreateDocument = async (data: any) =>
   await instance.post("/api/travel/document", data).then((res) => res);
+
+
+export const updateGameConfig = async (data: any) =>
+  await instance.put("/game/", data).then((res) => res);
 
 export const RemoveTravelEmp = async (data) =>
   await instance
@@ -76,6 +83,17 @@ export const getGameDetailsById = async (id) =>
   await instance.get(`/game/`+id).then((res) => res);
 
 
+export const getAllNotification = async () => 
+  await instance.get("/api/user/notification/all").then((res) => res);
+
+export const CreateBooking = async (data: any) =>
+  await instance.post("/game/booking", data).then((res) => res);
+
+export const cancelBooking = async (id) =>
+  await instance
+    .delete(`/game/booking/`+id)
+    .then((res) => res);
+
 instance.interceptors.request.use((config) => {
   console.log(config.url);
   const state = store.getState();
@@ -87,13 +105,13 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
- instance.interceptors.response.use((response) =>  response,
+ instance.interceptors.response.use((response) =>   response,
                                      (error) =>
                                        {
                                         if (error.response.data.status==5001 ) {
                                           console.log("error");
                                         window.open("http://localhost:5173/refresh");
                                         return Promise.reject(error);
-                                  }
+                                  }else{alert(error.response.data.msg)}
                                   }
                                    );

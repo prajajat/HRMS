@@ -15,9 +15,10 @@ import { Navigate, useNavigate } from "react-router-dom";
 import TravelerCard from "./TravelerCard";
 import { useState } from "react";
 import SlotCard from "./SlotCard";
+import { useCancelBooking } from "../Query/useQueries";
 
 function GameBookingCard({
-  data
+  data,refetch
 }) {
   const userId=useSelector((state)=>state.user.userId);
     var color="green";
@@ -30,16 +31,35 @@ function GameBookingCard({
     case "CANCELLED" : color="red";break;
     default :color="red";
   } 
-  
+   const {
+        mutate,
+        
+        isPending,
+        isError ,
+        error,
+      } =   useCancelBooking();
+const handleCancel=(id)=>
+{
+   mutate({id:id}, {
+      onSuccess: (response: any) => {
+        alert(response.data.message);
+        
+        refetch();
+      },
+    }
+
+   )
+}
+
   const[view,setView]=useState("");
  console.log(color);
   console.log(data);
   return (
     <div>
       <Card sx={{ maxWidth: 300, margin:5 }} >
-    <div className="flex flex-col aline-item-center justify-center h-full" >
+    <div className="flex flex-col aline-item-center justify-center h-full " >
          <div className="flex flex-row aline-item-center justify-between w-full" >
-          <div>id :{data.gameBookingId}</div>
+          <div>{data.gameBookingId}</div>
           <div className={"bg-"+color+"-200"}>{data.status}</div>
           </div>
          
@@ -68,7 +88,7 @@ function GameBookingCard({
                     view!=""&& <><Button color="secondary" onClick={()=>setView("")}>close</Button></>
                    }
                 </div>
-                 <div className="bg-green-300">
+                 <div className="bg-blue-300">
             { view=="showParticipants"&&
               data.participants.map((p)=>{
                 return <div className="border-b-2 bg-blue-200 rounded-lg border-indigo-500 flex flex-row justify-items-center w-full m-5">
@@ -78,7 +98,7 @@ function GameBookingCard({
             })
             }
             </div>
-               <div className="bg-green-300">
+               <div className="bg-blue-300">
               { view=="showSlots"&& 
              
               data.gameSlots.map((s)=>{
@@ -88,7 +108,7 @@ function GameBookingCard({
              
             }
             </div>
-        { data.createdBy!=null&&userId==data.createdBy.userId&& <Button  color="error">Cancel booking</Button>}
+        { data.createdBy!=null&&userId==data.createdBy.userId&&<Button  color="error" onClick={()=>handleCancel(data.gameBookingId)}>Cancel booking</Button>}
 
     </div>
       </Card>

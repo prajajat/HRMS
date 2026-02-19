@@ -2,10 +2,13 @@ package com.roima.HRMS.services;
 
 
 
+import com.roima.HRMS.dtos.response.NotificationResponseDTO;
 import com.roima.HRMS.dtos.response.UserResponceWithManagerAndTeamDTO;
 import com.roima.HRMS.dtos.response.UserResponseForEmailDTO;
 import com.roima.HRMS.dtos.response.UserResponseWithTeamAndManagerDTO;
+import com.roima.HRMS.entites.Notification;
 import com.roima.HRMS.entites.User;
+import com.roima.HRMS.repos.NotificationRepository;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepo;
     private final ModelMapper modelMapper;
+    private final NotificationRepository notificationRepository;
 
     public List<UserResponseForEmailDTO> getAllUserWithNameAndEmail()
     {
@@ -36,6 +40,12 @@ public class UserService {
         return modelMapper.map(user,UserResponceWithManagerAndTeamDTO.class);
     }
 
+    public List<NotificationResponseDTO> getAllNotification(Long userId)
+    {   User user=userRepo.findById(userId).orElseThrow(()->new RuntimeException("user not found"));
+        return notificationRepository.findByUser(user).stream().map(
+                x->modelMapper.map(x,NotificationResponseDTO.class)
+        ).toList();
+    }
     public List<UserResponseForEmailDTO> getAllUser()
     {
        List<User> user = userRepo.findAll();

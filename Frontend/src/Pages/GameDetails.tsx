@@ -5,17 +5,19 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import GameBookingCard from "../Components/GameBookingCard";
 import SlotContainer from "../Components/SlotContainer";
+import { useSelector } from "react-redux";
 
 function GameDetails() {
   const { id } = useParams();
   const { isLoading, data, isError, refetch } = useGetGameDetailsById(id);
   const [val, setVal] = useState("");
+  const userId=useSelector((state)=>state.user.userId);
 
   return (
     <>
-      {!isLoading && (
+      {!isLoading &&data?.data.playerInterested&& (
         <div>
-          <div className="flex flex-row aline-item-center justify-center  w-full">
+          <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
             <GameCard data={data.data} isAllFields={true} />
           </div>
 
@@ -35,15 +37,19 @@ function GameDetails() {
             )}
           </div>
 
-          <div className="flex flex-row aline-item-center justify-center  w-full">
+          <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
             <div>
               {val == "showBooking" &&
                 data.data.gameBookings.map((gameBooking) => {
-                  return <GameBookingCard data={gameBooking} />;
+                  return <GameBookingCard data={gameBooking} refetch={refetch} />;
                 })}{" "}
             </div>
           </div>
-          {val == "showSlots" && <SlotContainer data={data?.data.gameSlots} />}
+           <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
+            <div>
+          {val == "showSlots" && <SlotContainer data={data?.data.gameSlots} gameId={data?.data.gameId} refetch={refetch}/>}
+          </div>
+          </div>
         </div>
       )}
     </>

@@ -30,6 +30,7 @@ public class TravelService {
     private final DocumentRepository documentRepository;
     private final TravelerDocumentRepository travelerDocumentRepository;
     private final CloudinaryService cloudinaryService;
+    private final NotificationRepository notificationRepository;
 
     // travel details
 
@@ -220,6 +221,7 @@ public class TravelService {
         for(Traveler traveler: travelDetail.getTravelers())
         {
             addedEmp.add(traveler.getUser());
+
         }
 
         for (User user:allEmp) {
@@ -228,6 +230,11 @@ public class TravelService {
                  newEmp.setUser(user);
                  newEmp.setTravelDetail(travelDetail);
                  travelDetail.getTravelers().add(newEmp);
+                 Notification notification=new Notification();
+                 notification.setDescription("New travel added for you :"+travelDetail.getTitle());
+                 notification.setTitle("New Travel added");
+                 notification.setUser(user);
+                 notificationRepository.save(notification);
                 travelerRepository.save(newEmp);
             }
         }
@@ -251,6 +258,13 @@ public class TravelService {
         }
         if(travelerToRemove==null)
         {return new BasicResponse(" Emp not found");}
+
+
+        Notification notification=new Notification();
+        notification.setDescription("you removed from travel :"+travelDetail.getTitle());
+        notification.setTitle("Travel removed");
+        notification.setUser(emp);
+        notificationRepository.save(notification);
 
             travelDetail.getTravelers().remove(travelerToRemove);
             travelerToRemove.getTravelerDocuments().size();

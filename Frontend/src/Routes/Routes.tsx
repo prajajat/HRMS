@@ -22,6 +22,9 @@ import ManagerDocDetails from "../Pages/ManagerDocDetails";
 import RefreshPage from "../Pages/RefreshPage";
 import Game from "../Pages/Game";
 import GameDetails from "../Pages/GameDetails";
+import Notification from "../Pages/Notification";
+import NotificationLayout from "../Layouts/NotificationLayout";
+import GameConfig from "../Pages/GameConfig";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +52,19 @@ const router = createBrowserRouter([
             element: <HRDashboard />,
           },
           {
+            path: "game",
+            children: [
+              {
+                path: "details",
+                element: <Game view="hr"/>,
+              },
+              {
+                path: "details/:id",
+                element: <GameConfig />,
+              },
+            ],
+          },
+          {
             path: "travel",
             children: [
               {
@@ -67,6 +83,7 @@ const router = createBrowserRouter([
                 path: "details/update/:id",
                 element: <HRUpdate />,
               },
+              
             ],
           },
         ],
@@ -162,6 +179,22 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    element: <ProtectedRoute allowedRoles={["employee", "hr", "manager"]} />,
+    children: [
+      {
+        path: "/notification",
+        element: <NotificationLayout />,
+        children: [
+          {
+            path: "all",
+            element: <Notification />,
+          },
+        ],
+      },
+    ],
+  },
+  
   {
     path: "/refresh",
     element: <RefreshPage />,

@@ -74,10 +74,10 @@ public class Game {
 
     @ManyToMany
     @JoinTable(
-            name = "game_player_inerestes",
+            name = "game_player_interestes",
             joinColumns = @JoinColumn(name = "fk_game_id"),
             inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
-    private List<User> inerestedPlayers;
+    private List<User> interestedPlayers;
 
 }
 

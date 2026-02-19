@@ -21,6 +21,11 @@ import {
   Refresh,
   getALLGames,
   getGameDetailsById,
+  CreateBooking,
+  cancelBooking,
+  getAllNotification,
+  updateGameConfig,
+  getGameConfigById,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -41,6 +46,15 @@ export const useCreateTravel = () => {
     mutationFn: CreateTravel,
     onSuccess: (response) => {
       console.log(response);
+    },
+  });
+};
+
+export const useCancelBooking= () => {
+  return useMutation<any>({
+    mutationFn: ({id})=>cancelBooking(id),
+    onSuccess: (response) => {
+      response;
     },
   });
 };
@@ -66,6 +80,15 @@ export const useCreateExpense = () => {
   });
 };
 
+export const useUpdateGameConfig = () => {
+  return useMutation({
+    mutationFn:  updateGameConfig,
+    onSuccess: (response) => {
+      alert(response.data.message);
+    },
+  });
+};
+
 export const useCreateDocument = () => {
   return useMutation({
     mutationFn: CreateDocument,
@@ -82,6 +105,19 @@ export const useRemoveTravelEmp = () => {
     onSuccess: (response) => {
       console.log(response);
     },
+  });
+};
+
+export const useCreateBooking = () => {
+ 
+  return useMutation({
+    mutationFn: CreateBooking,
+    onSuccess: (response) => {
+      console.log(response);
+    },
+    onError:(error)=>{
+      console.log(error);
+        }
   });
 };
 
@@ -109,6 +145,15 @@ export const useGetTravelByUser = () => {
 
 export const useGetAllEmp = () => {
   return useQuery({ queryKey: ["allemp"], queryFn: getAllEmp });
+};
+
+export const useGetGameConfigById = (id) => {
+  return useQuery({ queryKey: ["gameConfig",id], queryFn:()=> getGameConfigById(id) });
+};
+
+
+export const useGetAllNotification = () => {
+  return useQuery({ queryKey: ["notification"], queryFn: getAllNotification });
 };
 
 export const useGetExpenceBytraveler = (id) => {
@@ -140,11 +185,11 @@ export const useGetDocumentsBytraveler = (id) => {
 };
 
 export const useGetDocuments = () => {
-  return useQuery({ queryKey: ["travelerDoc"], queryFn: getDocuments });
+  return useQuery({ queryKey: ["travelerDoc-"], queryFn: getDocuments });
 };
 export const useGetTravelById = (id) => {
   return useQuery({
-    queryKey: ["travel", id],
+    queryKey: ["travel-", id],
     queryFn: () => getTravelDetailsById(id),
     enabled: !!id,
   });
@@ -156,7 +201,7 @@ export const useGetALLUser = () => {
 
 export const useGetUserById = (id) => {
   return useQuery({
-    queryKey: ["user", id],
+    queryKey: ["user-", id],
     queryFn: () => getUserById(id),
     enabled: !!id,
   });

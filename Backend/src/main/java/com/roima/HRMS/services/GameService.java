@@ -3,6 +3,8 @@ package com.roima.HRMS.services;
 
 import com.roima.HRMS.componets.StatusType;
 import com.roima.HRMS.dtos.request.GameBookingDTO;
+import com.roima.HRMS.dtos.request.GameConfigDTO;
+import com.roima.HRMS.dtos.request.GameInterestDTO;
 import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
@@ -30,12 +32,12 @@ public class GameService {
     private final GameQueueRepository gameQueueRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper ;
-
+    private final NotificationRepository notificationRepository;
 
     public List<GameResponseDTO> getAllGame(Long userId)
     {
         User user=findUserById(userId);
-        List<Long> userIntrestedGameIds=user.getInerestedGames().stream().map(game->game.getGameId()).toList();
+        List<Long> userIntrestedGameIds=user.getInterestedGames().stream().map(game->game.getGameId()).toList();
         List<Game> gameList=gameRepository.findAll();
         List<GameResponseDTO> gameDTOs= gameList.stream().map(a ->
                 modelMapper.map(a, GameResponseDTO.class)
@@ -47,25 +49,32 @@ public class GameService {
                     {
                        gameDTO.setPlayerInterested(true);
                     }
-                    else gameDTO.setPlayerInterested(true);
+                    else gameDTO.setPlayerInterested(false);
                 }
 
         );
         return gameDTOs;
     }
-
+     public BasicResponse UpdateGameInterest(GameInterestDTO dto)
+     {
+         List<Game> gameList= dto.getGames().stream().map(x->findGameById(x))
+                 .toList();
+         User user=findUserById(dto.getUserId());
+         user.setInterestedGames(gameList);
+         return new BasicResponse("game interest update successfully");
+     }
     public GameResponceWithSlotAndBookingDTO getGameById(Long gameId, Long userId)
     {
 
          Game game=findGameById(gameId);
         User user=findUserById(userId);
-        List<Long> userIntrestedGameIds=user.getInerestedGames().stream().map(g->g.getGameId()).toList();
+        List<Long> userIntrestedGameIds=user.getInterestedGames().stream().map(g->g.getGameId()).toList();
         GameResponceWithSlotAndBookingDTO dto=modelMapper.map(game, GameResponceWithSlotAndBookingDTO.class);
          if(userIntrestedGameIds.contains(dto.getGameId()))
          {
              dto.setPlayerInterested(true);
          }
-         else dto.setPlayerInterested(true);
+         else dto.setPlayerInterested(false);
 
          List<GameBooking> gameBookings=gameBookingRepository.findByGame(game).stream().filter(
                  gameBooking ->
@@ -75,10 +84,11 @@ public class GameService {
                  gameBooking -> modelMapper.map(gameBooking, GameBookingResponseDTO.class)).toList()
          );
 
-         List<GameSlot> gameSlots=gameSlotRepository.findByDateLessThanEqualAndDateLessThanEqual(
+         List<GameSlot> gameSlots=gameSlotRepository.findByDateLessThanEqualAndDateLessThanEqualAndGame(
                  Date.valueOf(LocalDate.now()),
                  Date.valueOf(LocalDate.now().plusDays(game.getMaxDayOfBookingAllow()
-                 )));
+
+                 )), game);
          dto.setGameSlots(gameSlots.stream().map(
                  gs->modelMapper.map(gs, GameSlotResponseDTO.class)
          ).toList()
@@ -87,7 +97,24 @@ public class GameService {
         return dto;
 
     }
+    public GameConfigDTO getGameConfig(Long gameId)
+    {
+        Game game=findGameById(gameId);
+        GameConfigDTO dto=modelMapper.map(game,GameConfigDTO.class);
+        dto.setSlotEndTime(game.getSlotEndTime().toLocalTime());
+        dto.setSlotStartTime(game.getSlotStartTime().toLocalTime());
+        return dto;
+    }
+     public BasicResponse updateGameConfig(GameConfigDTO dto)
+     {
 
+         Game game=findGameById(dto.getGameId());
+         modelMapper.map(dto,game);
+         game.setSlotStartTime(Time.valueOf(dto.getSlotStartTime()));
+         game.setSlotEndTime(Time.valueOf(dto.getSlotEndTime()));
+         gameRepository.save(game);
+         return new BasicResponse("config updated successfully");
+     }
 
 
 
@@ -101,9 +128,9 @@ public class GameService {
         List<User> players=dto.getAllPlayers()!=null?dto.getAllPlayers().stream().map(p->findUserById(p)).toList():new ArrayList<>();
         Game game=findGameById(dto.getCreatedBy());
 
-        if(!createdBy.getInerestedGames().contains(game))
+        if(!createdBy.getInterestedGames().contains(game))
         {
-            throw new RuntimeException("user not have this game as interested");
+           // throw new RuntimeException("user not have this game as interested");
         }
 
         if(!players.contains(createdBy))
@@ -146,7 +173,7 @@ public class GameService {
                             )
                     ))
             {
-                throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
+                //throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
             }
 
         });
@@ -182,9 +209,15 @@ public class GameService {
             gameSlotRepository.saveAll(gameSlots);
 
         }
+        Notification notification=new Notification();
+        notification.setDescription("your booking for "+game.getGameName()+" is "+gameBooking.getStatus()+" right now." );
+        notification.setTitle("Game booking Update");
+        notification.setUser(createdBy);
+        notificationRepository.save(notification);
 
         gameBooking.setGameQueues(gameQueues);
         gameBookingRepository.save(gameBooking);
+        gameSlots.forEach(x->x.setGameBooking(gameBooking));
 
       return new BasicResponse("Booking created successfully");
     }
@@ -196,9 +229,9 @@ public class GameService {
          return gameSlotRepository.findBySlotStatus(StatusType.BookingStatus.PENDING)
                  .stream().filter(
                  gs->
-                 //!gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now())//&&
-                         //!gs.getSlotStartTime().toLocalTime().isAfter(LocalTime.now().plusMinutes(30))
-                       //&&
+                 !gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now())&&
+                         !gs.getSlotStartTime().toLocalTime().isAfter(LocalTime.now().plusMinutes(30))
+                       &&
                          gs.getDate().toLocalDate().equals(LocalDate.now())
                  ).toList();
 
@@ -219,7 +252,8 @@ public class GameService {
     }
 
     @Transactional
-    public void assignSlot() {
+    public void assignSlot()
+    {
       log.info("  auto :assign slot runing");
       List<GameSlot> gameSlotList =  findAllAvailableSlotToAssign();
       log.info("auto : slot found{}",gameSlotList.size());
@@ -235,6 +269,11 @@ public class GameService {
               gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
               x.setSlotStatus(StatusType.BookingStatus.BOOKED);
 
+              Notification notification=new Notification();
+              notification.setDescription("your booking for "+gameQueue.getGame().getGameName()+" is "+gameBooking.getStatus()+" right now." );
+              notification.setTitle("Game booking Update");
+              notification.setUser(gameQueue.getPlayer());
+              notificationRepository.save(notification);
               gameQueue.getGameBooking().getParticipants().forEach(
                      player->
                      updateQueue(player,x.getGame(),false,1)
@@ -270,6 +309,12 @@ public class GameService {
         //update booking
         gameBooking.setStatus(StatusType.BookingStatus.CANCELLED);
 
+        Notification notification=new Notification();
+        notification.setDescription("your booking for "+gameBooking.getGame().getGameName()+" is "+gameBooking.getStatus()+" right now." );
+        notification.setTitle("Game booking Update");
+        notification.setUser(gameBooking.getCreatedBy());
+        notificationRepository.save(notification);
+
         //update queue
         gameBooking.getParticipants().forEach(
                 player->
@@ -289,7 +334,7 @@ public class GameService {
         games.forEach(
                 game ->
                 {
-                    if(game.getCycleEndDate().toLocalDate().isBefore(LocalDate.now())) {
+                    if(game.getCycleStartDate().toLocalDate().equals(LocalDate.now())) {
                         long days = 1 + ChronoUnit.DAYS.between(game.getCycleStartDate().toLocalDate(), game.getCycleEndDate().toLocalDate());
                         Date date = game.getCycleStartDate();
                         for (long i = 1; i <= days; i++) {
@@ -340,7 +385,11 @@ public class GameService {
 
                         Double perDayMaxPlayerGotChance=perDaytime*game.getMaxPlayerPerSlot();
                         int  days=(int) Math.ceil(110/perDayMaxPlayerGotChance);
+
                          endDate=Date.valueOf(LocalDate.now().plusDays(days-1));
+                         
+
+
                          game.setCycleStartDate(startDate);
                          game.setCycleEndDate(endDate);
                           log.info("auto : new calulation perdaytime: {},perDayMaxPlayerGotChance: {},days{}",perDaytime,perDayMaxPlayerGotChance,days);
