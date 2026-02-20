@@ -44,4 +44,5 @@ public class GameQueue {
     @JoinColumn(name="fk_game_book_id")
     private GameBooking gameBooking;
 
+
 }

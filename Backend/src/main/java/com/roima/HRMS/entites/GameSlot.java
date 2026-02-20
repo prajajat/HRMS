@@ -43,12 +43,16 @@ public class GameSlot {
             inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
     private List<User> cancellers;
 
-    @ManyToOne
-    @JoinColumn(name="fk_game_booking_id")
-    private GameBooking gameBooking;
+    @ManyToMany
+    @JoinTable(
+            name = "slot_bookings",
+            joinColumns = @JoinColumn(name = "fk_slot_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_booking_id"))
+    private List<GameBooking> currentGameBookings;
 
     @ManyToOne
     @JoinColumn(name = "fk_game_id")
     private Game game;
+
 
 }

@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 function ChartCard({ data, id, team = false }) {
   const userId = useSelector((state) => state.user.userId);
   const navigator = useNavigate();
-  var color = "#f7f9fa";
+  var color = "#acafb1";
 
   if (id == data.userId) {
-    color = "#0e5aaa";
+    color = "#398ee9";
   }
 
   return (

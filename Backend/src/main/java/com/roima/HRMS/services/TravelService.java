@@ -4,9 +4,11 @@ import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
+import com.roima.HRMS.specification.TravelExpenseSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -115,11 +117,12 @@ public class TravelService {
         ) .toList();
     }
 
-    public List<TravelExpenseResponseDTO> getAllTravelExpense()
-    {
-        return travelExpenseRepository.findAll().stream().map(
-                a->modelMapper.map(a, TravelExpenseResponseDTO.class)
-        ) .toList();
+    public List<TravelExpenseResponseDTO> getAllTravelExpenseByFilter(TravelExpenseFilterDTO filter) {
+           Specification<TravelExpense> spec = TravelExpenseSpecification.withFilters(filter);
+
+           return travelExpenseRepository.findAll(spec).stream().map(
+                   a -> modelMapper.map(a, TravelExpenseResponseDTO.class))
+            .toList();
     }
     public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, List<MultipartFile> documents, Long id)
     {

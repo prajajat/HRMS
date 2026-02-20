@@ -17,8 +17,8 @@ public class QueueScheduler {
 
     @Scheduled(fixedDelay = 60*1000)//30 min
     public void runForAssignSlot(){
-        log.info("auto call assign");
-        gameService.assignSlot();
+       // log.info("auto call assign");
+        //gameService.assignSlot();
     }
 
     @Scheduled(fixedDelay = 100*1000)

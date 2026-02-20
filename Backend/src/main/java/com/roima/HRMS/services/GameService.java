@@ -61,6 +61,15 @@ public class GameService {
                  .toList();
          User user=findUserById(dto.getUserId());
          user.setInterestedGames(gameList);
+         List<GameQueue> gameQueues=new ArrayList<>();
+         gameList.forEach(
+                 x->{  GameQueue gameQueue=new GameQueue();
+                              gameQueue.setTotalPlayedInCycle(1000);
+                              gameQueue.setIsActive(false);
+                              gameQueue.setPenalty(1000);
+                     gameQueues.add(gameQueue);}
+         );
+         user.setGameQueues(gameQueues);
          return new BasicResponse("game interest update successfully");
      }
     public GameResponceWithSlotAndBookingDTO getGameById(Long gameId, Long userId)
@@ -68,9 +77,9 @@ public class GameService {
 
          Game game=findGameById(gameId);
         User user=findUserById(userId);
-        List<Long> userIntrestedGameIds=user.getInterestedGames().stream().map(g->g.getGameId()).toList();
+        List<Long> userInterestedGameIds =user.getInterestedGames().stream().map(g->g.getGameId()).toList();
         GameResponceWithSlotAndBookingDTO dto=modelMapper.map(game, GameResponceWithSlotAndBookingDTO.class);
-         if(userIntrestedGameIds.contains(dto.getGameId()))
+         if(userInterestedGameIds.contains(dto.getGameId()))
          {
              dto.setPlayerInterested(true);
          }
@@ -123,14 +132,14 @@ public class GameService {
     public BasicResponse createBooking(GameBookingDTO dto)
     {
         User createdBy=findUserById(dto.getCreatedBy());
-        List<GameSlot> gameSlots=dto.getGameSlots()!=null ?
-        dto.getGameSlots().stream().map(gameSlotId-> findGameSlotById(gameSlotId)).toList():new ArrayList<>();
+        List<GameSlot> gameSlots=dto.getGameSlots()!=null ? dto.getGameSlots().stream().map(gameSlotId-> findGameSlotById(gameSlotId)).toList():new ArrayList<>();
         List<User> players=dto.getAllPlayers()!=null?dto.getAllPlayers().stream().map(p->findUserById(p)).toList():new ArrayList<>();
-        Game game=findGameById(dto.getCreatedBy());
+        log.info("slot>>>{}",gameSlots.get(0).getGameSlotId());
+        Game game=findGameById(dto.getGameId());
 
         if(!createdBy.getInterestedGames().contains(game))
         {
-           // throw new RuntimeException("user not have this game as interested");
+            throw new RuntimeException("user not have this game as interested");
         }
 
         if(!players.contains(createdBy))
@@ -154,10 +163,10 @@ public class GameService {
             {
                 throw new RuntimeException("player can't book early then"+game.getMaxDayOfBookingAllow()+" days.");
             }
-            else if(gameSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
-            {
-                throw new RuntimeException(" slot is not avialable");
-            }
+//            else if(gameSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
+//            {
+//                throw new RuntimeException(" slot is not avialable");
+//            }
             else if(
                     gameSlot.getDate().before(game.getCycleStartDate()) ||
                     gameSlot.getDate().after(game.getCycleEndDate()))
@@ -167,13 +176,19 @@ public class GameService {
             }
             else if(createdBy.getGameBookings().stream()
                     .anyMatch(
-                            x->x.getGameSlots().stream().anyMatch(
-                                    s->s.getDate().equals(gameSlot.getDate())
+                            x->x.getBookingSlots().stream().anyMatch(
+                                    s->{  log.info(" {}-{}-{}-{}",s.getDate(),gameSlot.getDate(),x.getGame().getGameId(),game.getGameId());
+                                        return s.getDate().equals(gameSlot.getDate())
                                             && x.getGame().equals(game)
+                                             && (
+                                                     x.getStatus().equals(StatusType.BookingStatus.BOOKED)
+                                                             ||
+                                                x.getStatus().equals(StatusType.BookingStatus.QUEUED));
+                                    }
                             )
                     ))
             {
-                //throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
+                throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
             }
 
         });
@@ -182,9 +197,10 @@ public class GameService {
         boolean played=players.stream().anyMatch(x->isPlayedInCycle(x,game));
         log.info("played {}",played);
         // mapping data
+        log.info("slot>>>{}",gameSlots.size());
         GameBooking gameBooking=new GameBooking();
         gameBooking.setCreatedBy(createdBy);
-        gameBooking.setGameSlots(gameSlots);
+        gameBooking.setBookingSlots(gameSlots);
         gameBooking.setParticipants(players);
         gameBooking.setGame(game);
         List<GameQueue> gameQueues=new ArrayList<>();
@@ -206,9 +222,11 @@ public class GameService {
             gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
             log.info("booked");
             gameSlots.forEach(x->x.setSlotStatus(StatusType.BookingStatus.BOOKED));
-            gameSlotRepository.saveAll(gameSlots);
+
 
         }
+
+
         Notification notification=new Notification();
         notification.setDescription("your booking for "+game.getGameName()+" is "+gameBooking.getStatus()+" right now." );
         notification.setTitle("Game booking Update");
@@ -217,7 +235,8 @@ public class GameService {
 
         gameBooking.setGameQueues(gameQueues);
         gameBookingRepository.save(gameBooking);
-        gameSlots.forEach(x->x.setGameBooking(gameBooking));
+        gameSlots.forEach(x->x.getCurrentGameBookings().add(gameBooking));
+        gameSlotRepository.saveAll(gameSlots);
 
       return new BasicResponse("Booking created successfully");
     }
@@ -237,33 +256,60 @@ public class GameService {
 
     }
 
-    public GameQueue findPlayerToAssignSlot(List<User> allCanceller,Game game)
+    public GameQueue findPlayerToAssignSlot( GameSlot gameSlot)
     {
-         List<GameQueue> allPlayer=gameQueueRepository.findByGameAndIsActive(game,true);
+         List<GameQueue> allPlayer= new ArrayList<>(gameQueueRepository.findByGameAndIsActive(gameSlot.getGame(), true).stream().filter(
+                         x -> x.getGameBooking().getBookingSlots().contains(gameSlot)
+                 )
+                 .toList());
+        log.info("auto : all player size{}",allPlayer.size());
+
              allPlayer
                 .sort(
-                        Comparator.comparingInt((GameQueue b)->b.getTotalPlayedInCycle()*50+b.getPenalty())
+                        Comparator.comparingInt(
+                                (GameQueue b)->{
+                                    List<GameQueue> playersQueue=b.getGameBooking().getParticipants().stream().map(p->findGameQueueByPlayerAndGame(p,gameSlot.getGame())).toList();
+                                    int totalPlayedAsTeam = playersQueue.stream()
+                                            .map(GameQueue::getTotalPlayedInCycle)
+                                            .reduce(0, Integer::sum);
+
+                                    int totalPenaltyAsTeam = playersQueue.stream()
+                                            .map(GameQueue::getPenalty)
+                                            .reduce(0, Integer::sum);
+
+                                    return totalPlayedAsTeam+totalPenaltyAsTeam;
+                                })
                                 .thenComparing(GameQueue::getQueueTime)
                 );
+        log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
               if(allPlayer.isEmpty())  return null;
-             return allPlayer.stream().filter( e->!allPlayer.contains(e))
-                     .findFirst().orElse(allPlayer.get(0));
+             return allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())
+                                  ).toList().get((0));
 
     }
 
+     public void assignSlot()
+     {
+         log.info("  auto :assign slot runing");
+         List<GameSlot> gameSlotList =  findAllAvailableSlotToAssign();
+         assignKnownSlot(gameSlotList);
+     }
+
     @Transactional
-    public void assignSlot()
+    public void assignKnownSlot(List<GameSlot> gameSlotList)
     {
-      log.info("  auto :assign slot runing");
-      List<GameSlot> gameSlotList =  findAllAvailableSlotToAssign();
+
       log.info("auto : slot found{}",gameSlotList.size());
       gameSlotList.forEach(x -> {
-          GameQueue gameQueue = findPlayerToAssignSlot(x.getCancellers(), x.getGame());
+          GameQueue gameQueue = findPlayerToAssignSlot(x);
+
           if(gameQueue==null)return;
+
           log.info(" auto :player found{}",gameQueue.getPlayer().getUserName());
           if (gameQueue != null) {
-              GameBooking gameBooking = new GameBooking();
-              gameBooking.setGameSlots(Collections.singletonList(x));
+
+              GameBooking gameBooking = gameQueue.getGameBooking();
+
               gameBooking.setParticipants(new ArrayList<>(gameQueue.getGameBooking().getParticipants()));
               gameBooking.setGame(x.getGame());
               gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
@@ -280,7 +326,7 @@ public class GameService {
               );
 
               gameBookingRepository.save(gameBooking);
-              x.setGameBooking(gameBooking);
+              x.getCurrentGameBookings().add(gameBooking);
               gameSlotRepository.save(x);
               log.info(" auto : assign slot to:{} {}",x.getGameSlotId(),gameQueue.getPlayer().getUserName());
           }
@@ -290,16 +336,16 @@ public class GameService {
     @Transactional
     public BasicResponse cancelSlot(Long bookingId)
     {
-
+        log.info(" jatin starting {}",bookingId);
         GameBooking gameBooking=findGameBookingById(bookingId);
-        List<GameSlot> gameSlots=gameBooking.getGameSlots();
+        List<GameSlot> gameSlots=gameBooking.getBookingSlots();
         //update slot
         gameSlots.forEach(gs-> {
                     if(gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now()))
                     {
                         throw new RuntimeException("you miss cancel slot time, slot is already started");
                     }
-                    if(gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED)&& Objects.equals(gs.getGameBooking().getGameBookingId(), gameBooking.getGameBookingId())) {
+                    if(gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED)&& gameBooking.getStatus().equals((StatusType.BookingStatus.BOOKED))) {
                         gs.getCancellers().addAll(gameBooking.getParticipants());
                         gs.setSlotStatus(StatusType.BookingStatus.PENDING);
                     }
@@ -323,7 +369,9 @@ public class GameService {
 
         gameBookingRepository.save(gameBooking);
         gameSlotRepository.saveAll(gameSlots);
-
+        log.info(" jatin now calling for auto assign {}",bookingId);
+        assignKnownSlot(gameSlots);
+        log.info(" jatin  end calling for auto assign {}",bookingId);
           return new BasicResponse("slot cancelled successfully");
     }
 

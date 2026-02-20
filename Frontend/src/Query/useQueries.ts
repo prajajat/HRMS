@@ -50,9 +50,9 @@ export const useCreateTravel = () => {
   });
 };
 
-export const useCancelBooking= () => {
+export const useCancelBooking = () => {
   return useMutation<any>({
-    mutationFn: ({id})=>cancelBooking(id),
+    mutationFn: ({ id }) => cancelBooking(id),
     onSuccess: (response) => {
       response;
     },
@@ -82,7 +82,7 @@ export const useCreateExpense = () => {
 
 export const useUpdateGameConfig = () => {
   return useMutation({
-    mutationFn:  updateGameConfig,
+    mutationFn: updateGameConfig,
     onSuccess: (response) => {
       alert(response.data.message);
     },
@@ -109,15 +109,14 @@ export const useRemoveTravelEmp = () => {
 };
 
 export const useCreateBooking = () => {
- 
   return useMutation({
     mutationFn: CreateBooking,
     onSuccess: (response) => {
       console.log(response);
     },
-    onError:(error)=>{
+    onError: (error) => {
       console.log(error);
-        }
+    },
   });
 };
 
@@ -148,15 +147,17 @@ export const useGetAllEmp = () => {
 };
 
 export const useGetGameConfigById = (id) => {
-  return useQuery({ queryKey: ["gameConfig",id], queryFn:()=> getGameConfigById(id) });
+  return useQuery({
+    queryKey: ["gameConfig", id],
+    queryFn: () => getGameConfigById(id),
+  });
 };
-
 
 export const useGetAllNotification = () => {
   return useQuery({ queryKey: ["notification"], queryFn: getAllNotification });
 };
 
-export const useGetExpenceBytraveler = (id) => {
+export const useGetExpenceBytraveler = (id, search) => {
   return useQuery({
     queryKey: ["expenses", id],
     queryFn: () => getExpenceBytraveler(id),
@@ -172,8 +173,12 @@ export const useGetDocumentByManager = (id) => {
   });
 };
 
-export const useGetAllExpence = (id) => {
-  return useQuery({ queryKey: ["expenses"], queryFn: getAllExpence });
+export const useGetAllExpence = (id, search: String) => {
+  console.log(search);
+  return useQuery({
+    queryKey: ["expenses"],
+    queryFn: () => getAllExpence(search),
+  });
 };
 
 export const useGetDocumentsBytraveler = (id) => {

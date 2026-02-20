@@ -24,8 +24,8 @@ public class GameBooking {
     @Column(name = "status")
     private StatusType.BookingStatus status;
 
-    @OneToMany(mappedBy = "gameBooking")
-    private List<GameSlot> gameSlots;
+    @ManyToMany(mappedBy = "currentGameBookings")
+    private List<GameSlot> bookingSlots;
 
     @ManyToMany
     @JoinTable(

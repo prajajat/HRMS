@@ -4,7 +4,7 @@ import SlotCard from "./SlotCard";
 import { Button, List, ListItem, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
 
-function SlotContainer({ data, gameId, refetch }) {
+function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
   console.log(data);
   const {
     isLoading: isEmpLoading,
@@ -24,6 +24,11 @@ function SlotContainer({ data, gameId, refetch }) {
 
   const handleAddEmp = (newEmp) => {
     if (emp.length > 0 && emp.find((e) => e.userId == newEmp.userId)) {
+      return;
+    }
+
+    if (emp.length + 1 > maxPlayer - 1) {
+      alert("max player allowed is only " + maxPlayer);
       return;
     }
     setEmp((emp) => [...emp, newEmp]);
@@ -47,6 +52,10 @@ function SlotContainer({ data, gameId, refetch }) {
       return;
     }
 
+    if (slot.length + 1 > maxSlot) {
+      alert("max slot allowed is only " + maxSlot);
+      return;
+    }
     setSlot((slot) => [...slot, newSlot]);
   };
 
@@ -91,6 +100,7 @@ function SlotContainer({ data, gameId, refetch }) {
             onChange={(e) => handleAddEmp(e.target.value)}
           >
             {Empdata.data.map((e) => {
+              if (userId == e.userId) return;
               return (
                 <MenuItem value={e}>
                   {e.name}- {e.companyEmail}
@@ -98,67 +108,56 @@ function SlotContainer({ data, gameId, refetch }) {
               );
             })}
           </Select>
-       
-        
-          {      
-          emp.length > 0 && (
+          {emp.length > 0 && (
             <div>
-             <p>Player Added: </p>
-         <div className="bg-slate-400">
-            <List >
-              {emp.map((e) => {
-                return (
-                  <ListItem key={e.userId}>
-                    {e.name}-{e.companyEmail}
-                  </ListItem>
-                );
-              })}
-            </List>
-            </div>
-            </div>
-          )
-         
-          }
-            
-        
-           <div className="bg-slate-300">
-          {slot.length > 0 && (
-              <div>
-             <p>  Added :Slots </p>
-         <div className="bg-slate-400">
-            <List>
-              {slot.map((e) => {
-                return <SlotCard data={e} key={e.gameSlotId} />;
-              })}
-            </List>
-            </div>
+              <p>Player Added: </p>
+              <div className="bg-slate-400">
+                <List>
+                  {emp.map((e) => {
+                    return (
+                      <ListItem key={e.userId}>
+                        {e.name}-{e.companyEmail}
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </div>
             </div>
           )}
+          <div className="bg-slate-300">
+            {slot.length > 0 && (
+              <div>
+                <p> Added :Slots </p>
+                <div className="bg-slate-400">
+                  <List>
+                    {slot.map((e) => {
+                      return <SlotCard data={e} key={e.gameSlotId} />;
+                    })}
+                  </List>
+                </div>
+              </div>
+            )}
           </div>
           <Button onClick={handleBooking}>Make booking</Button>
         </div>
       )}
       <div className="flex flex-row aline-item-center justify-center  w-full ">
-          
-      {sortDate.map((date,indexOfDate) => (
-        <div
-          key={date}
-          className="min-w-[200px]  m-3 p-3"
-        >
-          <div>{new Date(date).toDateString()}</div>
-          <hr />
+        {sortDate.map((date, indexOfDate) => (
+          <div key={date} className="min-w-[200px]  m-3 p-3">
+            <div>{new Date(date).toDateString()}</div>
+            <hr />
 
-          {groupByDate[date].map((slot,indexOfSlot) => (
-            <div
-              key={slot.gameSlotId}
-              onClick={() => handleSlotAdd(slot)}
-              className={`rounded-lg p-3 mb-3 ${(indexOfDate%2==0&&indexOfSlot%2==1)||(indexOfDate%2==1&&indexOfSlot%2==0)? "bg-blue-300" : "bg-green-100"}`}
-            >
-              <SlotCard data={slot} />
-            </div>
-          ))}
-        </div>
-      ))}
+            {groupByDate[date].map((slot, indexOfSlot) => (
+              <div
+                key={slot.gameSlotId}
+                onClick={() => handleSlotAdd(slot)}
+                className={`rounded-lg p-3 mb-3 ${(indexOfDate % 2 == 0 && indexOfSlot % 2 == 1) || (indexOfDate % 2 == 1 && indexOfSlot % 2 == 0) ? "bg-blue-300" : "bg-green-100"}`}
+              >
+                <SlotCard data={slot} />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );

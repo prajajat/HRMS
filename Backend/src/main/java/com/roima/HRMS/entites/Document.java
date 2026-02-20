@@ -56,5 +56,11 @@ public class Document {
     @JoinColumn(name = "fk_travel_expense_id",nullable = true)
     private TravelExpense travelExpense ;
 
+    @OneToOne(mappedBy = "jobDescription")
+    private Job job ;
+
+    @OneToOne(mappedBy = "cv")
+    private JobRefer jobRefer ;
+
 }
 

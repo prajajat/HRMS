@@ -11,11 +11,11 @@ function GameDetails() {
   const { id } = useParams();
   const { isLoading, data, isError, refetch } = useGetGameDetailsById(id);
   const [val, setVal] = useState("");
-  const userId=useSelector((state)=>state.user.userId);
+  const userId = useSelector((state) => state.user.userId);
 
   return (
     <>
-      {!isLoading &&data?.data.playerInterested&& (
+      {!isLoading && data?.data.playerInterested && (
         <div>
           <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
             <GameCard data={data.data} isAllFields={true} />
@@ -41,14 +41,24 @@ function GameDetails() {
             <div>
               {val == "showBooking" &&
                 data.data.gameBookings.map((gameBooking) => {
-                  return <GameBookingCard data={gameBooking} refetch={refetch} />;
+                  return (
+                    <GameBookingCard data={gameBooking} refetch={refetch} />
+                  );
                 })}{" "}
             </div>
           </div>
-           <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
+          <div className="flex flex-row aline-item-center justify-center  w-full bg-slate-200">
             <div>
-          {val == "showSlots" && <SlotContainer data={data?.data.gameSlots} gameId={data?.data.gameId} refetch={refetch}/>}
-          </div>
+              {val == "showSlots" && (
+                <SlotContainer
+                  data={data?.data.gameSlots}
+                  gameId={data?.data.gameId}
+                  maxPlayer={data?.data.maxPlayerPerSlot}
+                  maxSlot={data?.data.maxSlotPerBooking}
+                  refetch={refetch}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

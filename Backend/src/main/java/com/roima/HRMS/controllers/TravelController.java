@@ -112,9 +112,12 @@ public class TravelController {
     // travel expence
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/expense/all")
-    public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense(){
-        return ResponseEntity.ok(travelService.getAllTravelExpense());
+    public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense( @ModelAttribute TravelExpenseFilterDTO filter){
+        return ResponseEntity.ok(travelService.getAllTravelExpenseByFilter(filter));
     }
+
+
+
 
     @PreAuthorize("hasAuthority('access-traveler')")
     @PostMapping(value = "/expense",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

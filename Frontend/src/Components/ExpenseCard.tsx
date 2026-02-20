@@ -22,52 +22,54 @@ function ExpenseCard({ data, ownerType, refetch }) {
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(data.status);
   const [remark, setRemark] = useState(data.remark);
-  const userId=useSelector(state=>state.user.userId);
+  const userId = useSelector((state) => state.user.userId);
   const { mutate, isPending, isError, error } = usePatchExpense();
   const handleSave = () => {
     const dto = {
       status: status,
       remark: remark,
     };
-    mutate({ 
-       eId:data.travelExpensesId,
-       userId:userId,
-      dto:dto
-    },
-       {
-      onSuccess: (response) => {
-        console.log("success");
-        alert("expense updated");
-        refetch();
+    mutate(
+      {
+        eId: data.travelExpensesId,
+        userId: userId,
+        dto: dto,
       },
-    });
+      {
+        onSuccess: (response) => {
+          console.log("success");
+          alert("expense updated");
+          refetch();
+        },
+      },
+    );
   };
- 
+
   return (
     <TableRow
       key={data.travelExpensesId}
       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
     >
-      { ownerType=="HR"&&
-      <TableCell>
-        <Button
-          onClick={() => {
-            if (edit) {
-              handleSave();
-              console.log(ownerType);
-            }
-            setEdit(!edit);
-          }}
-        >
-          {edit ? "Save" : "Edit"}
-        </Button>
-      </TableCell>
-}
+      {ownerType == "HR" && (
+        <TableCell>
+          <Button
+            onClick={() => {
+              if (edit) {
+                handleSave();
+                console.log(ownerType);
+              }
+              setEdit(!edit);
+            }}
+          >
+            {edit ? "Save" : "Edit"}
+          </Button>
+        </TableCell>
+      )}
       <TableCell component="th" scope="row">
         {data.amount}
       </TableCell>
       <TableCell align="right">{data.expenseDate}</TableCell>
-     
+
       <TableCell align="right">
         {edit ? (
           <Select
@@ -94,13 +96,13 @@ function ExpenseCard({ data, ownerType, refetch }) {
           data.remark
         )}
       </TableCell>
-     
-      {ownerType == "HR" && 
+
+      {ownerType == "HR" && (
         <>
           <TableCell align="right">{data.travelerUserName}</TableCell>
           <TableCell align="right">{data.travelerTravelDetailTitle}</TableCell>
         </>
-      }
+      )}
       <TableCell align="right">
         {data.documents.map((d) => {
           return (

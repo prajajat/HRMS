@@ -12,7 +12,7 @@ import java.util.List;
 public class GameBookingResponseDTO {
     private Long gameBookingId;
     private StatusType.BookingStatus status;
-    private List<GameSlotResponseDTO> gameSlots;
+    private List<GameSlotResponseDTO> bookingSlots;
     private List<UserResponseForEmailDTO> participants;
     private UserResponseForEmailDTO createdBy;
 }
