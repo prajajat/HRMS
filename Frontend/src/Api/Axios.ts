@@ -4,7 +4,7 @@ import { store } from "../Store/Store.ts";
 const instance = axios.create({
   baseURL: "http://localhost:8089",
   timeout: 10000,
-  
+
   withCredentials: true,
 });
 
@@ -23,8 +23,14 @@ export const CreateExpense = async (data: any) =>
 export const Refresh = async () =>
   await instance.get("/auth/refreshToken/").then((res) => res);
 
+export const getGameConfigById = async (id) =>
+  await instance.get("/game/config/" + id).then((res) => res);
+
 export const CreateDocument = async (data: any) =>
   await instance.post("/api/travel/document", data).then((res) => res);
+
+export const updateGameConfig = async (data: any) =>
+  await instance.put("/game/", data).then((res) => res);
 
 export const RemoveTravelEmp = async (data) =>
   await instance
@@ -43,37 +49,58 @@ export const getAllEmp = async () =>
 export const getTravelByUser = async () =>
   await instance.get("/api/travel/details/traveler/all").then((res) => res);
 
-export const getExpenceBytraveler = async (id) => 
-  await instance.get("/api/travel/expense/all/"+id).then((res) => res);
 
-export const getAllExpence = async () => 
-  await instance.get("/api/travel/expense/all").then((res) => res);
+export const getExpenceBytraveler = async (id) =>
+  await instance.get("/api/travel/expense/all/" + id).then((res) => res);
 
-export const patchExpense = async (eId,userId,dto) => 
-  await instance.patch(`/api/travel/expense/${eId}/user/${userId}`,dto).then((res) => res);
+export const getAllExpence = async (search: String) =>
+  await instance.get("/api/travel/expense/all" + search).then((res) => res);
 
-export const getDocumentsBytraveler = async (id) => 
-  await instance.get("/api/travel/document/traveler/all/"+id).then((res) => res);
+export const patchExpense = async (eId, userId, dto) =>
+  await instance
+    .patch(`/api/travel/expense/${eId}/user/${userId}`, dto)
+    .then((res) => res);
 
-export const getDocumentsByManager = async (id) => 
-  await instance.get("/api/travel/document/manager/"+id).then((res) => res);
+export const getDocumentsBytraveler = async (id) =>
+  await instance
+    .get("/api/travel/document/traveler/all/" + id)
+    .then((res) => res);
 
-export const getDocuments = async () => 
+export const getDocumentsByManager = async (id) =>
+  await instance.get("/api/travel/document/manager/" + id).then((res) => res);
+
+export const getDocuments = async () =>
   await instance.get("/api/travel/document/uploader/all/").then((res) => res);
 
-
-export const getUserById = async (id) => 
+export const getUserById = async (id) =>
   await instance.get(`/api/user/${id}`).then((res) => res);
 
-
-export const getALLUser = async () => 
+export const getALLUser = async () =>
   await instance.get(`/api/user/all`).then((res) => res);
 
+export const getALLGames = async () =>
+  await instance.get(`/game/all`).then((res) => res);
+
+export const getGameDetailsById = async (id) =>
+  await instance.get(`/game/` + id).then((res) => res);
+
+export const getAllNotification = async () =>
+  await instance.get("/api/user/notification/all").then((res) => res);
+
+export const CreateBooking = async (data: any) =>
+  await instance.post("/game/booking", data).then((res) => res);
+
+export const cancelBooking = async (id) =>
+  await instance.delete(`/game/booking/` + id).then((res) => res);
 
 instance.interceptors.request.use((config) => {
   console.log(config.url);
   const state = store.getState();
-  if (state.tokens.token != null&&config.url!="/auth/login"&&config.url!="/auth/refreshToken/") {
+  if (
+    state.tokens.token != null &&
+    config.url != "/auth/login" &&
+    config.url != "/auth/refreshToken/"
+  ) {
     console.log("set");
     config.headers.Authorization = `Bearer ${state.tokens.token}`;
     console.log(config.headers.Authorization);
@@ -81,13 +108,15 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
- instance.interceptors.response.use((response) =>  response,
-                                     (error) =>
-                                       {
-                                        if (error.response.data.status==5001 ) {
-                                          console.log("error");
-                                        window.open("http://localhost:5173/refresh");
-                                        return Promise.reject(error);
-                                  }
-                                  }
-                                   );
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.data.status == 5001) {
+      console.log("error");
+      window.open("http://localhost:5173/refresh");
+      return Promise.reject(error);
+    } else {
+      alert(error.response.data.msg);
+    }
+  },
+);

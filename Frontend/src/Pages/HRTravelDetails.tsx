@@ -46,7 +46,7 @@ function TravelDetails() {
   };
 
   return (
-   <>
+    <>
       All Travels
       {addState && (
         <form
@@ -86,13 +86,10 @@ function TravelDetails() {
             />
           </FormControl>
 
-
-
-         
-          <FormControl >
-             <InputLabel htmlFor="my-input">startDate</InputLabel>
+          <FormControl>
+            <InputLabel htmlFor="my-input">startDate</InputLabel>
             <Input
-              type="datetime-local" 
+              type="datetime-local"
               className="mt-10 mb-10 "
               {...register("startDate", {
                 required: "Please enter startDate",
@@ -102,7 +99,7 @@ function TravelDetails() {
           <FormControl>
             <InputLabel htmlFor="my-input">endDate</InputLabel>
             <Input
-              type="datetime-local"   
+              type="datetime-local"
               className="mt-10 mb-10 "
               {...register("endDate", {
                 required: "Please enter endDate",
@@ -132,18 +129,16 @@ function TravelDetails() {
           {addState ? "cancle" : "add new travel"}
         </Button>
       }
-        
       {!isLoading && (
-       <Grid container spacing={2}>
+        <Grid container spacing={2}>
           {data.data.map((td) => {
             return (
-               <Grid item xs={12} md={4} key={td.travelDetailsId}>
+              <Grid item xs={12} md={4} key={td.travelDetailsId}>
                 <TravelDetailCard data={td} />{" "}
-             </Grid>
+              </Grid>
             );
           })}
-          </Grid>
-        
+        </Grid>
       )}
     </>
   );

@@ -30,45 +30,45 @@ public class TravelController {
 
      //travel Details
 
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @GetMapping("/details/all")
     public ResponseEntity<List<TravelDetailResponseWithOutTravelerIdDTO>> getAllDetails(){
       return ResponseEntity.ok(travelService.getAllTravelDetails());
     }
 
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/details/{id}")
     public ResponseEntity<TravelDetailResponseWithOutTravelerIdDTO> getDetail(@PathVariable long id) {
          return ResponseEntity.ok(travelService.getTravelDetails(id));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @GetMapping("/details/creater/all/{id}")
     public ResponseEntity<List<TravelDetailResponseWithTravelerIdDTO>> getDetailByCreater(@PathVariable long id) {
         return ResponseEntity.ok(travelService.getTravelDetailsByCreater(id));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/details/traveler/all")
     public ResponseEntity<List<TravelDetailsResponseWithInTeavelerIdDTO>> getDetailByTraveler() {
 
         return ResponseEntity.ok(travelService.getTravelDetailsByTraveler((Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @PostMapping("/details")
     public ResponseEntity<BasicResponse> createTravelDetail(@RequestBody TravelDetailDTO dto) {
         return ResponseEntity.ok(travelService.createTravelDetail(dto));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @PutMapping("/details/{id}")
     public ResponseEntity<BasicResponse> updateTravelDetails(@RequestBody TravelDetailDTO dto, @PathVariable long id)
     {
         return ResponseEntity.ok(travelService.updateTravelDetails(id,dto));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @DeleteMapping("/details/{id}")
     public ResponseEntity<BasicResponse> deleteTravelDetails(@PathVariable long id)
     {
@@ -77,14 +77,14 @@ public class TravelController {
 
 
     // travel details with employee
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @PostMapping("/details/employee")
     public ResponseEntity<BasicResponse> addEmployees(@RequestBody AddEmployeeDTO dto)
     {
         return ResponseEntity.ok(travelService.addEmployees(dto));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @DeleteMapping("/details/{id}/employee/{userId}")
     public ResponseEntity<BasicResponse> removeEmployee(@PathVariable long id, @PathVariable long userId)
     {
@@ -95,28 +95,31 @@ public class TravelController {
 
 
     // traveler
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
-    @GetMapping("/{id}/traveler/info/{userId}")
-    public ResponseEntity<Long> getTravelerInfo(@PathVariable long id,@PathVariable long userId) {
-        return ResponseEntity.ok(travelService.getTravelerInfo(id,userId));
-    }
+//    @PreAuthorize("hasAuthority('DML-travel-detail')")
+//    @GetMapping("/{id}/traveler/info/{userId}")
+//    public ResponseEntity<Long> getTravelerInfo(@PathVariable long id,@PathVariable long userId) {
+//        return ResponseEntity.ok(travelService.getTravelerInfo(id,userId));
+//    }
 
 
     // travel expence
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/expense/all/{travelerId}")
     public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpenseByTravelerId(@PathVariable long travelerId){
         return ResponseEntity.ok(travelService.getAllTravelExpenseByTravelerId(travelerId));
     }
 
     // travel expence
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/expense/all")
-    public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense(){
-        return ResponseEntity.ok(travelService.getAllTravelExpense());
+    public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense( @ModelAttribute TravelExpenseFilterDTO filter){
+        return ResponseEntity.ok(travelService.getAllTravelExpenseByFilter(filter));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+
+
+
+    @PreAuthorize("hasAuthority('access-traveler')")
     @PostMapping(value = "/expense",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicResponse> createTravelExpense(
             @RequestParam("expenseData") String dto,
@@ -129,19 +132,20 @@ public class TravelController {
         return ResponseEntity.ok(travelService.createUpdateTravelExpense(newDTO,documents,(long)-1));
     }
 
-//    @PreAuthorize("hasAuthority('DML-travel-detail')")
-//    @PutMapping("/expense/{id}")
-//    public ResponseEntity<BasicResponse> updateTravelExpense(@RequestBody TravelExpenseDTO dto, @PathVariable long id) {
-//        return ResponseEntity.ok(travelService.createUpdateTravelExpense(dto,id));
-//    }
+    @PreAuthorize("hasAuthority('manage-travel')")
+    @PutMapping("/expense/{id}")
+    public ResponseEntity<BasicResponse> updateTravelExpense(@RequestBody TravelExpenseDTO dto, @PathVariable long id) {
+        //travelService.createUpdateTravelExpense(dto);
+        return ResponseEntity.ok(new BasicResponse("coming soon..."));
+    }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-travel')")
     @PatchMapping("/expense/{id}/user/{userId}")
     public ResponseEntity<BasicResponse> patchTravelExpense(@RequestBody TravelExpenceStatusDTO dto, @PathVariable long id, @PathVariable long userId) {
         return ResponseEntity.ok(travelService.patchTravelExpense(dto,id,userId));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @DeleteMapping("/expense/{id}")
     public ResponseEntity<BasicResponse> deleteTravelExpense(@PathVariable long id)
     {
@@ -150,19 +154,19 @@ public class TravelController {
 
 
     //travel document
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/document/uploader/all/")
     public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocument(){
         return ResponseEntity.ok(travelService.getAllTravelerDocuments());
     }
 
-    @PreAuthorize("hasAuthority('All-User')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/document/traveler/all/{travelerId}")
     public ResponseEntity<List<TravelerDocumentResponseDTO>> getAllTravelerDocumentByTravelerId(@PathVariable long travelerId){
         return ResponseEntity.ok(travelService.getAllTravelerDocumentByTravelerId(travelerId));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('manage-traveler')  ")
     @PostMapping(value = "/document",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicResponse> createTravelerDocument(
             @RequestParam("tarvelerDocumentData") String dto,
@@ -175,14 +179,16 @@ public class TravelController {
         return ResponseEntity.ok(travelService.createTravelerDocument(newDTO,document,(Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
-    @PreAuthorize("hasAuthority('DML-travel-detail')")
+    @PreAuthorize("hasAuthority('access-travel')")
     @DeleteMapping("/document/{id}")
     public ResponseEntity<BasicResponse> deleteTravelerDocument(@PathVariable long id)
     {
         return ResponseEntity.ok(travelService.deleteTravelerDocument(id));
     }
 
-    @PreAuthorize("hasAuthority('All-User')")
+
+    //manager view
+    @PreAuthorize("hasAuthority('view-travel-doc')")
     @GetMapping("/document/manager/{id}")
     public ResponseEntity<List<TravelerDocumentResponseDTO>> getAllTravelerDocumentForManager(@PathVariable Long id){
         return ResponseEntity.ok(travelService.getAllTravelerDocumentForManager(id));

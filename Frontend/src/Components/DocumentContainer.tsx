@@ -26,6 +26,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
     isError: isErrorTDoc,
     refetch: refetchTDoc,
   } = useGetDocumentsBytraveler(travelerId);
+  console.log(dataTDoc);
   return (
     <>
       <Typography variant="h3"> Travel Documents</Typography>
@@ -53,7 +54,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
               <TableCell> Uploaded by</TableCell>
               <TableCell align="right">Visibility</TableCell>
               <TableCell align="right">Document</TableCell>
-               <TableCell align="right">Traveler</TableCell>
+              <TableCell align="right">Traveler</TableCell>
               <TableCell align="right">Travel</TableCell>
             </TableRow>
           </TableHead>

@@ -93,6 +93,38 @@ public class User {
 
     @OneToMany(mappedBy = "uploadedBy")
     private List<Document> Documents;
+
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<GameBooking> gameBookingsCreatedByMe;
+
+    @OneToMany(mappedBy = "user")
+    private List<Notification> notifications;
+
+    @OneToMany(mappedBy = "player")
+    private List<GameQueue> gameQueues;
+
+    @ManyToMany(mappedBy = "cancellers")
+    private List<GameSlot> cancelledSlots;
+
+    @ManyToMany(mappedBy = "participants")
+    private List<GameBooking> gameBookings;
+
+    @ManyToMany(mappedBy = "reviewers")
+    private List<Job> jobToReview;
+
+    @ManyToMany(mappedBy = "referer")
+    private List<JobRefer> jobRefers;
+
+    @ManyToMany(mappedBy = "sender")
+    private List<JobShare> jobShares;
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<Job> createdJobs;
+
+    @ManyToMany(mappedBy = "interestedPlayers")
+    private List<Game> interestedGames;
+
 }
 
 
