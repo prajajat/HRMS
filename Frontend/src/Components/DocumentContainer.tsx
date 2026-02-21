@@ -29,7 +29,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
   console.log(dataTDoc);
   return (
     <>
-      <Typography variant="h3"> Travel Documents</Typography>
+      
 
       <Button
         onClick={() => {
@@ -70,3 +70,5 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
   );
 }
 export default DocumentContainer;
+
+ 

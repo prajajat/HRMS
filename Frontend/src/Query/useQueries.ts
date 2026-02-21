@@ -26,6 +26,18 @@ import {
   getAllNotification,
   updateGameConfig,
   getGameConfigById,
+  createJob,
+  getAllJobs,
+  updateJobStatus,
+  addReviewer,
+  addHr,
+  createJobReferral,
+  getActiveJobs,
+  getUserReferrals,
+  getUserShares,
+  shareJob,
+  getSystemConfig,
+  updateSystemConfig,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -221,5 +233,103 @@ export const useGetGameDetailsById = (id) => {
     queryKey: ["gamedetails", id],
     queryFn: () => getGameDetailsById(id),
     enabled: !!id,
+  });
+};
+
+export const useCreateJob = () => {
+  return useMutation({
+    mutationFn: createJob,
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useGetAllJobs = (filters: any) => {
+  return useQuery({
+    queryKey: ["jobs", filters],
+    queryFn: () => getAllJobs(filters),
+  });
+};
+
+export const useUpdateJobStatus = () => {
+  return useMutation({
+    mutationFn: ({ jobId, data }) => updateJobStatus(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useAddReviewer = () => {
+  return useMutation({
+    mutationFn: ({ jobId, data }) => addReviewer(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useAddHr = () => {
+  return useMutation({
+    mutationFn: ({ jobId, data }) => addHr(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useCreateJobReferral = () => {
+  return useMutation<any,any>({
+    mutationFn: ({ jobId, data }) => createJobReferral(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useGetActiveJobs = (search: string = "") => {
+  return useQuery({
+    queryKey: ["activeJobs", search],
+    queryFn: () => getActiveJobs(search),
+  });
+};
+
+export const useGetUserReferrals = () => {
+  return useQuery({
+    queryKey: ["userReferrals"],
+    queryFn: getUserReferrals,
+  });
+};
+
+export const useGetUserShares = () => {
+  return useQuery({
+    queryKey: ["userShares"],
+    queryFn: getUserShares,
+  });
+};
+
+export const useShareJob = () => {
+  return useMutation({
+    mutationFn: ({ jobId, data }) => shareJob(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+export const useGetSystemConfig = () => {
+  return useQuery({
+    queryKey: ["systemConfig"],
+    queryFn: getSystemConfig,
+  });
+};
+
+export const useUpdateSystemConfig = () => {
+  return useMutation({
+    mutationFn: updateSystemConfig,
+    onSuccess: (response) => {
+      console.log(response);
+    },
   });
 };

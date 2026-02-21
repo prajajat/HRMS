@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 function HRSidebar() {
   return (
     <div className="flex flex-col h-full  bg-gray-100  w-30">
-      HRSidebar
+    
       <NavLink
         to="/hr/travel/details"
         className={({ isActive }) =>
           isActive ? "text-blue-700" : "text-blue-300"
         }
       >
-        deatils
+       Travel Deatils
       </NavLink>
       <NavLink
         to="/hr/travel/expense"
@@ -18,7 +18,7 @@ function HRSidebar() {
           isActive ? "text-blue-700" : "text-blue-300"
         }
       >
-        expense
+       Travel Expense
       </NavLink>
       <NavLink
         to="/hr/travel/document"
@@ -26,7 +26,7 @@ function HRSidebar() {
           isActive ? "text-blue-700" : "text-blue-300"
         }
       >
-        document
+        Travel Document
       </NavLink>
 
       <NavLink
@@ -37,6 +37,16 @@ function HRSidebar() {
         }
       >
         Game Config
+      </NavLink>
+
+       <NavLink
+        to="/hr/job/dashboard"
+        
+        className={({ isActive }) =>
+          isActive ? "text-blue-700" : "text-blue-300"
+        }
+      >
+        Jobs
       </NavLink>
     </div>
   );

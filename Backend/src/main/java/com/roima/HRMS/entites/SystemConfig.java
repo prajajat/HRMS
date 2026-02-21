@@ -21,8 +21,8 @@ public class SystemConfig {
     private Long configId;
 
     @Column(name = "title",nullable = false )
-    private String title;
+    private String configKey;
 
     @Column(name = "description",nullable = false )
-    private String description;
+    private String configValue;
 }
