@@ -5,16 +5,18 @@ import EmpTravelDetailCard from "../Components/EmpTravelDetailCard";
 
 function EmpTravelDetails() {
   const { isLoading, data, isError } = useGetTravelByUser();
+  if(!isLoading){
   console.log(data);
   console.log(isError);
+  }
 
   return (
     <>
       <Typography variant="h3">Travels for you</Typography>
       {!isLoading && (
         <Grid container spacing={2}>
-          {data.data.map((td) => {
-            return <EmpTravelDetailCard data={td} />;
+          {data.data.map((td,index) => {
+            return <EmpTravelDetailCard data={td} key={index}/>;
           })}
         </Grid>
       )}

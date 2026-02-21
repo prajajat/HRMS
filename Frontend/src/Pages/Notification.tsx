@@ -1,42 +1,74 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Chip,
+} from "@mui/material";
 import { useGetAllNotification } from "../Query/useQueries";
 
-function Notification(){
-      const {
-        isLoading,
-        data,
-        isError,
-      } = useGetAllNotification();
+function Notification() {
+  const { isLoading, data, isError } = useGetAllNotification();
 
-    return (
+  return (
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        Notifications
+      </Typography>
+
+      {isLoading && (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 5 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {isError && (
+        <Box sx={{ p: 2, bgcolor: "#ffebee", borderRadius: 1 }}>
+          <Typography color="error">Failed to load notifications</Typography>
+        </Box>
+      )}
+
+      {!isLoading && data?.data && data.data.length > 0 ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table" color="Green">
+          <Table size="small">
             <TableHead>
               <TableRow>
-               
-                <TableCell> Title</TableCell>
-                <TableCell  >Description</TableCell>
-                <TableCell >Status</TableCell>
-                 
+                <TableCell sx={{ fontWeight: 600 }}>Title</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-            {!isLoading&&data.data.length>0&&
-                data.data.map((n) => {
-                  return (
-                    <TableRow>
-                         <TableCell>{n.title}</TableCell>
-                          <TableCell>{n.description}</TableCell>
-                          <TableCell>{!n.isRead?"new":"old"}</TableCell>
-                         </TableRow>
-                  );
-                })
-            }
+              {data.data.map((n) => (
+                <TableRow key={n.notificationId}>
+                  <TableCell>{n.title}</TableCell>
+                  <TableCell>{n.description}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={n.isRead ? "Seen" : "New"}
+                      color={n.isRead ? "default" : "primary"}
+                      size="small"
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
-      
-    );
+      ) : (
+        !isLoading && !isError && (
+          <Box sx={{ p: 2, textAlign: "center", color: "textSecondary" }}>
+            <Typography variant="body2">No notifications</Typography>
+          </Box>
+        )
+      )}
+    </Box>
+  );
 }
- 
 export default Notification;

@@ -25,6 +25,12 @@ import GameDetails from "../Pages/GameDetails";
 import Notification from "../Pages/Notification";
 import NotificationLayout from "../Layouts/NotificationLayout";
 import GameConfig from "../Pages/GameConfig";
+import HRJobDashboard from "../Pages/HRJobDashboard";
+import EmployeeJobListing from "../Pages/EmployeeJobListing";
+import EmployeeJobReferrals from "../Pages/EmployeeJobReferrals";
+import EmployeeJobShares from "../Pages/EmployeeJobShares";
+import HRJobDetails from "../Pages/HRJobDetails";
+import EmployeeJobDetails from "../Pages/EmployeeJobDetails";
 
 const router = createBrowserRouter([
   {
@@ -85,6 +91,21 @@ const router = createBrowserRouter([
               },
               
             ],
+            
+          },
+
+          { path: "job",
+            children: [
+              {
+                path: "dashboard",
+                element: <HRJobDashboard />,
+              },
+               {
+                path: "config/:id",
+                element: <HRJobDetails />,
+              },
+            ],
+
           },
         ],
       },
@@ -129,6 +150,27 @@ const router = createBrowserRouter([
               {
                 path: "details/:id",
                 element: <GameDetails />,
+              },
+            ],
+          },
+           {
+            path: "job",
+            children: [
+              {
+                path: "listing",
+                element: <EmployeeJobListing />,
+              },
+               {
+                path: "details/:id",
+                element: <EmployeeJobDetails />,
+              },
+              {
+                path: "referrals",
+                element: <EmployeeJobReferrals />,
+              },
+              {
+                path: "shares",
+                element: <EmployeeJobShares />,
               },
             ],
           },
