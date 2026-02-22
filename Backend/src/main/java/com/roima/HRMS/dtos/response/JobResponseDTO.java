@@ -20,11 +20,19 @@ public class JobResponseDTO {
 
     private String description;
 
+    private Boolean status;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    private UserResponseForEmailDTO createdBy;
+    private Long createdById;
 
-    private DocDto jobDescription;
+    private String createdByName;
+
+    private List<UserBasicDTO> reviewers;
+
+    private List<UserBasicDTO> hrs;
+
+    private String jobDescriptionUrl;
 }

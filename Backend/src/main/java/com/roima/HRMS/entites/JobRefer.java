@@ -40,6 +40,9 @@ public class JobRefer {
     @JoinColumn(name="fk_job_id")
     private Job job;
 
+    @Column(name = "status")
+    private String status;
+
     @OneToOne
     @JoinColumn(name="fk_doc_id")
     private Document cv;

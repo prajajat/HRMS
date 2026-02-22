@@ -94,7 +94,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   console.log(uniqueTravel);
   return (
     <>
-      <Typography variant="h3"> Travel expenses </Typography>
+      
       {!isLoadingEp && (
         <Typography variant="h5" color="Green">
           {" "}
@@ -261,3 +261,5 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   );
 }
 export default ExpenseContainer;
+
+ 
