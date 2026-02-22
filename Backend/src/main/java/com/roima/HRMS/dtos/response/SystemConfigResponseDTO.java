@@ -7,5 +7,5 @@ public class SystemConfigResponseDTO {
     private Long configId;
     private String configKey;
     private String configValue;
-    private String description;
+
 }

@@ -31,6 +31,8 @@ import EmployeeJobReferrals from "../Pages/EmployeeJobReferrals";
 import EmployeeJobShares from "../Pages/EmployeeJobShares";
 import HRJobDetails from "../Pages/HRJobDetails";
 import EmployeeJobDetails from "../Pages/EmployeeJobDetails";
+import { PostDashboard } from "../Pages/PostDashboard";
+import { SystemConfig } from "../Pages/SystemConfig";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +73,15 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: "achievement",
+            children: [
+              {
+                path: "posts",
+                element: <PostDashboard view="hr" />,
+              },
+            ],
+          },
+          {
             path: "travel",
             children: [
               {
@@ -106,6 +117,10 @@ const router = createBrowserRouter([
               },
             ],
 
+          },
+          {
+            path: "system-config",
+            element: <SystemConfig />,
           },
         ],
       },
@@ -150,6 +165,15 @@ const router = createBrowserRouter([
               {
                 path: "details/:id",
                 element: <GameDetails />,
+              },
+            ],
+          },
+          {
+            path: "achievement",
+            children: [
+              {
+                path: "posts",
+                element: <PostDashboard view="employee" />,
               },
             ],
           },

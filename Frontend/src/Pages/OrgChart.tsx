@@ -43,7 +43,7 @@ function OrgChart() {
       ) : (
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Manager Chain</h3>
+            <h3 className="mb-4">Manager Chain</h3>
             <div className="overflow-x-auto">
               {!isLoadingUser && dataUser?.data && (
                 <ChartCard data={dataUser.data} id={id} />
@@ -52,7 +52,7 @@ function OrgChart() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Direct Reports</h3>
+            <h3 className="mb-4">Direct Reports</h3>
             {!isLoadingUser &&
             dataUser?.data?.teamMember &&
             dataUser.data.teamMember.length > 0 ? (

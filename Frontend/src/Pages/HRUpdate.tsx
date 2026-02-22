@@ -64,17 +64,7 @@ function HRUpdate() {
             refetch={refetch}
           />
           {data?.data.createdId == userId && (
-            <div>
-              <Button size="small" onClick={() => console.log("e")}>
-                Edit
-              </Button>
-              <Button
-                size="small"
-                className="text-red"
-                onClick={() => console.log("e")}
-              >
-                Delete
-              </Button>
+            <div className="mt-10 w-max-2xl">
               <br />
               Add Employee to travel
               {!isEmpLoading && (
@@ -82,7 +72,7 @@ function HRUpdate() {
                   <Select
                     type="text"
                     defaultValue=""
-                    className="mt-10 mb-10"
+                    className="mt-10 mb-10 w-100"
                     onChange={(e) => handleAddEmp(e.target.value)}
                   >
                     {Empdata.data.map((e) => {
@@ -93,6 +83,7 @@ function HRUpdate() {
                       );
                     })}
                   </Select>
+                  <br />
                   added :
                   {emp.length > 0 && (
                     <List>

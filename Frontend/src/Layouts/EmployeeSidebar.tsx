@@ -21,6 +21,15 @@ function EmployeeSidebar() {
         Games
       </NavLink>
 
+      <NavLink
+        to="/employee/achievement/posts"
+        className={({ isActive }) =>
+          isActive ? "text-blue-700" : "text-blue-300"
+        }
+      >
+        Achievements
+      </NavLink>
+
        <NavLink
         to="/employee/job/listing"
         className={({ isActive }) =>

@@ -39,6 +39,16 @@ function HRSidebar() {
         Game Config
       </NavLink>
 
+      <NavLink
+        to="/hr/achievement/posts"
+        
+        className={({ isActive }) =>
+          isActive ? "text-blue-700" : "text-blue-300"
+        }
+      >
+        Achievements
+      </NavLink>
+
        <NavLink
         to="/hr/job/dashboard"
         
@@ -47,6 +57,16 @@ function HRSidebar() {
         }
       >
         Jobs
+      </NavLink>
+
+      <NavLink
+        to="/hr/system-config"
+        
+        className={({ isActive }) =>
+          isActive ? "text-blue-700" : "text-blue-300"
+        }
+      >
+        System Configuration
       </NavLink>
     </div>
   );

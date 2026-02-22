@@ -1,0 +1,340 @@
+/* systemConfig.module.css */
+
+.container {
+  padding: 24px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.header p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.searchBar {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.tableWrapper {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.configTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.configTable thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.configTable th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.configTable tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.configTable tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.configTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+.configTable td {
+  padding: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.keyCell {
+  width: 25%;
+  font-weight: 500;
+}
+
+.keyCell code {
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  color: #c7254e;
+  font-size: 12px;
+}
+
+.valueCell {
+  width: 55%;
+  word-break: break-word;
+}
+
+.valueText {
+  color: #666;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.editInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 13px;
+  resize: vertical;
+  font-size: 12px;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.editInput:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.actionsCell {
+  width: 20%;
+  text-align: center;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.editBtn,
+.saveBtn,
+.cancelBtn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editBtn {
+  background: #007bff;
+  color: white;
+}
+
+.editBtn:hover {
+  background: #0056b3;
+}
+
+.editBtn:active {
+  transform: translateY(1px);
+}
+
+.saveBtn {
+  background: #28a745;
+  color: white;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.saveBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: #6c757d;
+  color: white;
+}
+
+.cancelBtn:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.cancelBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.noData {
+  text-align: center;
+  padding: 40px 16px !important;
+  color: #999;
+  font-style: italic;
+}
+
+.footer {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.footer strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.loading,
+.error {
+  padding: 40px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  color: #007bff;
+  font-size: 16px;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .searchInput {
+    max-width: 100%;
+  }
+
+  .configTable {
+    font-size: 12px;
+  }
+
+  .configTable th,
+  .configTable td {
+    padding: 12px 8px;
+  }
+
+  .keyCell {
+    width: 30%;
+  }
+
+  .keyCell code {
+    font-size: 11px;
+  }
+
+  .valueCell {
+    width: 45%;
+  }
+
+  .valueText {
+    font-size: 11px;
+  }
+
+  .editInput {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .actionsCell {
+    width: 25%;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .editBtn,
+  .saveBtn,
+  .cancelBtn {
+    padding: 6px 10px;
+    font-size: 11px;
+    width: 100%;
+  }
+
+  .tableWrapper {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .tableWrapper {
+    overflow-x: auto;
+  }
+
+  .configTable {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .configTable th,
+  .configTable td {
+    padding: 10px 6px;
+  }
+
+  .keyCell code {
+    font-size: 10px;
+  }
+
+  .valueCell {
+    max-width: 100px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+}

@@ -1,0 +1,891 @@
+/* achievement.module.css */
+
+/* ==================== Dashboard ==================== */
+.postDashboard {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.dashboardContainer {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Filters Bar at Top */
+.filtersBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  align-items: flex-end;
+}
+
+.filtersBar .filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.filtersBar .filterGroup label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
+
+.filtersBar .filterInput {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background: white;
+}
+
+.filtersBar .tagFilterList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Post Media Display */
+.postMediaContainer {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.postImage {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.documentPreview {
+  padding: 40px 20px;
+  text-align: center;
+  background: #f0f0f0;
+  border-radius: 8px;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.documentLink {
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.documentLink:hover {
+  background: #0056b3;
+}
+
+/* Tag Creation Form */
+.tagHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.tagHeader label {
+  margin: 0;
+}
+
+.addTagBtn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.addTagBtn:hover {
+  background: #218838;
+}
+
+.addTagBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.createTagForm {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.tagInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.tagInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.tagInput:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.createTagForm .submitBtn,
+.createTagForm .cancelBtn {
+  padding: 8px 16px;
+  white-space: nowrap;
+}
+
+/* Media Query for Tag Creation */
+@media (max-width: 768px) {
+  .createTagForm {
+    flex-direction: column;
+  }
+
+  .createTagForm button {
+    width: 100%;
+  }
+
+  .postImage {
+    max-height: 300px;
+  }
+}
+  .dashboardContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .filtersSidebar,
+  .commentsSidebar {
+    display: none;
+  }
+
+
+/* ==================== Filters Sidebar ==================== */
+.filtersSidebar {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  height: fit-content;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filtersSidebar h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.filterGroup {
+  margin-bottom: 20px;
+}
+
+.filterGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.filterInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filterInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.tagFilterList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tagFilterBtn {
+  padding: 8px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.tagFilterBtn:hover {
+  background: #e0e0e0;
+}
+
+.tagFilterBtn.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.clearFiltersBtn {
+  width: 100%;
+  padding: 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.clearFiltersBtn:hover {
+  background: #c82333;
+}
+
+/* ==================== Main Content ==================== */
+.mainContent {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.createPostBtn {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background 0.2s;
+}
+
+.createPostBtn:hover {
+  background: #218838;
+}
+
+.formWrapper {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.postsSection {
+  margin-top: 20px;
+}
+
+.postListing {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loadingContainer,
+.emptyState {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+}
+
+/* ==================== Post Card ==================== */
+.postCard {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.postCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.authorInfo h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.timestamp {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.optionsMenu {
+  position: relative;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.menuButton:hover {
+  color: #333;
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 120px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.menuItem:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.menuItem:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+.menuItem:hover {
+  background: #f0f0f0;
+}
+
+.menuItem:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.postContent {
+  margin-bottom: 12px;
+}
+
+.postContent h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.postContent p {
+  margin: 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.visibility {
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #ffeaa7;
+}
+
+.postActions {
+  display: flex;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.actionBtn {
+  padding: 8px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.actionBtn:hover {
+  background: #e0e0e0;
+}
+
+.actionBtn.liked {
+  background: #ffe0e0;
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+/* ==================== Form Styles ==================== */
+.postForm,
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.postForm h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.formGroup input:disabled,
+.formGroup textarea:disabled,
+.formGroup select:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tagSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tagCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tagCheckbox input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.tagCheckbox span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.noTags {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin: 8px 0;
+}
+
+.fileName {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submitBtn {
+  flex: 1;
+  padding: 10px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitBtn:hover {
+  background: #0056b3;
+}
+
+.submitBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 10px 16px;
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+  background: #d0d0d0;
+}
+
+.cancelBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== Comment Card ==================== */
+.commentCard {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+  margin-bottom: 12px;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.commentHeader .authorInfo h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.commentHeader .timestamp {
+  font-size: 11px;
+}
+
+.commentContent {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.commentActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.commentActions .actionBtn {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.repliesContainer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ==================== Comments Sidebar ==================== */
+.commentsSidebar {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.commentsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.commentsHeader h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: #333;
+}
+
+.postPreview {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border-left: 3px solid #28a745;
+}
+
+.postPreview h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.postPreviewAuthor {
+  margin: 0;
+  font-size: 11px;
+  color: #999;
+}
+
+.addCommentSection {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.commentsList {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.commentItemWrapper {
+  margin-bottom: 12px;
+}
+
+.noComments {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  padding: 20px 0;
+}
+
+.commentForm {
+  gap: 10px;
+}
+
+.commentForm textarea {
+  resize: vertical;
+  min-height: 60px;
+  max-height: 120px;
+}
+
+.replyFormWrapper,
+.editFormWrapper {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+/* ==================== Utilities ==================== */
+.hidden {
+  display: none;
+}
+
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ==================== Scrollbar ==================== */
+.commentsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.commentsList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.commentsList::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.commentsList::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .dashboardContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .filtersSidebar,
+  .commentsSidebar {
+    display: none;
+  }
+
+  .postForm,
+  .commentForm {
+    gap: 12px;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+
+  .submitBtn,
+  .cancelBtn {
+    width: 100%;
+  }
+
+  .postActions {
+    justify-content: space-around;
+  }
+
+  /* Responsive Dashboard Layout */
+  .dashboardContainer {
+    grid-template-columns: 1fr;
+  }
+
+  .filtersBar {
+    flex-direction: column;
+  }
+
+  .filtersBar .filterGroup {
+    width: 100%;
+  }
+
+  .filtersSidebar,
+  .commentsSidebar {
+    display: none;
+  }
+
+  .mainContent {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboardContainer {
+    grid-template-columns: 1fr 300px;
+  }
+
+  .filtersBar {
+    gap: 12px;
+  }
+
+  .filtersBar .filterGroup {
+    min-width: 140px;
+  }
+
+  .commentsSidebar {
+    width: 300px;
+  }
+}
