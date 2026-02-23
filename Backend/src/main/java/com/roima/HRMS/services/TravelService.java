@@ -322,7 +322,11 @@ public class TravelService {
 //                 documents.remove(document);
 //            }
 //        }
-        List<Document> documents=documentRepository.findAllByTravelExpense(null);
+      //  List<Document> documents=documentRepository.findAllByTravelExpenseAndOwnerTypeNot(null,"post");
+        List<Document> documents=documentRepository.findAll().stream().filter(
+                d->!d.getTravelerDocuments().isEmpty()
+                )
+                .toList();
         return  documents.stream().map(
                 a->modelMapper.map(a, DocumentResponseDTO.class)
         ).toList();

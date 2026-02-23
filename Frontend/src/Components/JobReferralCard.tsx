@@ -1,6 +1,6 @@
 function JobReferralCard({ data}) {
   return (
-    <div className="bg-sky-100 rounded">
+    <div className="bg-sky-100 m-3 p-3 rounded">
       <div className="mb-3">
         <h3>{data.jobTitle}</h3>
         <p>{data.friendName}</p>

@@ -13,7 +13,7 @@ function OrgChart() {
     useGetUserById(id);
 
   return (
-    <div className="p-4">
+    <div className="p-4  bg-gray-100">
       {isLoadingAll ? (
         <div className="flex justify-center py-3">
           <CircularProgress size="small" />
@@ -35,7 +35,11 @@ function OrgChart() {
           </select>
         </div>
       )}
+      
+       <div className="w-full overflow-x-auto">
+        <div className="min-w-max">
 
+        
       {isLoadingUser ? (
         <div className="flex justify-center py-8">
           <CircularProgress />
@@ -69,6 +73,8 @@ function OrgChart() {
           </div>
         </div>
       )}
+      </div>
+        </div>
     </div>
   );
 }

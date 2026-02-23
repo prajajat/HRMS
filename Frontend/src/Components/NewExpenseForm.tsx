@@ -65,10 +65,10 @@ function NewExpenseForm({ travelerId, ownerType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col border p-20 rounded-lg w-100"
+      className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
     >
       <FormControl>
-        <InputLabel htmlFor="amount">Amount</InputLabel>
+        <label htmlFor="amount">Amount</label>
         <Input
           type="number"
           className="mt-10 mb-10"
@@ -108,7 +108,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
       </FormControl>
 
       <FormControl>
-        <InputLabel htmlFor="date">Date</InputLabel>
+        <label htmlFor="date">Date</label>
         <Input
           type="datetime-local"
           className="mt-10 mb-10"
@@ -119,7 +119,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
       </FormControl>
 
       <FormControl>
-        <InputLabel htmlFor="documents">Upload Documents</InputLabel>
+        <label htmlFor="documents">Upload Documents</label>
         <input
           type="file"
           multiple

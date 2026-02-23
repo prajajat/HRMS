@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CircularProgress, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { useGetAllJobs, useAddReviewer, useAddHr, useGetAllEmp, useGetALLUser } from "../Query/useQueries";
+import { useGetAllJobs, useAddReviewer, useAddHr, useGetAllEmp, useGetALLUser, useUpdateJobStatus } from "../Query/useQueries";
 import { useForm } from "react-hook-form";
 
 function HRJobDetails() {
@@ -9,6 +9,8 @@ function HRJobDetails() {
   const navigate = useNavigate();
   const { data: jobsData, isLoading } = useGetAllJobs({});
   const [activeTab, setActiveTab] = useState("details");
+  const [edit,setEdit]=useState(false);
+  const [status,setStatus]=useState("");
   const { register, handleSubmit, reset } = useForm({
     shouldUseNativeValidation: true,
   });
@@ -19,9 +21,11 @@ function HRJobDetails() {
     isError: isErrorEmp,
     refetch: refetchEmp,
   } = useGetALLUser();
-
+  
   const { mutate: addReviewerMutation, isPending: isReviewerLoading } = useAddReviewer();
   const { mutate: addHrMutation, isPending: isHrLoading } = useAddHr();
+
+   const { mutate: updateStatusMutation, isPending: isUpdateStatusLoading } = useUpdateJobStatus();
  
   const job = jobsData?.data?.find((j: any) => j.jobId === parseInt(id));
 
@@ -47,6 +51,22 @@ function HRJobDetails() {
     );
   };
 
+   const handleUpdateStatus = async ()=>{
+   const updateData = {
+       status: status,
+    };
+       updateStatusMutation( { jobId: parseInt(id), data: updateData },
+        {
+        onSuccess: (response: any) => {
+          console.log("status updated", response);
+          reset();
+          setActiveTab("details");
+          alert("status updated!");
+        },
+      }
+      )
+      setEdit(!edit);
+   }
   const handleAddHr = async (formData: any) => {
     const hrData = {
        userId: formData.eid,
@@ -86,15 +106,34 @@ function HRJobDetails() {
             <h2 className="  mb-4">{job.title}</h2>
             
             <div className="grid grid-cols-2 gap-4 mb-6">
-               
+              
               <div>
                 <p >Status</p>
                 <p >
+                  { edit? 
+                   <Select
+                  type="number"
+                  className="mt-10 mb-10"
+                 onChange={(e)=>setStatus(e.target.value)}
+                >
+                      <MenuItem value={"true"}>
+                         Active
+                      </MenuItem>
+                      <MenuItem value={"false"}>
+                         Inactive
+                      </MenuItem>
+                    
+              
+                </Select>:
                   <span className={`px-2 py-1 rounded ${job.status ? "bg-green-100 " : "bg-red-100  "}`}>
                     {job.status ? "Active" : "Inactive"}
                   </span>
+                  }
                 </p>
               </div>
+                {
+                  edit?<Button onClick={handleUpdateStatus}>Save </Button>:<Button onClick={()=>setEdit(!edit)}>Edit</Button>
+                }
             </div>
 
             <div className="mb-6">

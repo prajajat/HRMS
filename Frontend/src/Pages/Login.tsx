@@ -4,6 +4,7 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
+  Typography,
 } from "@mui/material";
 import { useLogin } from "../Query/useQueries";
 import { useForm } from "react-hook-form";
@@ -39,11 +40,17 @@ function Login() {
     });
   };
   return (
-    <div className="w-100 align-middle flex flex-row justify-center items-center">
+     <div className="w-full  flex felx-row justify-center">
+        <div>
+    
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col  border p-20 rounded-lg "
-      >
+       className="p-4 mt-4 rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
+      >  
+        <Typography>Login</Typography>
+        <br />
+        
+        <hr />
         <FormControl>
           <InputLabel htmlFor="my-input">Email address </InputLabel>
           <Input
@@ -77,7 +84,8 @@ function Login() {
           </p>
         )}
       </form>
-    </div>
+      </div>
+      </div>
   );
 }
 export default Login;

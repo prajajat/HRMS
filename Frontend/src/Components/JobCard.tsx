@@ -14,7 +14,7 @@ function JobCard({ data,view }) {
   };
 
   return (
-    <div className=" rounded-lg p-4 bg-sky-100">
+    <div className=" rounded-lg p-4 bg-gray-200 border-pink-300/10">
       <div className="mb-3">
         <h3>{data.title}</h3>
       </div>
@@ -27,7 +27,7 @@ function JobCard({ data,view }) {
 
       <div className="mb-3 flex gap-2">
         <span className="px-2 py-1 bg-blue-100 rounded">
-          {data.status || "Active"}
+          {data.status ?"Active":"Inactive"}
         </span>
         {data.createdByName && (
           <span className="px-2 py-1 bg-gray-100 rounded">
@@ -73,8 +73,6 @@ function JobCard({ data,view }) {
         </button>
       </div>
       
-
-
     </div>
   );
 }

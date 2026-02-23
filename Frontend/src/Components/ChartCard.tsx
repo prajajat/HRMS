@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 function ChartCard({ data, id, team = false }) {
   const userId = useSelector((state) => state.user.userId);
   const navigator = useNavigate();
-  var color = "#acafb1";
+  var color = "#bccb76";
 
   if (id == data.userId) {
-    color = "#398ee9";
+    color = "#0a71df";
   }
 
   return (
@@ -30,7 +30,7 @@ function ChartCard({ data, id, team = false }) {
     >
       {data.manager != null && <ChartCard data={data.manager} id={id} />}
 
-      <Card sx={{ maxWidth: 200, backgroundColor: color, margin: 5 }}>
+      <Card sx={{ maxWidth: 200 , maxHeight:250,backgroundColor: color, margin: 5 }}>
         <img src={data.imageUrl} className="h-10 w-10"></img>
 
         <CardContent>

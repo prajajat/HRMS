@@ -2,12 +2,14 @@ import { NavLink } from "react-router-dom";
 
 function EmployeeSidebar() {
   return (
-    <div className="flex flex-col h-full bg-gray-100  w-30">
-      
+ 
+      <div className="flex flex-col h-full bg-blue-300  w-30">
+     
+    
       <NavLink
         to="/employee/travel/details"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-800 m-1" : "text-blue-500 m-1"
         }
       >
         Travel Details
@@ -15,7 +17,7 @@ function EmployeeSidebar() {
       <NavLink
         to="/employee/game/details"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Games
@@ -24,7 +26,7 @@ function EmployeeSidebar() {
       <NavLink
         to="/employee/achievement/posts"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Achievements
@@ -33,7 +35,7 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/listing"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Jobs Listing
@@ -41,7 +43,7 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/referrals"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Jobs Referrals
@@ -49,12 +51,14 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/shares"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Jobs Shares
       </NavLink>
     </div>
+ 
+    
   );
 }
 export default EmployeeSidebar;

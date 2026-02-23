@@ -47,7 +47,7 @@ function TravelDetails() {
           className="mb-6 p-4 border border-gray-300 rounded-lg bg-white space-y-4 max-w-md"
         >
           <FormControl fullWidth size="small">
-            <InputLabel>Title</InputLabel>
+            <label>Title</label>
             <Input
               type="text"
               {...register("title", { required: "Please enter title" })}
@@ -55,7 +55,7 @@ function TravelDetails() {
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Description</InputLabel>
+            <label>Description</label>
             <Input
               type="text"
               {...register("description", {
@@ -65,7 +65,7 @@ function TravelDetails() {
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Max amount per day</InputLabel>
+            <label>Max amount per day</label>
             <Input
               type="number"
               {...register("maxAmoutPerDay", {
@@ -76,7 +76,7 @@ function TravelDetails() {
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Start Date</InputLabel>
+            <label>Start Date</label>
             <Input
               type="datetime-local"
               {...register("startDate", {
@@ -86,7 +86,7 @@ function TravelDetails() {
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>End Date</InputLabel>
+            <label>End Date</label>
             <Input
               type="datetime-local"
               {...register("endDate", { required: "Please enter endDate" })}

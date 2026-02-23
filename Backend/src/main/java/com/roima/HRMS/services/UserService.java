@@ -6,6 +6,7 @@ import com.roima.HRMS.dtos.response.NotificationResponseDTO;
 import com.roima.HRMS.dtos.response.UserResponceWithManagerAndTeamDTO;
 import com.roima.HRMS.dtos.response.UserResponseForEmailDTO;
 import com.roima.HRMS.dtos.response.UserResponseWithTeamAndManagerDTO;
+import com.roima.HRMS.entites.GameQueue;
 import com.roima.HRMS.entites.Notification;
 import com.roima.HRMS.entites.User;
 import com.roima.HRMS.repos.NotificationRepository;
@@ -13,6 +14,8 @@ import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +45,11 @@ public class UserService {
 
     public List<NotificationResponseDTO> getAllNotification(Long userId)
     {   User user=userRepo.findById(userId).orElseThrow(()->new RuntimeException("user not found"));
-        return notificationRepository.findByUser(user).stream().map(
-                x->modelMapper.map(x,NotificationResponseDTO.class)
-        ).toList();
+       List<NotificationResponseDTO>  notificationResponseDTOS= new java.util.ArrayList<>(notificationRepository.findByUser(user).stream().map(
+               x -> modelMapper.map(x, NotificationResponseDTO.class)
+       ).toList());
+       notificationResponseDTOS.sort(Comparator.comparingLong(NotificationResponseDTO::getNotificationId).reversed());
+       return notificationResponseDTOS;
     }
     public List<UserResponseForEmailDTO> getAllUser()
     {

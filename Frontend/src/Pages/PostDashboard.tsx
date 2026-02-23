@@ -167,7 +167,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                     }`}
                     onClick={() => handleTagFilter(tag.pkTagId)}
                   >
-                    #{tag.tagName}
+                    {tag.tagName}
                   </button>
                 ))}
               </div>

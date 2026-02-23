@@ -2,12 +2,12 @@ import { NavLink } from "react-router-dom";
 
 function HRSidebar() {
   return (
-    <div className="flex flex-col h-full  bg-gray-100  w-30">
+    <div className="flex flex-col h-full  bg-blue-300  w-30">
     
       <NavLink
         to="/hr/travel/details"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
        Travel Deatils
@@ -15,7 +15,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/travel/expense"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
        Travel Expense
@@ -23,7 +23,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/travel/document"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Travel Document
@@ -33,7 +33,7 @@ function HRSidebar() {
         to="/hr/game/details"
         
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Game Config
@@ -43,7 +43,7 @@ function HRSidebar() {
         to="/hr/achievement/posts"
         
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Achievements
@@ -53,7 +53,7 @@ function HRSidebar() {
         to="/hr/job/dashboard"
         
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         Jobs
@@ -63,7 +63,7 @@ function HRSidebar() {
         to="/hr/system-config"
         
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700 m-1" : "text-blue-500 m-1"
         }
       >
         System Configuration

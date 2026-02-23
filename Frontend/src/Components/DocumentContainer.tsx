@@ -28,9 +28,9 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
   } = useGetDocumentsBytraveler(travelerId);
   console.log(dataTDoc);
   return (
-    <>
+     <div className="bg-gray-100">
       
-
+       <div className="flex flex-row justify-end mx-10">
       <Button
         onClick={() => {
           if (view != "doc") SetView("doc");
@@ -39,6 +39,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
       >
         {view != "doc" ? "Add new doc" : "cancel"}
       </Button>
+</div> 
       {view == "doc" && (
         <NewDocumentForm
           travelerId={travelerId}
@@ -46,7 +47,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
           ownerType={ownerType}
         />
       )}
-
+         <div className="mx-20">
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -66,7 +67,8 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+      </div>  
+    </div>
   );
 }
 export default DocumentContainer;

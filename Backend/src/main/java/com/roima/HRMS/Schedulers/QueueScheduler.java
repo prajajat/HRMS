@@ -15,22 +15,23 @@ public class QueueScheduler {
 
     private final GameService gameService;
 
-    @Scheduled(fixedDelay = 60*1000)//30 min
+    @Scheduled(fixedDelay = 30*60*1000)//30 min
     public void runForAssignSlot(){
-       // log.info("auto call assign");
-        //gameService.assignSlot();
+        log.info("auto call assign");
+        gameService.assignSlot();
     }
 
-    @Scheduled(fixedDelay = 100*1000)
+    @Scheduled(cron ="0 5 0 * * ?")
+  // @Scheduled(fixedDelay = 1*60*1000)
     public void runForGenerateSlot(){
-//          log.info(" auto call  update cycle");
-//        if( gameService.updateCycle()) {
-//log.info("auto call generate slot");
-        //    gameService.generateSlot();
-//        }
-//        else{
-//            log.info("auto same slot");
-//        }
+          log.info(" auto call  update cycle");
+        if( gameService.updateCycle()) {
+          log.info("auto call generate slot");
+            gameService.generateSlot();
+        }
+        else{
+            log.info("auto same slot");
+        }
     }
 
 }

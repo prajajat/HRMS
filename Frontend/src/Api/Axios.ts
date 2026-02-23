@@ -93,6 +93,9 @@ export const CreateBooking = async (data: any) =>
 export const cancelBooking = async (id) =>
   await instance.delete(`/game/booking/` + id).then((res) => res);
 
+export const updateInterest = async (data) =>
+  await instance.post(`/game/interest`,data).then((res) => res);
+
 export const createJob = async (data: any) =>
   await instance.post("/job/create", data).then((res) => res);
 

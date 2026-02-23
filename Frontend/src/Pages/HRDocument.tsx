@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import { useGetDocuments } from "../Query/useQueries";
 import { useState } from "react";
@@ -20,7 +21,9 @@ function HRDocument() {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4">Travel Documents</h2>
+       <Typography fontSize={36}>Travel Documents</Typography>
+      <hr />
+      <br />
 
       <button
         onClick={() => setView(view !== "doc" ? "doc" : "")}

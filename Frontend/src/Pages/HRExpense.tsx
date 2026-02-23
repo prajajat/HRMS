@@ -1,9 +1,14 @@
+import { Typography } from "@mui/material";
 import ExpenseContainer from "../Components/ExpenseContainer";
 
 function HRExpense() {
   return (
     <div className="p-4">
-       <h2 className="mb-4">Travel Expense</h2>
+      <Typography fontSize={36}>Travel Expenses</Typography>
+      <hr />
+      <br />
+      
+    
       <ExpenseContainer ownerType={"HR"} />
     </div>
   );

@@ -70,7 +70,10 @@ export const PostCard: React.FC<PostCardProps> = ({
       {/* Header */}
       <div className={styles.postHeader}>
         <div className={styles.authorInfo}>
+           <div className='flex flex-row'>
+           <img src={post.authorImageUrl||'/letter-r.png'} className="h-10 w-10"></img>
           <h3>{post.authorName || 'System'}</h3>
+          </div>
           <p className={styles.timestamp}>
             {new Date(post.createdAt).toLocaleDateString()}
           </p>

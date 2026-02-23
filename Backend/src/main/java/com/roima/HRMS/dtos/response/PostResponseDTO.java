@@ -9,6 +9,7 @@ public class PostResponseDTO {
     private Long pkPostId;
     private Long authorId;
     private String authorName;
+    private String authorImageUrl;
     private String title;
     private String description;
     private String visibility;

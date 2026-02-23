@@ -34,6 +34,16 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
     setEmp((emp) => [...emp, newEmp]);
   };
 
+  const handleRemovePlayer = (id) => {
+   var newEmp=emp.filter((e)=>e.userId!=id);
+    setEmp(newEmp);
+  }
+   const handleRemoveSlot = (id) => {
+   var newSlot=slot.filter((e)=>e.gameSlotId!=id);
+    setSlot(newSlot);
+  }
+  
+
   const groupByDate = data.reduce((acc, slot) => {
     if (!acc[slot.date]) {
       acc[slot.date] = [];
@@ -60,6 +70,10 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
   };
 
   const handleBooking = () => {
+    if (slot.length == 0 || emp.length != 1 || emp.length != 3) {
+      alert("select player and slot properly");
+      return;
+    }
     var dto = {
       gameSlots: [],
       allPlayers: [],
@@ -91,31 +105,33 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
   return (
     <div className="flex flex-col gap-4 overflow-x-auto ">
       {!isEmpLoading && (
-        <div className="flex flex-col h-full mt-3">
-          Add Players
-          <Select
-            type="text"
-            defaultValue=""
-            className="mt-10 mb-10"
-            onChange={(e) => handleAddEmp(e.target.value)}
-          >
-            {Empdata.data.map((e) => {
-              if (userId == e.userId) return;
-              return (
-                <MenuItem value={e}>
-                  {e.name}- {e.companyEmail}
-                </MenuItem>
-              );
-            })}
-          </Select>
+        <div className="flex flex-col justify-center h-full mt-3 ">
+          <div className="flex flex-row justify-center content-center w-full">
+            Add Players
+            <Select
+              type="text"
+              defaultValue=""
+              className="mt-10 mb-10 w-sm"
+              onChange={(e) => handleAddEmp(e.target.value)}
+            >
+              {Empdata.data.map((e) => {
+                if (userId == e.userId) return;
+                return (
+                  <MenuItem value={e}>
+                    {e.name}- {e.companyEmail}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </div>
           {emp.length > 0 && (
-            <div>
-              <p>Player Added: </p>
-              <div className="bg-slate-400">
+          <div className="flex flex-row justify-center content-center w-full">
+              <p>Player Added </p>
+              <div className="bg-slate-400  w-sm"> 
                 <List>
                   {emp.map((e) => {
                     return (
-                      <ListItem key={e.userId}>
+                      <ListItem key={e.userId} onClick={()=>handleRemovePlayer(e.userId)}>
                         {e.name}-{e.companyEmail}
                       </ListItem>
                     );
@@ -124,38 +140,45 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
               </div>
             </div>
           )}
-          <div className="bg-slate-300">
+          
             {slot.length > 0 && (
-              <div>
-                <p> Added :Slots </p>
-                <div className="bg-slate-400">
+              <div className="flex flex-row justify-center content-center w-full mt-3">
+            <p> Added Slots  </p>
+                <div className="bg-slate-400  w-sm">
                   <List>
                     {slot.map((e) => {
-                      return <SlotCard data={e} key={e.gameSlotId} />;
+                      return <div onClick={()=>handleRemoveSlot(e.gameSlotId)}><SlotCard data={e} key={e.gameSlotId}  /></div>;
                     })}
                   </List>
                 </div>
               </div>
             )}
-          </div>
-          <Button onClick={handleBooking}>Make booking</Button>
+          
+          <Button onClick={handleBooking} >Make booking</Button>
         </div>
       )}
       <div className="flex flex-row aline-item-center justify-center  w-full ">
         {sortDate.map((date, indexOfDate) => (
-          <div key={date} className="min-w-[200px]  m-3 p-3">
-            <div>{new Date(date).toDateString()}</div>
-            <hr />
+          <div key={date} className="   m-3 p-3">
+            <div className="flex flex-row justify-center w-full bg-blue-600 my-4 text-white">
+              {new Date(date).toDateString()}
+            </div>
 
-            {groupByDate[date].map((slot, indexOfSlot) => (
-              <div
-                key={slot.gameSlotId}
-                onClick={() => handleSlotAdd(slot)}
-                className={`rounded-lg p-3 mb-3 ${(indexOfDate % 2 == 0 && indexOfSlot % 2 == 1) || (indexOfDate % 2 == 1 && indexOfSlot % 2 == 0) ? "bg-blue-300" : "bg-green-100"}`}
-              >
-                <SlotCard data={slot} />
-              </div>
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {groupByDate[date].map((slot, indexOfSlot) => (
+                <div>
+                  <hr />
+                  <div
+                    key={slot.gameSlotId}
+                    onClick={() => handleSlotAdd(slot)}
+                    className={`rounded-lg p-3 mb-3 ${(indexOfDate % 2 == 0 && indexOfSlot % 2 == 1) || (indexOfDate % 2 == 1 && indexOfSlot % 2 == 0) ? "bg-blue-300" : "bg-green-100"}`}
+                  >
+                    <SlotCard data={slot} />
+                  </div>
+                  <hr />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

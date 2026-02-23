@@ -2,12 +2,12 @@ import { NavLink } from "react-router-dom";
 
 function ManagerSidebar() {
   return (
-    <div className="flex flex-col h-full max-h-screen bg-gray-100  w-30">
+    <div className="flex flex-col h-full max-h-screen bg-blue-300  w-30">
   
       <NavLink
         to="/manager/tarvel-document-detail"
         className={({ isActive }) =>
-          isActive ? "text-blue-700" : "text-blue-300"
+          isActive ?  "text-indigo-700" : "text-blue-500"
         }
       >
         team member's travel documents

@@ -68,7 +68,10 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       {/* Header */}
       <div className={styles.commentHeader}>
         <div className={styles.authorInfo}>
-          <h4>{comment.authorName}</h4>
+          <div className='flex flex-row'>
+           <img src={comment.authorImageUrl} className="h-10 w-10"></img>
+          <h4 className='ml-3'>{comment.authorName}</h4>
+          </div>
           <p className={styles.timestamp}>
             {new Date(comment.createdAt).toLocaleDateString()}
           </p>

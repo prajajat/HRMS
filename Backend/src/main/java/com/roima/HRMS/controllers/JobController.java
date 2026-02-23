@@ -57,7 +57,7 @@ public class JobController {
         return ResponseEntity.ok(jobService.createJob(newDTO, document));
     }
 
-    @PreAuthorize("hasAuthority('manage-job')")
+    @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/all")
     public ResponseEntity<List<JobResponseDTO>> getAllJobs(@ModelAttribute JobFilterDTO filter) {
         log.info("Fetching all jobs with filter");

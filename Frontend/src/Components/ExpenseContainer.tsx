@@ -93,10 +93,10 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   };
   console.log(uniqueTravel);
   return (
-    <>
-      
+    <div className="bg-gray-100">
+       <div className="flex flex-row justify-between mx-10">
       {!isLoadingEp && (
-        <Typography variant="h5" color="Green">
+        <Typography variant="h6" color="Green">
           {" "}
           {ownerType != "HR" && "Total claimed " + totalClaimed}
         </Typography>
@@ -115,16 +115,16 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <NewExpenseForm travelerId={travelerId} ownerType={ownerType} />
           )}
         </>
-      )}
+      )}</div>
 
       {ownerType == "HR" && (
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-col justify-start border  border-blue-100">
+        <div className="flex flex-row justify-between mb-5">
+          <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select employee</FormLabel>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
+              className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterEmp(
                   e.target.value.substring(0, e.target.value.indexOf("-")),
@@ -141,12 +141,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
 
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select Travel</FormLabel>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
+             className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterTravel(
                   e.target.value.substring(0, e.target.value.indexOf("-")),
@@ -163,12 +163,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
 
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select status</FormLabel>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
+            className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterStatus(e.target.value);
               }}
@@ -180,12 +180,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
 
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select Start Date</FormLabel>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
+                className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterStartDate(e.target.value);
               }}
@@ -197,12 +197,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
 
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select End Date</FormLabel>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
+                className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterEndDate(e.target.value);
               }}
@@ -214,7 +214,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
           <div className="w-20 h-10">
-            <Button variant="contained" size="sm" onClick={handleApplyFilter}>
+            <Button variant="contained" size="sm" onClick={handleApplyFilter} sx={{marginY:1,}}>
               Apply Filter
             </Button>
           </div>
@@ -222,8 +222,9 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       )}
 
       {!isLoadingEp && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table" color="Green">
+        <div className="mx-20">
+        <TableContainer component={Paper} >
+          <Table  aria-label="simple table" color="Green">
             <TableHead>
               <TableRow>
                 {ownerType === "HR" && <TableCell>Action</TableCell>}
@@ -256,8 +257,9 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </TableBody>
           </Table>
         </TableContainer>
+        </div>
       )}
-    </>
+    </div>
   );
 }
 export default ExpenseContainer;

@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface GameSlotRepository  extends JpaRepository<GameSlot,Long> {
     List<GameSlot> findBySlotStatus(StatusType.BookingStatus slotStatus);
-    List<GameSlot> findByDateLessThanEqualAndDateLessThanEqualAndGame(Date startDate, Date endDate, Game game);
+    List<GameSlot> findByDateGreaterThanEqualAndDateLessThanEqualAndGame(Date startDate, Date endDate, Game game);
 
 }

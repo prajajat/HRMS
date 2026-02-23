@@ -85,15 +85,19 @@ public class JobService {
                     if (filter.getStatus() != null && !job.getStatus().equals(filter.getStatus())) {
                         return false;
                     }
+
                     if (filter.getStartDate() != null && job.getCreatedAt().isBefore(filter.getStartDate())) {
                         return false;
                     }
+
                     if (filter.getEndDate() != null && job.getCreatedAt().isAfter(filter.getEndDate())) {
                         return false;
                     }
+
                     if (filter.getCreatedById() != null && !job.getCreatedBy().getUserId().equals(filter.getCreatedById())) {
                         return false;
                     }
+                    
                     if (filter.getSearch() != null && !filter.getSearch().isEmpty()) {
                         String search = filter.getSearch().toLowerCase();
                         if (!job.getTitle().toLowerCase().contains(search) &&

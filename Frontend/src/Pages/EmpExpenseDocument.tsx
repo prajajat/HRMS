@@ -40,11 +40,11 @@ function EmpExpenseDocument() {
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold mb-3">Expenses</h3>
+          <h3 className="text-lg font-semibold mb-3 ml-10">Expenses</h3>
           <ExpenseContainer travelerId={id} ownerType={"employee"} />
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-3">Documents</h3>
+          <h3 className="text-lg font-semibold mb-3 ml-10">Documents</h3>
           <DocumentContainer
             travelDetailId={tid}
             travelerId={id}

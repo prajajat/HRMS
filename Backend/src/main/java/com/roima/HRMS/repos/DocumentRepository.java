@@ -12,5 +12,5 @@ import java.util.List;
 public interface DocumentRepository extends JpaRepository<Document,Long>
 {
     List<Document> findByUploadedBy(User uploadedBy);
-    List<Document>findAllByTravelExpense(TravelExpense travelExpense);
+    List<Document>findAllByTravelExpenseAndOwnerTypeNot(TravelExpense travelExpense,String ownerType);
 }

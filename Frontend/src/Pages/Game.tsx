@@ -28,9 +28,9 @@ function Game({ view = "all" }) {
       )}
 
       {!isLoading && data?.data && data.data.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4">
           {data.data.map((g) => (
-            <GameCard key={g.gameId} data={g} isAllFields={false} view={"hr"} />
+            <GameCard key={g.gameId} data={g} isAllFields={false} view={view} />
           ))}
         </div>
       )}

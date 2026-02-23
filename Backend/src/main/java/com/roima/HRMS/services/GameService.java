@@ -57,19 +57,19 @@ public class GameService {
     }
      public BasicResponse UpdateGameInterest(GameInterestDTO dto)
      {
-         List<Game> gameList= dto.getGames().stream().map(x->findGameById(x))
-                 .toList();
+         log.info("cal{}{}",dto.getGame(),dto.getUserId())   ;
+         Game game= findGameById(dto.getGame());
          User user=findUserById(dto.getUserId());
-         user.setInterestedGames(gameList);
-         List<GameQueue> gameQueues=new ArrayList<>();
-         gameList.forEach(
-                 x->{  GameQueue gameQueue=new GameQueue();
-                              gameQueue.setTotalPlayedInCycle(1000);
-                              gameQueue.setIsActive(false);
-                              gameQueue.setPenalty(1000);
-                     gameQueues.add(gameQueue);}
-         );
-         user.setGameQueues(gameQueues);
+
+         if(user.getInterestedGames().contains((game)))
+         {
+              game.getInterestedPlayers().remove(user);
+         }
+         else{
+             game.getInterestedPlayers().add(user);
+         }
+
+        gameRepository.save(game);
          return new BasicResponse("game interest update successfully");
      }
     public GameResponceWithSlotAndBookingDTO getGameById(Long gameId, Long userId)
@@ -93,7 +93,7 @@ public class GameService {
                  gameBooking -> modelMapper.map(gameBooking, GameBookingResponseDTO.class)).toList()
          );
 
-         List<GameSlot> gameSlots=gameSlotRepository.findByDateLessThanEqualAndDateLessThanEqualAndGame(
+         List<GameSlot> gameSlots=gameSlotRepository.findByDateGreaterThanEqualAndDateLessThanEqualAndGame(
                  Date.valueOf(LocalDate.now()),
                  Date.valueOf(LocalDate.now().plusDays(game.getMaxDayOfBookingAllow()
 
@@ -281,8 +281,9 @@ public class GameService {
                                 })
                                 .thenComparing(GameQueue::getQueueTime)
                 );
-        log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
+
               if(allPlayer.isEmpty())  return null;
+        log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
              return allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())
                                   ).toList().get((0));
 
@@ -484,7 +485,8 @@ public class GameService {
                 Math.max(
                         gameQueue.getTotalPlayedInCycle()+changeInTotalPlayedInCycle,0));
         if(activeStatus)gameQueue.setQueueTime(LocalDateTime.now());
-         gameQueueRepository.save(gameQueue);
+
+        gameQueueRepository.save(gameQueue);
     }
     public boolean isPlayedInCycle(User player,Game game)
     {

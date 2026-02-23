@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import DocumentCard from "../Components/DocumentCard";
@@ -18,7 +19,9 @@ function ManagerDocDetails() {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4">Travel Documents</h2>
+      <Typography fontSize={36}>Travel Documnets</Typography>
+      <hr />
+      <br />
 
       {isLoading && (
         <div className="flex justify-center py-8">

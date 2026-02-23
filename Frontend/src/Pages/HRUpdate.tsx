@@ -54,7 +54,7 @@ function HRUpdate() {
 
   return (
     <>
-      HRUpdate
+     
       {!isLoading && (
         <div>
           <TravelDetailCard
@@ -64,11 +64,13 @@ function HRUpdate() {
             refetch={refetch}
           />
           {data?.data.createdId == userId && (
-            <div className="mt-10 w-max-2xl">
-              <br />
-              Add Employee to travel
+          <div className="mt-10 w-max-2xl flex flex-row justify-center w-full">
+            
+             
               {!isEmpLoading && (
-                <div>
+                <div className="mt-10 w-max-2xl flex flex-col bg-gray-200 rounded m-3 p-3">
+                   <br />
+                   Add Employee to travel
                   <Select
                     type="text"
                     defaultValue=""
@@ -84,21 +86,26 @@ function HRUpdate() {
                     })}
                   </Select>
                   <br />
-                  added :
+                  
                   {emp.length > 0 && (
+                    
+                      
                     <List>
+                       added :
                       {emp.map((e) => {
                         return (
-                          <ListItem key={e.userId}>
+                          <ListItem key={e.userId}  sx={{backgroundColor:"#b9b9bf"}}>
                             {e.name}-{e.companyEmail}
                           </ListItem>
                         );
                       })}
                     </List>
+                   
                   )}
                   <Button onClick={handelAssign}>Add Employes</Button>
                 </div>
               )}
+           
             </div>
           )}
         </div>

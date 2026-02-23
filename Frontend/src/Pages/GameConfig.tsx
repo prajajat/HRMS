@@ -49,66 +49,72 @@ function GameConfig() {
           )}
 
           <FormControl fullWidth size="small">
-            <InputLabel>Slot Start Time</InputLabel>
+             <label>Slot Start Time</label>
             <Input
               type="time"
               {...register("slotStartTime", {
                 required: "Please enter slot start time",
               })}
+              placeholder="Slot Start Time"
             />
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Slot End Time</InputLabel>
+            <label>Slot End Time</label>
             <Input
               type="time"
               {...register("slotEndTime", {
                 required: "Please enter slot end time",
               })}
+              placeholder="Slot End Time"
             />
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Slot Duration (Minutes)</InputLabel>
+            <label>Slot Duration (minutes)</label>
             <Input
               type="number"
               {...register("slotDurationMinutes", {
                 required: "Please enter slot duration",
                 min: { value: 0, message: "Must be positive" },
               })}
+              placeholder="Slot Duration (minutes)"
             />
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Max Players Per Slot</InputLabel>
+             <label>Max Players Per Slot</label>
             <Input
               type="number"
               {...register("maxPlayerPerSlot", {
                 required: "Please enter max players per slot",
                 min: { value: 0, message: "Must be positive" },
               })}
+              placeholder="Max Players Per Slot"
             />
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Max Slots Per Booking</InputLabel>
+           <label>Max Slots Per Booking</label>
             <Input
               type="number"
               {...register("maxSlotPerBooking", {
                 required: "Please enter max slots per booking",
                 min: { value: 0, message: "Must be positive" },
               })}
+              placeholder="Max Slots Per Booking"
             />
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel>Max Days for Booking</InputLabel>
+           <label>Max Days Allowed for Booking</label>
             <Input
               type="number"
               {...register("maxDayOfBookingAllow", {
                 required: "Please enter max days for booking",
                 min: { value: 0, message: "Must be positive" },
               })}
+              placeholder="Max Days Allowed for Booking"
             />
           </FormControl>
 

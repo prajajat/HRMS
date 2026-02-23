@@ -10,9 +10,14 @@ import {
 } from "@mui/material";
 
 import { Navigate, useNavigate } from "react-router-dom";
+import { useUpdateInterest } from "../Query/useQueries";
+import { useSelector } from "react-redux";
 
 function GameCard({ data, isAllFields = false, view }) {
   const navigate = useNavigate();
+  const userId=useSelector((state)=>state.user.userId);
+const { mutate: updateMutation, isPending: isUpdateLoading } = useUpdateInterest();
+
   var image = "";
   switch (data.gameId) {
     case 1:
@@ -28,40 +33,62 @@ function GameCard({ data, isAllFields = false, view }) {
       image = "/Carrom.jpg";
       break;
   }
-
+  
+ const handleUpdateGameInterest =()=>
+ {
+    
+   const updateData = {
+     userId:userId,
+       game: data.gameId,
+      
+    };
+       updateMutation( updateData ,
+        {
+        onSuccess: (response: any) => {
+          console.log("interest updated", response);
+          
+          alert("interest updated!");
+        },
+      }
+     ) 
+ }
   console.log(data);
   return (
-    <Card sx={{ maxWidth: 250, margin: 5 }}>
-      <div className="flex flex-col aline-item-center justify-center h-full">
-        <div className="flex flex-row aline-item-center justify-center w-full">
-          <img src={image} className="h-20 w-20"></img>
+  
+      <div className="max-w-4xl m-5 shadow-lg">
+      <div className="flex flex-row aline-item-center justify-center h-full">
+         
+        <div className="flex flex-col aline-item-center justify-center w-full">
+          <img src={image} className="h-50 "></img>
+           <div className="bg-gray-100 m-3 rounded-sm">{data.gameName}</div>
         </div>
-        <div className="flex flex-row aline-item-center justify-center  w-full">
-          <div className="bg-gray-100 m-3 rounded-sm">{data.gameName}</div>
-        </div>
-        <hr />
-        <div className="flex flex-row justify-items-stretch">
-          <div className="bg-gray-100 m-3 rounded-sm"> slotStartTime </div>
+
+          <div className="flex flex-col aline-item-center justify-center w-full">
+ 
+        <div className="flex flex-row justify-between w-sm">
+          <div className="bg-gray-100 m-3 rounded-sm"> slot start time </div>
           <div className="bg-gray-100 m-3 rounded-sm">
             {" "}
             {data.slotStartTime}
           </div>
         </div>
-        <div className="flex flex-row justify-items-stretch">
-          <div className="bg-gray-100 m-3 rounded-sm"> slotEndTime </div>
+
+        <div className="flex flex-row justify-between w-full">
+          <div className="bg-gray-100 m-3 rounded-sm"> slot end time </div>
           <div className="bg-gray-100 m-3 rounded-sm"> {data.slotEndTime}</div>
         </div>
-        <div className="flex flex-row justify-items-stretch">
-          <div className="bg-gray-100 m-3 rounded-sm"> maxPlayerPerSlot </div>
+
+        <div className="flex flex-row justify-between w-full">
+          <div className="bg-gray-100 m-3 rounded-sm"> max player per slot </div>
           <div className="bg-gray-100 m-3 rounded-sm">
             {" "}
             {data.maxPlayerPerSlot}
           </div>
         </div>
-        <div className="flex flex-row justify-items-stretch">
+        <div className="flex flex-row justify-between w-full">
           <div className="bg-gray-100 m-3 rounded-sm">
             {" "}
-            slotDurationMinutes{" "}
+            slot duration minutes{" "}
           </div>
           <div className="bg-gray-100 m-3 rounded-sm">
             {" "}
@@ -69,46 +96,34 @@ function GameCard({ data, isAllFields = false, view }) {
           </div>
         </div>
 
-        <div className="flex flex-row justify-items-stretch">
-          <div className="bg-gray-100 m-3 rounded-sm"> maxSlotPerBooking </div>
+        <div className="flex flex-row justify-between w-full">
+          <div className="bg-gray-100 m-3 rounded-sm"> max slot per booking </div>
           <div className="bg-gray-100 m-3 rounded-sm">
             {" "}
             {data.maxSlotPerBooking}
           </div>
         </div>
-        <hr />
-        {data.playerInterested && !isAllFields && (
-          <Button
-            onClick={() => navigate("/employee/game/details/" + data.gameId)}
-          >
-            See More
-          </Button>
-        )}
-
-        {view == "hr" && (
-          <Button onClick={() => navigate("/hr/game/details/" + data.gameId)}>
-            Config
-          </Button>
-        )}
+       
+        
 
         {isAllFields && (
           <div>
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> cycleStartDate </div>
+            <div className="flex flex-row justify-between w-full">
+              <div className="bg-gray-100 m-3 rounded-sm"> cycle start date </div>
               <div className="bg-gray-100 m-3 rounded-sm">
                 {" "}
                 {data.cycleStartDate}
               </div>
             </div>
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> cycleEndDate </div>
+            <div className="flex flex-row justify-between w-full">
+              <div className="bg-gray-100 m-3 rounded-sm"> cycle end date </div>
               <div className="bg-gray-100 m-3 rounded-sm">
                 {" "}
                 {data.cycleEndDate}
               </div>
             </div>
             {!data.isOpenForWeekend && (
-              <div className="flex flex-row justify-items-stretch">
+              <div className="flex flex-row justify-between w-full">
                 <div className="bg-green-100 m-3 rounded-sm">
                   {" "}
                   Open for weekend
@@ -117,8 +132,35 @@ function GameCard({ data, isAllFields = false, view }) {
             )}
           </div>
         )}
+
+
+{data.playerInterested && !isAllFields && (
+          <Button
+            onClick={() => navigate("/employee/game/details/" + data.gameId)}
+          >
+            See More
+          </Button>
+          
+
+        )}
+        {!data.playerInterested && !isAllFields &&
+                 <Button
+            onClick={handleUpdateGameInterest}
+          >Show interest
+            
+          </Button>
+        }
+        {view == "hr" && (
+          <Button onClick={() => navigate("/hr/game/details/" + data.gameId)}>
+            Config
+          </Button>
+        )}
+
+
+
       </div>
-    </Card>
+    </div>
+    </div>
   );
 }
 export default GameCard;

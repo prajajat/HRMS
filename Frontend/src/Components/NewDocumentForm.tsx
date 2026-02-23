@@ -75,7 +75,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col border p-20 rounded-lg w-100"
+      className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
     >
       {!isLoadingEmp && !isLoadingTd && (
         <>

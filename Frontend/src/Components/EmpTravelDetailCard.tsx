@@ -17,7 +17,7 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
   console.log(data);
   return (
     <Grid item xs={12} md={4}>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{  margin:5,backgroundColor:"#f2f5ee"}}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {data.title}

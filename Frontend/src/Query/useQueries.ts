@@ -52,6 +52,7 @@ import {
   likeComment,
   getAllTags,
   createTag,
+  updateInterest,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -296,6 +297,16 @@ export const useAddHr = () => {
 export const useCreateJobReferral = () => {
   return useMutation<any,any>({
     mutationFn: ({ jobId, data }) => createJobReferral(jobId, data),
+    onSuccess: (response) => {
+      console.log(response);
+    },
+  });
+};
+
+
+export const useUpdateInterest = () => {
+  return useMutation({
+    mutationFn: updateInterest,
     onSuccess: (response) => {
       console.log(response);
     },

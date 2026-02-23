@@ -9,6 +9,7 @@ public class CommentResponseDTO {
     private Long pkCommentId;
     private Long authorId;
     private String authorName;
+    private String authorImageUrl;
     private String description;
     private LocalDateTime createdAt;
     private Boolean isActive;

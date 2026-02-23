@@ -29,11 +29,12 @@ function GameDetails() {
 
       {!isLoading && data?.data?.playerInterested && (
         <div className="space-y-4">
-          <div className="p-4 bg-slate-100 rounded">
+          <div className="p-4 flex flex-row justify-center bg-slate-100 rounded">
             <GameCard data={data.data} isAllFields={true} />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
+          
+ 
+   
+          <div className="flex flex-col justify-center item-center gap-2">
             <Button
               onClick={() => setView("")}
             >
@@ -49,9 +50,12 @@ function GameDetails() {
               Available Slots
             </Button>
           </div>
+          </div>
 
           {view === "showBooking" && (
-            <div className="p-4 bg-slate-100 rounded">
+            <div className="p-4 flex flex-row justify-center bg-slate-100 rounded ">
+              <div>
+               
               {data.data.gameBookings && data.data.gameBookings.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {data.data.gameBookings.map((gameBooking) => (
@@ -65,6 +69,7 @@ function GameDetails() {
               ) : (
                 <p className="py-4">No bookings yet</p>
               )}
+               </div>
             </div>
           )}
 
