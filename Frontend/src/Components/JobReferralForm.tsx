@@ -42,7 +42,7 @@ function JobReferralForm({ jobId, onSuccess }) {
           setFile(null);
           onSuccess();
         },
-      }
+      },
     );
   };
 
@@ -88,12 +88,7 @@ function JobReferralForm({ jobId, onSuccess }) {
 
       {file && <p>Selected: {file.name}</p>}
 
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        disabled={isPending}
-      >
+      <Button type="submit" fullWidth variant="contained" disabled={isPending}>
         {isPending ? "Submitting..." : "Submit Referral"}
       </Button>
     </form>

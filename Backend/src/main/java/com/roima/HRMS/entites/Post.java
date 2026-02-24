@@ -40,6 +40,10 @@ public class Post {
     private User updatedBy;
 
     @ManyToOne
+    @JoinColumn(name = "deleted_by")
+    private User deletedBy; // who deleted the post (HR or author)
+
+    @ManyToOne
     @JoinColumn(name = "created_for")
     private User createdFor; // for system posts
 

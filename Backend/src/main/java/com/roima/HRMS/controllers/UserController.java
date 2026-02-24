@@ -1,10 +1,7 @@
 package com.roima.HRMS.controllers;
 
 
-import com.roima.HRMS.dtos.response.NotificationResponseDTO;
-import com.roima.HRMS.dtos.response.UserResponceWithManagerAndTeamDTO;
-import com.roima.HRMS.dtos.response.UserResponseForEmailDTO;
-import com.roima.HRMS.dtos.response.UserResponseWithTeamAndManagerDTO;
+import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +44,11 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasAuthority('All-User')")
+    @GetMapping("/team-members")
+    public ResponseEntity<List<UserResponceBaseDTO>> getTeamMemberByManager(){
+        return ResponseEntity.ok(userService.getTeamMemberByManager());
+    }
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/{id}")

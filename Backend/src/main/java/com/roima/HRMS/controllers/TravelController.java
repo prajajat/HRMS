@@ -166,7 +166,7 @@ public class TravelController {
         return ResponseEntity.ok(travelService.getAllTravelerDocumentByTravelerId(travelerId));
     }
 
-    @PreAuthorize("hasAuthority('manage-traveler')  ")
+    @PreAuthorize("hasAuthority('access-travel') ")
     @PostMapping(value = "/document",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicResponse> createTravelerDocument(
             @RequestParam("tarvelerDocumentData") String dto,

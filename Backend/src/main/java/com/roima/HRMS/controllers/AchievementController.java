@@ -65,7 +65,7 @@ public class AchievementController {
         return ResponseEntity.ok(achievementService.updatePost(postId, newDTO));
     }
 
-    @PreAuthorize("hasAuthority('manage-post')")
+    @PreAuthorize("hasAuthority('All-User')")
     @DeleteMapping("/post/{postId}")
     public ResponseEntity<BasicResponse> deletePost(@PathVariable Long postId) {
         log.info("Deleting post: {}", postId);
@@ -108,7 +108,7 @@ public class AchievementController {
         return ResponseEntity.ok(achievementService.updateComment(commentId, dto));
     }
 
-    @PreAuthorize("hasAuthority('manage-post')")
+    @PreAuthorize("hasAuthority('All-User')")
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<BasicResponse> deleteComment(@PathVariable Long commentId) {
         log.info("Deleting comment: {}", commentId);

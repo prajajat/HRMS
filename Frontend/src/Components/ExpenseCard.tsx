@@ -68,7 +68,7 @@ function ExpenseCard({ data, ownerType, refetch }) {
       <TableCell component="th" scope="row">
         {data.amount}
       </TableCell>
-      <TableCell align="right">{data.expenseDate}</TableCell>
+      <TableCell align="right">{data.expenseDate.replace("T", ",")}</TableCell>
 
       <TableCell align="right">
         {edit ? (
@@ -92,8 +92,10 @@ function ExpenseCard({ data, ownerType, refetch }) {
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
           ></TextField>
-        ) : (
+        ) : data.remark ? (
           data.remark
+        ) : (
+          "NA"
         )}
       </TableCell>
 
@@ -103,6 +105,9 @@ function ExpenseCard({ data, ownerType, refetch }) {
           <TableCell align="right">{data.travelerTravelDetailTitle}</TableCell>
         </>
       )}
+      <TableCell align="right">
+        {data.updateByUserName ? data.updateByUserName : "N/A"}
+      </TableCell>
       <TableCell align="right">
         {data.documents.map((d) => {
           return (

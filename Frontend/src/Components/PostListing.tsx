@@ -1,12 +1,11 @@
-import React from 'react';
-import { PostCard } from './PostCard';
-import styles from '../Styles/achievement.module.css';
+import React from "react";
+import { PostCard } from "./PostCard";
+import styles from "../Styles/achievement.module.css";
 
 interface PostListingProps {
   posts: any[];
   isLoading: boolean;
-  view: 'hr' | 'employee';
-  onEdit?: (post: any) => void;
+  view: "hr" | "employee";
   onCommentClick?: (postId: number) => void;
 }
 
@@ -14,8 +13,7 @@ export const PostListing: React.FC<PostListingProps> = ({
   posts,
   isLoading,
   view,
-  onEdit,
-  onCommentClick
+  onCommentClick,
 }) => {
   if (isLoading) {
     return (
@@ -40,7 +38,6 @@ export const PostListing: React.FC<PostListingProps> = ({
           key={post.pkPostId}
           post={post}
           view={view}
-          onEdit={onEdit}
           onCommentClick={onCommentClick}
         />
       ))}

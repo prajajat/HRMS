@@ -149,7 +149,6 @@ public class JobService {
         return new BasicResponse("Reviewer added successfully");
     }
 
-
     public BasicResponse addHr(Long jobId, AddHrDTO dto) {
         Job job = findJobById(jobId);
         User hr = findUserById(dto.getUserId());

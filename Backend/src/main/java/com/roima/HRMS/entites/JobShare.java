@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -29,7 +30,7 @@ public class JobShare {
 
     @CreationTimestamp
     @Column(name = "datetime" , updatable = false)
-    private LocalTime datetime;
+    private LocalDateTime datetime;
 
     @ManyToOne
     @JoinColumn(name="fk_job_id")

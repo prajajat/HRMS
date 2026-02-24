@@ -14,4 +14,5 @@ public interface GameQueueRepository  extends JpaRepository<GameQueue,Long> {
     List<GameQueue> findByGameAndIsActive(Game game,Boolean isActive);
     List<GameQueue> findByGameBooking(GameBooking gameBooking);
     List<GameQueue> findAllByPlayer(User player);
+    Boolean existsByGameAndPlayer(Game game,User user);
 }

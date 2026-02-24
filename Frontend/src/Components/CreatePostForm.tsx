@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useCreatePost, useUpdatePost, useGetAllTags, useCreateTag } from '../Query/useQueries';
-import styles from '../Styles/achievement.module.css';
+import React, { useState, useEffect } from "react";
+import {
+  useCreatePost,
+  useUpdatePost,
+  useGetAllTags,
+  useCreateTag,
+} from "../Query/useQueries";
+import styles from "../Styles/achievement.module.css";
 
 interface CreatePostFormProps {
   editingPost?: any;
@@ -11,19 +16,19 @@ interface CreatePostFormProps {
 export const CreatePostForm: React.FC<CreatePostFormProps> = ({
   editingPost,
   onSuccess,
-  onCancel
+  onCancel,
 }) => {
   const [formData, setFormData] = useState<any>({
-    title: '',
-    desc: '',
-    visibility: 'all',
+    title: "",
+    desc: "",
+    visibility: "all",
     tagIds: [],
-    mainDocumentId: undefined
+    mainDocumentId: undefined,
   });
   const [file, setFile] = useState<File | undefined>();
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [showTagForm, setShowTagForm] = useState(false);
-  const [newTagName, setNewTagName] = useState('');
+  const [newTagName, setNewTagName] = useState("");
 
   const { mutate: createPost, isPending: isCreating } = useCreatePost();
   const { mutate: updatePost, isPending: isUpdating } = useUpdatePost();
@@ -36,20 +41,22 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
         title: editingPost.title,
         desc: editingPost.desc,
         visibility: editingPost.visibility,
-        tagIds: editingPost.tags?.map(t => t.pkTagId) || [],
-        mainDocumentId: editingPost.mainDocumentId
+        tagIds: editingPost.tags?.map((t) => t.pkTagId) || [],
+        mainDocumentId: editingPost.mainDocumentId,
       });
-      setSelectedTags(editingPost.tags?.map(t => t.pkTagId) || []);
+      setSelectedTags(editingPost.tags?.map((t) => t.pkTagId) || []);
     }
   }, [editingPost]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -60,9 +67,9 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
   };
 
   const handleTagSelect = (tagId: number) => {
-    setSelectedTags(prev => {
+    setSelectedTags((prev) => {
       if (prev.includes(tagId)) {
-        return prev.filter(t => t !== tagId);
+        return prev.filter((t) => t !== tagId);
       }
       return [...prev, tagId];
     });
@@ -70,9 +77,9 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
 
   const handleCreateTag = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newTagName.trim()) {
-      alert('Please enter a tag name');
+      alert("Please enter a tag name");
       return;
     }
 
@@ -80,15 +87,15 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
       { tagName: newTagName.trim() },
       {
         onSuccess: () => {
-          setNewTagName('');
+          setNewTagName("");
           setShowTagForm(false);
-          console.log('Tag created successfully');
+          console.log("Tag created successfully");
         },
         onError: (error) => {
-          console.error('Error creating tag:', error);
-          alert('Failed to create tag');
-        }
-      }
+          console.error("Error creating tag:", error);
+          alert("Failed to create tag");
+        },
+      },
     );
   };
 
@@ -97,7 +104,7 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
 
     const submitData: any = {
       ...formData,
-      tagIds: selectedTags
+      tagIds: selectedTags,
     };
 
     if (editingPost) {
@@ -107,8 +114,8 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
           onSuccess: () => {
             resetForm();
             onSuccess?.();
-          }
-        }
+          },
+        },
       );
     } else {
       createPost(
@@ -117,19 +124,19 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
           onSuccess: () => {
             resetForm();
             onSuccess?.();
-          }
-        }
+          },
+        },
       );
     }
   };
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      desc: '',
-      visibility: 'all',
+      title: "",
+      desc: "",
+      visibility: "all",
       tagIds: [],
-      mainDocumentId: undefined
+      mainDocumentId: undefined,
     });
     setFile(undefined);
     setSelectedTags([]);
@@ -139,7 +146,7 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className={styles.postForm}>
-      <h2>{editingPost ? 'Edit Post' : 'Create New Post'}</h2>
+      <h2>{editingPost ? "Edit Post" : "Create New Post"}</h2>
 
       {/* Title */}
       <div className={styles.formGroup}>
@@ -219,13 +226,13 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
               disabled={isCreatingTag || !newTagName.trim()}
               className={styles.submitBtn}
             >
-              {isCreatingTag ? 'Creating...' : 'Create Tag'}
+              {isCreatingTag ? "Creating..." : "Create Tag"}
             </button>
             <button
               type="button"
               onClick={() => {
                 setShowTagForm(false);
-                setNewTagName('');
+                setNewTagName("");
               }}
               disabled={isCreatingTag}
               className={styles.cancelBtn}
@@ -251,7 +258,9 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
             ))}
           </div>
         ) : (
-          <p className={styles.noTags}>No tags available. Create one to get started!</p>
+          <p className={styles.noTags}>
+            No tags available. Create one to get started!
+          </p>
         )}
       </div>
 
@@ -270,12 +279,12 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
 
       {/* Buttons */}
       <div className={styles.formActions}>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={styles.submitBtn}
-        >
-          {isLoading ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
+        <button type="submit" disabled={isLoading} className={styles.submitBtn}>
+          {isLoading
+            ? "Saving..."
+            : editingPost
+              ? "Update Post"
+              : "Create Post"}
         </button>
         {onCancel && (
           <button

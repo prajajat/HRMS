@@ -9,18 +9,7 @@ import java.util.List;
 
 
 
-@Data
-class UserResponceBaseDTO {
-        @NotNull
-        private Long userId;
-        @NotBlank
-        private String companyEmail;
-        @NotBlank
-        private String name;
-        private String imageUrl;
-        private String departmentName;
-        private String designation;
-}
+
 @Data
 public class UserResponceWithManagerAndTeamDTO  extends UserResponceBaseDTO{
 

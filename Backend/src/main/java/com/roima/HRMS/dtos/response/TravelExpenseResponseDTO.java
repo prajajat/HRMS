@@ -14,6 +14,7 @@ public class TravelExpenseResponseDTO {
     private String remark;
     private Long travelerUserId;
     private  String travelerUserName;
+    private  String UpdateByUserName;
     private Long travelerTravelDetailId;
     private String travelerTravelDetailTitle;
     private List<DocDto> documents;

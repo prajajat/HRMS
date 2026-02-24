@@ -1,68 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useLikePost, useDeletePost } from '../Query/useQueries';
-import styles from '../Styles/achievement.module.css';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useLikePost, useDeletePost, useUpdatePost } from "../Query/useQueries";
+import styles from "../Styles/achievement.module.css";
 
 interface PostCardProps {
   post: any;
-  view: 'hr' | 'employee';
-  onEdit?: (post: any) => void;
+  view: "hr" | "employee";
   onCommentClick?: (postId: number) => void;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
   post,
   view,
-  onEdit,
-  onCommentClick
+  onCommentClick,
 }) => {
-  const userData = useSelector((state: any) => state.user.userData);
+  const userId = useSelector((state: any) => state.user.userId);
   const { mutate: likePost, isPending: isLiking } = useLikePost();
   const { mutate: deletePost, isPending: isDeleting } = useDeletePost();
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost();
   const [showOptions, setShowOptions] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(post.title);
+  const [editDesc, setEditDesc] = useState(post.description);
 
   // Ensure userId and authorId match (handle both string and number types)
-  const currentUserId = Number(userData?.userId);
+  const currentUserId = Number(userId);
   const postAuthorId = Number(post?.authorId);
-  
-  const isAuthor = currentUserId > 0 && currentUserId === postAuthorId;
+
+  const isAuthor =
+    currentUserId > 0 && postAuthorId > 0 && currentUserId === postAuthorId;
   // Delete: HR users can always delete, or author can delete their own posts
-  const canDelete = view === 'hr' || isAuthor;
+  const canDelete = view === "hr" || isAuthor;
   // Edit: Only author can edit their own posts (only in employee view)
-  const canEdit = isAuthor && view === 'employee';
+  const canEdit = isAuthor && view === "employee";
   const canShowMenu = canEdit || canDelete;
 
   // Debug logging
   useEffect(() => {
-    console.log('PostCard Debug:', {
+    console.log("PostCard Debug:", {
       currentUserId,
       postAuthorId,
       isAuthor,
-      userData: userData?.userId,
-      authorId: post?.authorId,
+      userId,
+      "post.authorId": post?.authorId,
       view,
       canDelete,
       canEdit,
-      canShowMenu
+      canShowMenu,
+      "post.pkPostId": post?.pkPostId,
     });
-  }, [view, canDelete, canEdit, isAuthor, currentUserId, postAuthorId]);
+  }, [
+    view,
+    canDelete,
+    canEdit,
+    isAuthor,
+    currentUserId,
+    postAuthorId,
+    post?.pkPostId,
+  ]);
 
   const handleLike = () => {
     likePost(post.pkPostId);
   };
 
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm("Are you sure you want to delete this post?")) {
       deletePost(post.pkPostId);
       setShowOptions(false);
     }
   };
 
   const handleEdit = () => {
-    if (onEdit) {
-      onEdit(post);
-    }
+    setIsEditing(true);
     setShowOptions(false);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editTitle.trim() || !editDesc.trim()) {
+      alert("Title and description cannot be empty");
+      return;
+    }
+
+    updatePost(
+      {
+        postId: post.pkPostId,
+        data: {
+          title: editTitle,
+          desc: editDesc,
+          visibility: post.visibility,
+          tagIds: post.tags?.map((t: any) => t.pkTagId) || [],
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+        onError: (error) => {
+          console.error("Error updating post:", error);
+          alert("Failed to update post");
+        },
+      },
+    );
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditTitle(post.title);
+    setEditDesc(post.description);
   };
 
   return (
@@ -70,15 +114,18 @@ export const PostCard: React.FC<PostCardProps> = ({
       {/* Header */}
       <div className={styles.postHeader}>
         <div className={styles.authorInfo}>
-           <div className='flex flex-row'>
-           <img src={post.authorImageUrl||'/letter-r.png'} className="h-10 w-10"></img>
-          <h3>{post.authorName || 'System'}</h3>
+          <div className="flex flex-row">
+            <img
+              src={post.authorImageUrl || "/letter-r.png"}
+              className="h-10 w-10"
+            ></img>
+            <h3>{post.authorName || "System"}</h3>
           </div>
           <p className={styles.timestamp}>
             {new Date(post.createdAt).toLocaleDateString()}
           </p>
         </div>
-        
+
         {/* Options Menu */}
         {canShowMenu && (
           <div className={styles.optionsMenu}>
@@ -103,7 +150,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                     className={styles.menuItem}
                     title="Delete post"
                   >
-                    {isDeleting ? 'Deleting...' : 'Delete'}
+                    {isDeleting ? "Deleting..." : "Delete"}
                   </button>
                 )}
               </div>
@@ -114,8 +161,47 @@ export const PostCard: React.FC<PostCardProps> = ({
 
       {/* Content */}
       <div className={styles.postContent}>
-        <h2>{post.title}</h2>
-        <p>{post.description}</p>
+        {isEditing ? (
+          <div className={styles.editFormInline}>
+            <input
+              type="text"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              className={styles.editInput}
+              placeholder="Post title"
+              disabled={isUpdating}
+            />
+            <textarea
+              value={editDesc}
+              onChange={(e) => setEditDesc(e.target.value)}
+              className={styles.editInput}
+              placeholder="Post description"
+              rows={4}
+              disabled={isUpdating}
+            />
+            <div className={styles.editButtonsGroup}>
+              <button
+                onClick={handleSaveEdit}
+                disabled={isUpdating}
+                className={styles.saveBtnInline}
+              >
+                {isUpdating ? "Saving..." : "Save"}
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                disabled={isUpdating}
+                className={styles.cancelBtnInline}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2>{post.title}</h2>
+            <p>{post.description}</p>
+          </>
+        )}
       </div>
 
       {/* Image/Document Display */}
@@ -162,7 +248,7 @@ export const PostCard: React.FC<PostCardProps> = ({
       {/* Actions */}
       <div className={styles.postActions}>
         <button
-          className={`${styles.actionBtn} ${post.likedByCurrentUser ? styles.liked : ''}`}
+          className={`${styles.actionBtn} ${post.likedByCurrentUser ? styles.liked : ""}`}
           onClick={handleLike}
           disabled={isLiking}
         >

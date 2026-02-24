@@ -8,6 +8,7 @@ import com.roima.HRMS.dtos.request.GameInterestDTO;
 import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
+import com.roima.HRMS.util.MailTemplateUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class GameService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper ;
     private final NotificationRepository notificationRepository;
-
+    private final EmailService emailService;
     public List<GameResponseDTO> getAllGame(Long userId)
     {
         User user=findUserById(userId);
@@ -67,6 +68,18 @@ public class GameService {
          }
          else{
              game.getInterestedPlayers().add(user);
+
+             boolean presentInQueue=gameQueueRepository.existsByGameAndPlayer(game,user);
+             if(!presentInQueue)
+             {
+                 GameQueue gameQueue=new GameQueue();
+                 gameQueue.setPenalty(0);
+                 gameQueue.setTotalPlayedInCycle(10);
+                 gameQueue.setIsActive(false);
+                 gameQueue.setPlayer(user);
+                 gameQueue.setGame(game);
+                 gameQueueRepository.save(gameQueue);
+             }
          }
 
         gameRepository.save(game);
@@ -232,6 +245,14 @@ public class GameService {
         notification.setTitle("Game booking Update");
         notification.setUser(createdBy);
         notificationRepository.save(notification);
+
+        List<String> allPlayerMails=players.stream().map(
+                User::getCompanyEmail
+        ).toList();
+        String emailBody = MailTemplateUtil.gameBookingEmailTemplate(game.getGameName(), createdBy.getUserName(), gameBooking.getStatus().toString());
+
+        emailService.sendMail(allPlayerMails , "Game ", emailBody);
+
 
         gameBooking.setGameQueues(gameQueues);
         gameBookingRepository.save(gameBooking);

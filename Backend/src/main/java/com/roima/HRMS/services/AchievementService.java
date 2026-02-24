@@ -4,6 +4,7 @@ import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
+import com.roima.HRMS.util.MailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,7 @@ public class AchievementService {
     private final DocumentRepository documentRepository;
     private final NotificationRepository notificationRepository;
     private final CloudinaryService cloudinaryService;
+    private final EmailService emailService;
     private final ModelMapper modelMapper;
 
     // ==================== POST OPERATIONS ====================
@@ -82,7 +84,7 @@ public class AchievementService {
     public List<PostResponseDTO> getFeed(PostFilterDTO filter) {
         List<Post> posts = postRepository.findAll();
         Long currentUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+        posts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
         return posts.stream()
                 .filter(post -> post.getIsActive())
                 .filter(post -> {
@@ -170,7 +172,8 @@ public class AchievementService {
     }
 
     /**
-     * Soft delete post (HR only)
+     * Soft delete post (Author or HR)
+     * HR deletion sends contentWarningEmailTemplate to author
      */
     public BasicResponse deletePost(Long postId) {
         Post post = postRepository.findById(postId)
@@ -179,18 +182,36 @@ public class AchievementService {
         Long currentUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = findUserById(currentUserId);
         
-        if (post.getAuthor() != null) {
-            post.setIsActive(false);
-            post.setUpdatedAt(LocalDateTime.now());
-            post.setUpdatedBy(currentUser);
-            postRepository.save(post);
-            
-            // Notify author of deletion
-            sendNotificationToUser(post.getAuthor(), "Post Deleted", 
-                    "Your post '" + post.getTitle() + "' has been deleted by HR");
-            
-            log.info("Post soft deleted: {}", postId);
+        // Check if user is author or HR
+        boolean isAuthor = post.getAuthor() != null && post.getAuthor().getUserId().equals(currentUserId);
+        boolean isHR = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(auth -> auth.getAuthority().equals("manage-post"));
+        
+        if (!isAuthor && !isHR) {
+            throw new RuntimeException("Unauthorized: You can only delete your own posts");
         }
+
+        post.setIsActive(false);
+        post.setUpdatedAt(LocalDateTime.now());
+        post.setUpdatedBy(currentUser);
+        post.setDeletedBy(currentUser);
+        postRepository.save(post);
+        
+        // Send email notification only if HR deletes
+        if (isHR && !isAuthor && post.getAuthor() != null) {
+            String emailBody = MailTemplateUtil.contentWarningEmailTemplate("Post", post.getTitle());
+            emailService.sendMail(List.of(post.getAuthor().getCompanyEmail()), 
+                    "Content Warning - Post Deleted", emailBody);
+            log.info("Content warning email sent to author: {}", post.getAuthor().getUserId());
+        }
+        
+        // Notify author of deletion
+        if (post.getAuthor() != null) {
+            sendNotificationToUser(post.getAuthor(), "Post Deleted", 
+                    "Your post '" + post.getTitle() + "' has been deleted");
+        }
+
+        log.info("Post soft deleted: {} by user: {}", postId, currentUserId);
 
         return new BasicResponse("Post deleted successfully");
     }
@@ -314,7 +335,8 @@ public class AchievementService {
     }
 
     /**
-     * Soft delete comment (HR only)
+     * Soft delete comment (Author or HR)
+     * HR deletion sends contentWarningEmailTemplate to author
      */
     public BasicResponse deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
@@ -323,14 +345,35 @@ public class AchievementService {
         Long currentUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = findUserById(currentUserId);
 
+        // Check if user is author or HR
+        boolean isAuthor = comment.getAuthor() != null && comment.getAuthor().getUserId().equals(currentUserId);
+        boolean isHR = SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                .stream().anyMatch(auth -> auth.getAuthority().equals("manage-post"));
+        
+        if (!isAuthor && !isHR) {
+            throw new RuntimeException("Unauthorized: You can only delete your own comments");
+        }
+
         comment.setIsActive(false);
+        comment.setDeletedBy(currentUser);
         commentRepository.save(comment);
 
-        // Notify comment author
-        sendNotificationToUser(comment.getAuthor(), "Comment Deleted", 
-                "Your comment has been deleted by HR");
+        // Send email notification only if HR deletes
+        if (isHR && !isAuthor && comment.getAuthor() != null) {
+            String emailBody = MailTemplateUtil.contentWarningEmailTemplate("Comment", 
+                    comment.getPost() != null ? comment.getPost().getTitle() : "Unknown");
+            emailService.sendMail(List.of(comment.getAuthor().getCompanyEmail()), 
+                    "Content Warning - Comment Deleted", emailBody);
+            log.info("Content warning email sent to comment author: {}", comment.getAuthor().getUserId());
+        }
 
-        log.info("Comment soft deleted: {}", commentId);
+        // Notify comment author
+        if (comment.getAuthor() != null) {
+            sendNotificationToUser(comment.getAuthor(), "Comment Deleted", 
+                    "Your comment has been deleted "+comment.getDescription());
+        }
+
+        log.info("Comment soft deleted: {} by user: {}", commentId, currentUserId);
 
         return new BasicResponse("Comment deleted successfully");
     }
@@ -423,21 +466,30 @@ public class AchievementService {
      * Map Post entity to PostResponseDTO using ModelMapper
      */
     private PostResponseDTO mapPostToResponseDTO(Post post, Long currentUserId) {
-        PostResponseDTO dto = modelMapper.map(post, PostResponseDTO.class);
+        PostResponseDTO dto = new PostResponseDTO();
         
+        dto.setPkPostId(post.getPkPostId());
+        dto.setTitle(post.getTitle());
+        dto.setDescription(post.getDescription());
+        dto.setVisibility(post.getVisibility());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setIsActive(post.getIsActive());
+        dto.setUpdatedAt(post.getUpdatedAt());
+
         if (post.getAuthor() != null) {
             dto.setAuthorId(post.getAuthor().getUserId());
             dto.setAuthorName(post.getAuthor().getUserName());
+            dto.setAuthorImageUrl(post.getAuthor().getImageUrl());
         }
-        
+
         if (post.getUpdatedBy() != null) {
             dto.setUpdatedBy(post.getUpdatedBy().getUserId());
         }
-        
+
         if (post.getCreatedFor() != null) {
             dto.setCreatedFor(post.getCreatedFor().getUserId());
         }
-        
+
         if (post.getMainDocument() != null) {
             dto.setMainDocumentUrl(post.getMainDocument().getUrl());
         }
@@ -455,19 +507,11 @@ public class AchievementService {
                 .count();
         dto.setLikesCount((int) likesCount);
 
-        // Check if liked by current user
-        boolean likedByCurrentUser = likeRepository.findAll().stream()
-                .anyMatch(like -> like.getPost() != null && like.getPost().getPkPostId().equals(post.getPkPostId()) &&
-                        like.getUser().getUserId().equals(currentUserId));
-        dto.setLikedByCurrentUser(likedByCurrentUser);
-
-        // Get comments count
         long commentsCount = commentRepository.findAll().stream()
                 .filter(comment -> comment.getPost().getPkPostId().equals(post.getPkPostId()) &&
                         comment.getParentComment() == null && comment.getIsActive())
                 .count();
         dto.setCommentsCount((int) commentsCount);
-
         return dto;
     }
 
@@ -475,10 +519,18 @@ public class AchievementService {
      * Map Comment entity to CommentResponseDTO using ModelMapper
      */
     private CommentResponseDTO mapCommentToResponseDTO(Comment comment, Long currentUserId) {
-        CommentResponseDTO dto = modelMapper.map(comment, CommentResponseDTO.class);
+        CommentResponseDTO dto = new CommentResponseDTO();
         
-        dto.setAuthorId(comment.getAuthor().getUserId());
-        dto.setAuthorName(comment.getAuthor().getUserName());
+        dto.setPkCommentId(comment.getPkCommentId());
+        dto.setDescription(comment.getDescription());
+        dto.setCreatedAt(comment.getCreatedAt());
+        dto.setIsActive(comment.getIsActive());
+        
+        if (comment.getAuthor() != null) {
+            dto.setAuthorId(comment.getAuthor().getUserId());
+            dto.setAuthorName(comment.getAuthor().getUserName());
+            dto.setAuthorImageUrl(comment.getAuthor().getImageUrl());
+        }
 
         if (comment.getParentComment() != null) {
             dto.setParentCommentId(comment.getParentComment().getPkCommentId());

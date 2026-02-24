@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import styles from '../Styles/achievement.module.css';
-import { useGetAllPosts, useGetAllTags, useGetComments } from '../Query/useQueries';
-import { CreatePostForm } from '../Components/CreatePostForm';
-import { PostListing } from '../Components/PostListing';
-import { CreateCommentForm } from '../Components/CreateCommentForm';
-import { CommentCard } from '../Components/CommentCard';
- 
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import styles from "../Styles/achievement.module.css";
+import {
+  useGetAllPosts,
+  useGetAllTags,
+  useGetComments,
+} from "../Query/useQueries";
+import { CreatePostForm } from "../Components/CreatePostForm";
+import { PostListing } from "../Components/PostListing";
+import { CreateCommentForm } from "../Components/CreateCommentForm";
+import { CommentCard } from "../Components/CommentCard";
+import { useSearchParams } from "react-router-dom";
 
 interface PostDashboardProps {
-  view: 'hr' | 'employee';
+  view: "hr" | "employee";
 }
 
 export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
@@ -17,16 +21,17 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   const [filters, setFilters] = useState<any>({});
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [editingPost, setEditingPost] = useState<any>(null);
-  const [replyingToComment, setReplyingToComment] = useState<number | null>(null);
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [replyingToComment, setReplyingToComment] = useState<number | null>(
+    null,
+  );
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [visibilityFilter, setVisibilityFilter] = useState<string>('');
-  const [authorFilter, setAuthorFilter] = useState<string>('');
-
+  const [searchText, setSearchText] = useState("");
+  const [visibilityFilter, setVisibilityFilter] = useState<string>("");
+  const [authorFilter, setAuthorFilter] = useState<string>("");
+  const [searchParams] = useSearchParams();
   const { data: posts = [], isLoading: postsLoading } = useGetAllPosts(filters);
   const { data: comments = [], isLoading: commentsLoading } = useGetComments(
-    selectedPostId || 0
+    selectedPostId || 0,
   );
   const { data: tags = [] } = useGetAllTags();
 
@@ -35,39 +40,45 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   };
 
   const handleSearch = (value: string) => {
+    console.log("called");
     setSearchText(value);
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      search: value || undefined
+      search: value || undefined,
     }));
   };
 
+  useEffect(() => {
+    handleSearch(searchParams.get("employee"));
+    console.log(searchParams.get("employee"));
+  }, []);
+
   const handleVisibilityChange = (value: string) => {
     setVisibilityFilter(value);
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      visibility: value || undefined
+      visibility: value || undefined,
     }));
   };
 
   const handleTagFilter = (tagId: number) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      tagId: prev.tagId === tagId ? undefined : tagId
+      tagId: prev.tagId === tagId ? undefined : tagId,
     }));
   };
 
   const handleAuthorFilter = (value: string) => {
     setAuthorFilter(value);
-    if (value === 'myPosts') {
+    if (value === "myPosts") {
       // Filter to show only user's own posts
-      setFilters(prev => ({
+      setFilters((prev) => ({
         ...prev,
-        authorId: userData?.userId
+        authorId: userData?.userId,
       }));
-    } else if (value === 'all') {
+    } else if (value === "all") {
       // Show all posts
-      setFilters(prev => {
+      setFilters((prev) => {
         const { authorId, ...rest } = prev;
         return rest;
       });
@@ -93,15 +104,22 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
     setSelectedPostId(selectedPostId === postId ? null : postId);
   };
 
-  const selectedPost = posts.find(p => p.pkPostId === selectedPostId);
+  const selectedPost = posts.find((p) => p.pkPostId === selectedPostId);
 
   useEffect(() => {
     // Reset selected post when posts change
-    if (selectedPostId && !posts.find(p => p.pkPostId === selectedPostId)) {
+    if (selectedPostId && !posts.find((p) => p.pkPostId === selectedPostId)) {
       setSelectedPostId(null);
     }
     // Debug logging
-    console.log('PostDashboard - selectedPostId:', selectedPostId, 'posts:', posts.length, 'comments:', comments.length);
+    console.log(
+      "PostDashboard - selectedPostId:",
+      selectedPostId,
+      "posts:",
+      posts.length,
+      "comments:",
+      comments.length,
+    );
   }, [posts, selectedPostId, comments]);
 
   return (
@@ -163,7 +181,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                   <button
                     key={tag.pkTagId}
                     className={`${styles.tagFilterBtn} ${
-                      filters.tagId === tag.pkTagId ? styles.active : ''
+                      filters.tagId === tag.pkTagId ? styles.active : ""
                     }`}
                     onClick={() => handleTagFilter(tag.pkTagId)}
                   >
@@ -174,12 +192,15 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
             </div>
 
             {/* Clear Filters */}
-            {(searchText || visibilityFilter || filters.tagId || authorFilter !== '') && (
+            {(searchText ||
+              visibilityFilter ||
+              filters.tagId ||
+              authorFilter !== "") && (
               <button
                 onClick={() => {
-                  setSearchText('');
-                  setVisibilityFilter('');
-                  setAuthorFilter('');
+                  setSearchText("");
+                  setVisibilityFilter("");
+                  setAuthorFilter("");
                   setFilters({});
                 }}
                 className={styles.clearFiltersBtn}
@@ -214,7 +235,6 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
               posts={posts}
               isLoading={postsLoading}
               view={view}
-              onEdit={handleEditPost}
               onCommentClick={handleCommentClick}
             />
           </div>
@@ -236,12 +256,14 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
             {/* Post Preview */}
             <div className={styles.postPreview}>
               <h4>{selectedPost.title}</h4>
-              <p className={styles.postPreviewAuthor}>by {selectedPost.authorName}</p>
+              <p className={styles.postPreviewAuthor}>
+                by {selectedPost.authorName}
+              </p>
             </div>
 
             {/* Add Comment Form */}
             <div className={styles.addCommentSection}>
-              {!replyingToComment && !editingCommentId && (
+              {!replyingToComment && (
                 <CreateCommentForm
                   postId={selectedPostId}
                   onSuccess={() => {
@@ -259,15 +281,15 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                 <p className={styles.noComments}>No comments yet</p>
               ) : (
                 comments.map((comment: any) => (
-                  <div key={comment.pkCommentId} className={styles.commentItemWrapper}>
+                  <div
+                    key={comment.pkCommentId}
+                    className={styles.commentItemWrapper}
+                  >
                     <CommentCard
                       comment={comment}
                       postId={selectedPostId}
                       view={view}
                       onReply={(commentId) => setReplyingToComment(commentId)}
-                      onEdit={(comment) => {
-                        setEditingCommentId(comment.pkCommentId);
-                      }}
                     />
 
                     {/* Reply Form */}
@@ -278,19 +300,6 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                           parentCommentId={comment.pkCommentId}
                           onSuccess={() => setReplyingToComment(null)}
                           onCancel={() => setReplyingToComment(null)}
-                        />
-                      </div>
-                    )}
-
-                    {/* Edit Form */}
-                    {editingCommentId === comment.pkCommentId && (
-                      <div className={styles.editFormWrapper}>
-                        <CreateCommentForm
-                          postId={selectedPostId}
-                          editingCommentId={comment.pkCommentId}
-                          editingCommentText={comment.desc}
-                          onSuccess={() => setEditingCommentId(null)}
-                          onCancel={() => setEditingCommentId(null)}
                         />
                       </div>
                     )}

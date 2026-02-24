@@ -94,15 +94,14 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   console.log(uniqueTravel);
   return (
     <div className="bg-gray-100">
-       <div className="flex flex-row justify-between mx-10">
-      {!isLoadingEp && (
-        <Typography variant="h6" color="Green">
-          {" "}
-          {ownerType != "HR" && "Total claimed " + totalClaimed}
-        </Typography>
-      )}
-      {ownerType != "HR" && (
-        <>
+      <div className="flex flex-row justify-between mx-10">
+        {!isLoadingEp && (
+          <Typography variant="h6" color="Green">
+            {" "}
+            {ownerType != "HR" && "Total claimed " + totalClaimed}
+          </Typography>
+        )}
+        {ownerType != "HR" && (
           <Button
             onClick={() => {
               if (view != "expense") SetView("expense");
@@ -111,11 +110,13 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
           >
             {view != "expense" ? "Add new expense" : "cancel"}
           </Button>
-          {view == "expense" && (
-            <NewExpenseForm travelerId={travelerId} ownerType={ownerType} />
-          )}
-        </>
-      )}</div>
+        )}
+      </div>
+      <div className="flex flex-row justify-between my-4 w-full justify-center">
+        {view == "expense" && (
+          <NewExpenseForm travelerId={travelerId} ownerType={ownerType} />
+        )}
+      </div>
 
       {ownerType == "HR" && (
         <div className="flex flex-row justify-between mb-5">
@@ -146,7 +147,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <Select
               type="text"
               defaultValue=""
-             className="mt-2 mb-2"
+              className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterTravel(
                   e.target.value.substring(0, e.target.value.indexOf("-")),
@@ -168,7 +169,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <Select
               type="text"
               defaultValue=""
-            className="mt-2 mb-2"
+              className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterStatus(e.target.value);
               }}
@@ -185,7 +186,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <Select
               type="text"
               defaultValue=""
-                className="mt-2 mb-2"
+              className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterStartDate(e.target.value);
               }}
@@ -202,7 +203,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <Select
               type="text"
               defaultValue=""
-                className="mt-2 mb-2"
+              className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterEndDate(e.target.value);
               }}
@@ -214,7 +215,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             </Select>
           </div>
           <div className="w-20 h-10">
-            <Button variant="contained" size="sm" onClick={handleApplyFilter} sx={{marginY:1,}}>
+            <Button
+              variant="contained"
+              size="sm"
+              onClick={handleApplyFilter}
+              sx={{ marginY: 1 }}
+            >
               Apply Filter
             </Button>
           </div>
@@ -223,45 +229,44 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
 
       {!isLoadingEp && (
         <div className="mx-20">
-        <TableContainer component={Paper} >
-          <Table  aria-label="simple table" color="Green">
-            <TableHead>
-              <TableRow>
-                {ownerType === "HR" && <TableCell>Action</TableCell>}
-                <TableCell> Amount</TableCell>
-                <TableCell align="right">Date</TableCell>
-                <TableCell align="right">Status</TableCell>
-                <TableCell align="right">Remark</TableCell>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table" color="Green">
+              <TableHead>
+                <TableRow>
+                  {ownerType === "HR" && <TableCell>Action</TableCell>}
+                  <TableCell> Amount</TableCell>
+                  <TableCell align="right">Date</TableCell>
+                  <TableCell align="right">Status</TableCell>
+                  <TableCell align="right">Remark</TableCell>
 
-                {ownerType === "HR" && (
-                  <>
-                    <TableCell align="right">Employee</TableCell>
-                    <TableCell align="right">Travel</TableCell>
-                  </>
-                )}
-                <TableCell align="right">Documents</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {!isLoadingEp &&
-                dataEp.data.map((expense) => {
-                  return (
-                    <ExpenseCard
-                      data={expense}
-                      ownerType={ownerType}
-                      refetch={refetchEp}
-                      key={dataEp.data.travelExpensesId}
-                    />
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  {ownerType === "HR" && (
+                    <>
+                      <TableCell align="right">Employee</TableCell>
+                      <TableCell align="right">Travel</TableCell>
+                    </>
+                  )}
+                  <TableCell align="right">Updated By</TableCell>
+                  <TableCell align="right">Documents</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!isLoadingEp &&
+                  dataEp.data.map((expense) => {
+                    return (
+                      <ExpenseCard
+                        data={expense}
+                        ownerType={ownerType}
+                        refetch={refetchEp}
+                        key={dataEp.data.travelExpensesId}
+                      />
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       )}
     </div>
   );
 }
 export default ExpenseContainer;
-
- 

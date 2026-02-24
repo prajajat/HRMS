@@ -1,7 +1,22 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, data } from "react-router-dom";
 import { useState } from "react";
-import { CircularProgress, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { useGetAllJobs, useAddReviewer, useAddHr, useGetAllEmp, useGetALLUser, useUpdateJobStatus } from "../Query/useQueries";
+import {
+  CircularProgress,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import {
+  useGetAllJobs,
+  useAddReviewer,
+  useAddHr,
+  useGetAllEmp,
+  useGetALLUser,
+  useUpdateJobStatus,
+} from "../Query/useQueries";
 import { useForm } from "react-hook-form";
 
 function HRJobDetails() {
@@ -9,24 +24,26 @@ function HRJobDetails() {
   const navigate = useNavigate();
   const { data: jobsData, isLoading } = useGetAllJobs({});
   const [activeTab, setActiveTab] = useState("details");
-  const [edit,setEdit]=useState(false);
-  const [status,setStatus]=useState("");
+  const [edit, setEdit] = useState(false);
+  const [status, setStatus] = useState("");
   const { register, handleSubmit, reset } = useForm({
     shouldUseNativeValidation: true,
   });
 
- const {
+  const {
     isLoading: isLoadingEmp,
     data: dataEmp,
     isError: isErrorEmp,
     refetch: refetchEmp,
   } = useGetALLUser();
-  
-  const { mutate: addReviewerMutation, isPending: isReviewerLoading } = useAddReviewer();
+
+  const { mutate: addReviewerMutation, isPending: isReviewerLoading } =
+    useAddReviewer();
   const { mutate: addHrMutation, isPending: isHrLoading } = useAddHr();
 
-   const { mutate: updateStatusMutation, isPending: isUpdateStatusLoading } = useUpdateJobStatus();
- 
+  const { mutate: updateStatusMutation, isPending: isUpdateStatusLoading } =
+    useUpdateJobStatus();
+
   const job = jobsData?.data?.find((j: any) => j.jobId === parseInt(id));
 
   const handleAddReviewer = async (formData: any) => {
@@ -47,29 +64,30 @@ function HRJobDetails() {
           console.error("Error adding reviewer", error);
           alert("Failed to add reviewer.");
         },
-      }
+      },
     );
   };
 
-   const handleUpdateStatus = async ()=>{
-   const updateData = {
-       status: status,
+  const handleUpdateStatus = async () => {
+    const updateData = {
+      status: status,
     };
-       updateStatusMutation( { jobId: parseInt(id), data: updateData },
-        {
+    updateStatusMutation(
+      { jobId: parseInt(id), data: updateData },
+      {
         onSuccess: (response: any) => {
           console.log("status updated", response);
           reset();
           setActiveTab("details");
           alert("status updated!");
         },
-      }
-      )
-      setEdit(!edit);
-   }
+      },
+    );
+    setEdit(!edit);
+  };
   const handleAddHr = async (formData: any) => {
     const hrData = {
-       userId: formData.eid,
+      userId: formData.eid,
     };
 
     addHrMutation(
@@ -85,7 +103,7 @@ function HRJobDetails() {
           console.error("Error adding HR", error);
           alert("Failed to add HR.");
         },
-      }
+      },
     );
   };
 
@@ -101,44 +119,42 @@ function HRJobDetails() {
         </div>
       ) : (
         <div className="max-w-4xl">
-         
-          <div className="bg-sky-50 rounded-lg p-6 mb-6">
-            <h2 className="  mb-4">{job.title}</h2>
-            
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              
+          <div className="bg-sky-100 shadow-md rounded-lg p-6 mb-6">
+            <h2 className="mb-1">{job.title}</h2>
+            <hr />
+
+            <div className="grid grid-cols-2 gap-4 mb-6 mt-4">
               <div>
-                <p >Status</p>
-                <p >
-                  { edit? 
-                   <Select
-                  type="number"
-                  className="mt-10 mb-10"
-                 onChange={(e)=>setStatus(e.target.value)}
-                >
-                      <MenuItem value={"true"}>
-                         Active
-                      </MenuItem>
-                      <MenuItem value={"false"}>
-                         Inactive
-                      </MenuItem>
-                    
-              
-                </Select>:
-                  <span className={`px-2 py-1 rounded ${job.status ? "bg-green-100 " : "bg-red-100  "}`}>
-                    {job.status ? "Active" : "Inactive"}
-                  </span>
-                  }
+                <p>
+                  {edit ? (
+                    <Select
+                      type="number"
+                      className="mt-10 mb-10 w-full"
+                      onChange={(e) => setStatus(e.target.value)}
+                    >
+                      <MenuItem value={"true"}>Active</MenuItem>
+                      <MenuItem value={"false"}>Inactive</MenuItem>
+                    </Select>
+                  ) : (
+                    <span
+                      className={`px-2 py-1 rounded ${job.status ? "bg-green-100 " : "bg-red-100  "}`}
+                    >
+                      {job.status ? "Active" : "Inactive"}
+                    </span>
+                  )}
                 </p>
               </div>
-                {
-                  edit?<Button onClick={handleUpdateStatus}>Save </Button>:<Button onClick={()=>setEdit(!edit)}>Edit</Button>
-                }
+              {edit ? (
+                <Button onClick={handleUpdateStatus}>Save </Button>
+              ) : (
+                <Button onClick={() => setEdit(!edit)}>Edit</Button>
+              )}
             </div>
 
-            <div className="mb-6">
-              <p className="mb-2">Description</p>
-              <p className="whitespace-pre-wrap">{job.description || "No description"}</p>
+            <div className="mb-6 ">
+              <p className="whitespace-pre-wrap">
+                {job.description || "No description"}
+              </p>
             </div>
 
             {job.jobDescriptionUrl && (
@@ -147,40 +163,32 @@ function HRJobDetails() {
                   href={job.jobDescriptionUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className=""
+                  className="text-blue-600 "
                 >
-                  View Job Description Document
+                  View Job Description
                 </a>
               </div>
             )}
 
-           
             {job.reviewers && job.reviewers.length > 0 && (
               <div className="mb-6">
                 <h3 className=" mb-2">CV Reviewers</h3>
                 <div className="flex flex-wrap gap-2">
                   {job.reviewers.map((reviewer: any, idx: number) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 bg-blue-100 rounded "
-                    >
-                          {reviewer.userName} {reviewer.companyEmail}
+                    <span key={idx} className="px-3 py-1 bg-blue-100 rounded ">
+                      {reviewer.userName} {reviewer.companyEmail}
                     </span>
                   ))}
                 </div>
               </div>
             )}
 
-         
             {job.hrs && job.hrs.length > 0 && (
               <div className="mb-6">
                 <h3 className="mb-2">Assigned HR</h3>
                 <div className="flex flex-wrap gap-2">
                   {job.hrs.map((hr: any, idx: number) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 bg-green-100 rounded "
-                    >
+                    <span key={idx} className="px-3 py-1 bg-green-100 rounded ">
                       {hr.userName} {hr.companyEmail}
                     </span>
                   ))}
@@ -188,89 +196,85 @@ function HRJobDetails() {
               </div>
             )}
           </div>
- 
+
           <div className="bg-gray-100 rounded-lg overflow-hidden">
             <div className="flex ">
-              <Button
-                onClick={() => setActiveTab("details")}
-              >
-                Details
-              </Button>
-              <Button
-                onClick={() => setActiveTab("reviewer")}
-              >
+              <Button onClick={() => setActiveTab("details")}>Details</Button>
+              <Button onClick={() => setActiveTab("reviewer")}>
                 Add Reviewer
               </Button>
-              <Button
-                onClick={() => setActiveTab("hr")}
-              >
-                Add HR
-              </Button>
+              <Button onClick={() => setActiveTab("hr")}>Add HR</Button>
             </div>
 
-           
-            <div className="p-6">
+            <div className="p-6  ">
               {activeTab === "reviewer" && (
-                <form onSubmit={handleSubmit(handleAddReviewer)} className="space-y-4">
-                  <h3 className="mb-4">Add CV Reviewer</h3>
-                  
-                  
-                <Select
-                  type="number"
-                  className="mt-10 mb-10 w-full"
-                  {...register("eid",{
-                     required: "Email is required",
-                  })}
+                <form
+                  onSubmit={handleSubmit(handleAddReviewer)}
+                  className="space-y-4 flex flex-row justify-center w-full"
                 >
-                  {dataEmp?.data.map((emp) => {
-                    return (
-                      <MenuItem value={emp.userId}>
-                        {" "}
-                        {emp.name}-{emp.companyEmail}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                  <div className="space-y-4 flex flex-col justify-center ">
+                    <h3 className="mb-4">Add CV Reviewer</h3>
 
-
-                  <Button
-                    type="submit"
-                    disabled={isReviewerLoading}
-                    className="w-full"
-                  >
-                    {isReviewerLoading ? "Adding..." : "Add Reviewer"}
-                  </Button>
+                    <Select
+                      type="number"
+                      className="mt-10 mb-10 w-sm"
+                      {...register("eid", {
+                        required: "Email is required",
+                      })}
+                    >
+                      {dataEmp?.data.map((emp) => {
+                        return (
+                          <MenuItem value={emp.userId}>
+                            {" "}
+                            {emp.name}-{emp.companyEmail}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                    <Button
+                      type="submit"
+                      disabled={isReviewerLoading}
+                      className="w-sm"
+                    >
+                      {isReviewerLoading ? "Adding..." : "Add Reviewer"}
+                    </Button>
+                  </div>
                 </form>
               )}
 
               {activeTab === "hr" && (
-                <form onSubmit={handleSubmit(handleAddHr)} className="space-y-4">
-                  <h3 className="mb-4">Add HR User</h3>
-                  
-                  <Select
-                  type="number"
-                  className="mt-10 mb-10 w-full"
-                  {...register("eid",{
-                     required: "Email is required",
-                  })}
+                <form
+                  onSubmit={handleSubmit(handleAddHr)}
+                  className="space-y-4 flex flex-row justify-center w-full"
                 >
-                  {dataEmp?.data.map((emp) => {
-                    return (
-                      <MenuItem value={emp.userId}>
-                        {" "}
-                        {emp.name}-{emp.companyEmail}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                  <div className="space-y-4 flex flex-col justify-center ">
+                    <h3 className="mb-4">Add HR</h3>
 
-                  <Button
-                    type="submit"
-                    disabled={isHrLoading}
-                    className="w-full"
-                  >
-                    {isHrLoading ? "Adding..." : "Add HR"}
-                  </Button>
+                    <Select
+                      type="number"
+                      className="mt-10 mb-10 w-sm"
+                      {...register("eid", {
+                        required: "Email is required",
+                      })}
+                    >
+                      {dataEmp?.data.map((emp) => {
+                        return (
+                          <MenuItem value={emp.userId}>
+                            {" "}
+                            {emp.name}-{emp.companyEmail}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+
+                    <Button
+                      type="submit"
+                      disabled={isHrLoading}
+                      className="w-sm"
+                    >
+                      {isHrLoading ? "Adding..." : "Add HR"}
+                    </Button>
+                  </div>
                 </form>
               )}
             </div>

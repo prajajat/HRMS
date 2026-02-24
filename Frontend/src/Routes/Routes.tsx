@@ -33,6 +33,7 @@ import HRJobDetails from "../Pages/HRJobDetails";
 import EmployeeJobDetails from "../Pages/EmployeeJobDetails";
 import { PostDashboard } from "../Pages/PostDashboard";
 import { SystemConfig } from "../Pages/SystemConfig";
+import ManagerTeamMember from "../Pages/ManagerTeamMember";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "details",
-                element: <Game view="hr"/>,
+                element: <Game view="hr" />,
               },
               {
                 path: "details/:id",
@@ -100,23 +101,21 @@ const router = createBrowserRouter([
                 path: "details/update/:id",
                 element: <HRUpdate />,
               },
-              
             ],
-            
           },
 
-          { path: "job",
+          {
+            path: "job",
             children: [
               {
                 path: "dashboard",
                 element: <HRJobDashboard />,
               },
-               {
+              {
                 path: "config/:id",
                 element: <HRJobDetails />,
               },
             ],
-
           },
           {
             path: "system-config",
@@ -177,14 +176,14 @@ const router = createBrowserRouter([
               },
             ],
           },
-           {
+          {
             path: "job",
             children: [
               {
                 path: "listing",
                 element: <EmployeeJobListing />,
               },
-               {
+              {
                 path: "details/:id",
                 element: <EmployeeJobDetails />,
               },
@@ -241,6 +240,10 @@ const router = createBrowserRouter([
             path: "tarvel-document-detail",
             element: <ManagerDocDetails />,
           },
+          {
+            path: "team-member",
+            element: <ManagerTeamMember />,
+          },
         ],
       },
     ],
@@ -260,7 +263,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  
+
   {
     path: "/refresh",
     element: <RefreshPage />,

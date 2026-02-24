@@ -17,32 +17,36 @@ function Header() {
     }
   };
 
-  
-
   return (
-    <div className="flex justify-between items-center bg-blue-500 w-full ">
+    <div className="flex justify-between items-center bg-blue-400 w-full ">
       <div className="text-black-600">Roima HRMS</div>
       <div className="flex felx-row justify-end">
         <List className="flex felx-row">
           {roles.map((r) => {
             return (
               <ListItem key={r.roleId} onClick={() => navigator("/" + r.title)}>
-                <Button  sx={{color:"#1c1c1f"}}>{r.title + " dashboard"}</Button>
+                <Button sx={{ color: "#1c1c1f" }}>
+                  {r.title + " dashboard"}
+                </Button>
               </ListItem>
             );
           })}
         </List>
 
-        {userId != -1 && (<>
-          <Button onClick={() => navigator("/org-chart/" + userId)} sx={{color:"#1c1c1f"}}>
-            Org. Chart
-          </Button>
-           <Button onClick={() => navigator("/notification/all" )}>
-               <img src="/bell.png" className="h-8 w-8"></img>
-          </Button>
+        {userId != -1 && (
+          <>
+            <Button
+              onClick={() => navigator("/org-chart/" + userId)}
+              sx={{ color: "#1c1c1f" }}
+            >
+              Org. Chart
+            </Button>
+            <Button onClick={() => navigator("/notification/all")}>
+              <img src="/bellBlack.png" className="h-8 w-8"></img>
+            </Button>
           </>
         )}
-        <Button onClick={handleClick}  sx={{color:"#1c1c1f"}}>
+        <Button onClick={handleClick} sx={{ color: "#1c1c1f" }}>
           {userId == -1 ? "login" : "logout"}
         </Button>
       </div>

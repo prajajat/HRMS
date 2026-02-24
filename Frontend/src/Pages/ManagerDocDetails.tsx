@@ -19,7 +19,7 @@ function ManagerDocDetails() {
 
   return (
     <div className="p-4">
-      <Typography fontSize={36}>Travel Documnets</Typography>
+      <Typography fontSize={36}>Travel Documents</Typography>
       <hr />
       <br />
 
@@ -47,10 +47,18 @@ function ManagerDocDetails() {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 600 }}>Uploaded by</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Visibility</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Document</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Traveler</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="right">Travel</TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">
+                  Visibility
+                </TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">
+                  Document
+                </TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">
+                  Traveler
+                </TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="right">
+                  Travel
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

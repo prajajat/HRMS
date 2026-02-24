@@ -49,4 +49,48 @@ public class MailTemplateUtil {
                 "Best Regards,\n" +
                 "HRMS System";
     }
+
+
+    public static String travelerAddedEmailTemplate(String travelTitle, String travelStart,String travelEnd) {
+        return "Dear Traveler,\n\n" +
+                "You have been added as a tarveler for the following tavel:\n\n" +
+                "Travel Title: " + travelTitle + "\n" +
+                "Travel from : " + travelStart + "\n\n" +
+                "Travel to : " + travelEnd + "\n" +
+                "Please check the system for more travel details.\n\n" +
+                "Best Regards,\n" +
+                "HRMS System";
+    }
+
+    public static String contentWarningEmailTemplate(String content, String postTitle) {
+        return "Dear User,\n\n" +
+                "Your have been founded as wrong by HR team:\n\n" +
+                "Post Title: " + postTitle + "\n" +
+                "Content Type : " + content + "\n\n" +
+                "Please be aware of content policy.\n\n" +
+                "Best Regards,\n" +
+                "HRMS System";
+    }
+
+    public static String expenseAddedEmailTemplate(String travelTitle, String travelerName,String expenseDate) {
+        return "Dear HR Team,\n\n" +
+                " A travel expense has been added with system:\n\n" +
+                "Travel details : " + travelTitle+ "\n" +
+                "Traveler name: " + travelerName + "\n\n" +
+                "Travel Expense Date : " + expenseDate + "\n\n" +
+                "Please check the system for more expense details.\n\n" +
+                "Best Regards,\n" +
+                "HRMS System";
+    }
+    public static String gameBookingEmailTemplate(String gameName, String createdBy,String bookingStatus) {
+        return "Dear Player,\n\n" +
+                "You have been added as a player for the following Game booking:\n\n" +
+                "Game name: " + gameName + "\n" +
+                "Craeted by : " + createdBy + "\n\n" +
+                "Game Booking status: " + bookingStatus  + "\n" +
+                "Please check the system for more Game Booking details.\n\n" +
+                "Best Regards,\n" +
+                "HRMS System";
+    }
+
 }

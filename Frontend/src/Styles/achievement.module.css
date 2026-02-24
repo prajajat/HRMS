@@ -257,9 +257,9 @@
 }
 
 .clearFiltersBtn {
-  width: 100%;
+  width: 20%;
   padding: 8px;
-  background: #dc3545;
+  background: #3543dc;
   color: white;
   border: none;
   border-radius: 4px;
@@ -281,7 +281,7 @@
 }
 
 .createPostBtn {
-  width: 100%;
+  width: 20%;
   padding: 12px;
   background: #28a745;
   color: white;
@@ -433,6 +433,85 @@
   margin: 0;
   color: #555;
   line-height: 1.5;
+}
+
+/* Inline Edit Form */
+.editFormInline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.editInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.editInput:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.editButtonsGroup {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.saveBtnInline,
+.cancelBtnInline {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saveBtnInline {
+  background: #28a745;
+  color: white;
+}
+
+.saveBtnInline:hover:not(:disabled) {
+  background: #218838;
+}
+
+.saveBtnInline:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancelBtnInline {
+  background: #6c757d;
+  color: white;
+}
+
+.cancelBtnInline:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.cancelBtnInline:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .tagsList {

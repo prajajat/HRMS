@@ -53,6 +53,7 @@ import {
   getAllTags,
   createTag,
   updateInterest,
+  getTeamMember,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -219,6 +220,10 @@ export const useGetDocumentsBytraveler = (id) => {
 export const useGetDocuments = () => {
   return useQuery({ queryKey: ["travelerDoc-"], queryFn: getDocuments });
 };
+
+export const useGetTeamMember = () => {
+  return useQuery({ queryKey: ["teamMember"], queryFn: getTeamMember });
+};
 export const useGetTravelById = (id) => {
   return useQuery({
     queryKey: ["travel-", id],
@@ -295,14 +300,13 @@ export const useAddHr = () => {
 };
 
 export const useCreateJobReferral = () => {
-  return useMutation<any,any>({
+  return useMutation<any, any>({
     mutationFn: ({ jobId, data }) => createJobReferral(jobId, data),
     onSuccess: (response) => {
       console.log(response);
     },
   });
 };
-
 
 export const useUpdateInterest = () => {
   return useMutation({
@@ -387,8 +391,15 @@ export const useCreatePost = () => {
 
 export const useUpdatePost = () => {
   return useMutation({
-    mutationFn: ({ postId, data, file }: { postId: number; data: any; file?: File }) =>
-      updatePost(postId, data, file),
+    mutationFn: ({
+      postId,
+      data,
+      file,
+    }: {
+      postId: number;
+      data: any;
+      file?: File;
+    }) => updatePost(postId, data, file),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
@@ -427,37 +438,64 @@ export const useAddComment = () => {
     mutationFn: ({ postId, data }: { postId: number; data: any }) =>
       addComment(postId, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.postId],
+      });
     },
   });
 };
 
 export const useReplyComment = () => {
   return useMutation({
-    mutationFn: ({ commentId, data, postId }: { commentId: number; data: any; postId: number }) =>
-      replyComment(commentId, data),
+    mutationFn: ({
+      commentId,
+      data,
+      postId,
+    }: {
+      commentId: number;
+      data: any;
+      postId: number;
+    }) => replyComment(commentId, data),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.postId],
+      });
     },
   });
 };
 
 export const useUpdateComment = () => {
   return useMutation({
-    mutationFn: ({ commentId, desc, postId }: { commentId: number; desc: string; postId: number }) =>
-      updateComment(commentId, desc),
+    mutationFn: ({
+      commentId,
+      desc,
+      postId,
+    }: {
+      commentId: number;
+      desc: string;
+      postId: number;
+    }) => updateComment(commentId, desc),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.postId],
+      });
     },
   });
 };
 
 export const useDeleteComment = () => {
   return useMutation({
-    mutationFn: ({ commentId, postId }: { commentId: number; postId: number }) =>
-      deleteComment(commentId),
+    mutationFn: ({
+      commentId,
+      postId,
+    }: {
+      commentId: number;
+      postId: number;
+    }) => deleteComment(commentId),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["comments", variables.postId] });
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.postId],
+      });
     },
   });
 };

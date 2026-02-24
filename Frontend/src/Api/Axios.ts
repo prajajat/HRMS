@@ -187,6 +187,11 @@ export const getAllTags = async () =>
 export const createTag = async (data: any) =>
   await instance.post("/achievement/tag/create", data).then((res) => res);
 
+
+export const getTeamMember = async () =>
+  await instance.get("/api/user/team-members").then((res) => res);
+
+
 instance.interceptors.request.use((config) => {
   console.log(config.url);
   const state = store.getState();

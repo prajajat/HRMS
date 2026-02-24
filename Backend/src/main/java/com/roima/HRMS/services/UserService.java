@@ -2,10 +2,7 @@ package com.roima.HRMS.services;
 
 
 
-import com.roima.HRMS.dtos.response.NotificationResponseDTO;
-import com.roima.HRMS.dtos.response.UserResponceWithManagerAndTeamDTO;
-import com.roima.HRMS.dtos.response.UserResponseForEmailDTO;
-import com.roima.HRMS.dtos.response.UserResponseWithTeamAndManagerDTO;
+import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.GameQueue;
 import com.roima.HRMS.entites.Notification;
 import com.roima.HRMS.entites.User;
@@ -13,6 +10,7 @@ import com.roima.HRMS.repos.NotificationRepository;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -31,16 +29,22 @@ public class UserService {
         List<User> user = userRepo.findByRolesTitle("employee");
 
 
-        List<UserResponseForEmailDTO> responce = user.stream()
-                                        .map(a ->
+        return user.stream().map(a ->
                                                 modelMapper.map(a, UserResponseForEmailDTO.class)
                                         ).collect(Collectors.toList());
-        return responce;
     }
     public UserResponceWithManagerAndTeamDTO getUserById(Long id)
     {
         User user = userRepo.findById(id).orElseThrow(()->new RuntimeException("user Not found"));
         return modelMapper.map(user,UserResponceWithManagerAndTeamDTO.class);
+    }
+
+    public List<UserResponceBaseDTO> getTeamMemberByManager()
+    {
+        User user = userRepo.findById((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElseThrow(()->new RuntimeException("manager Not found"));
+        return user.getTeamMember().stream().map(
+                x->modelMapper.map(x,UserResponceBaseDTO.class)
+        ).toList();
     }
 
     public List<NotificationResponseDTO> getAllNotification(Long userId)

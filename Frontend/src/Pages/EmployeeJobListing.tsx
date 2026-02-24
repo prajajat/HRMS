@@ -1,11 +1,29 @@
-import { CircularProgress, Input, FormControl, InputLabel } from "@mui/material";
+import {
+  CircularProgress,
+  Input,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { useGetActiveJobs } from "../Query/useQueries";
 import JobCard from "../Components/JobCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function EmployeeJobListing() {
   const [search, setSearch] = useState("");
-  const { isLoading, data, isError, refetch } = useGetActiveJobs(search);
+  const [query, setQuery] = useState("");
+  const { isLoading, data, isError, refetch } = useGetActiveJobs(query);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setQuery(search), 500);
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  useEffect(() => {
+    if (query) {
+      console.log("API Call with:", query);
+      setQuery(search);
+    }
+  }, [query]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -20,7 +38,7 @@ function EmployeeJobListing() {
           <InputLabel htmlFor="search">Search Jobs</InputLabel>
           <Input
             type="text"
-            placeholder="Search by title, department..."
+            placeholder="Search by title ..."
             value={search}
             onChange={handleSearch}
           />

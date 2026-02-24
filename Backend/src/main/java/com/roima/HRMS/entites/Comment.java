@@ -32,4 +32,8 @@ public class Comment {
 
     @Column(name = "isActive")
     private Boolean isActive = true;
+
+    @ManyToOne
+    @JoinColumn(name = "deleted_by")
+    private User deletedBy; // who deleted the comment (HR or author)
 }

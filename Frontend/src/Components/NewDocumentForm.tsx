@@ -26,12 +26,16 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   const [val, setVal] = useState();
   const [file, setFile] = useState();
   const { mutate, isPending, isError, error } = useCreateDocument();
+  var fun = Math.random;
+  if (ownerType == "HR") {
+    fun = useGetAllTravel;
+  }
   const {
     isLoading: isLoadingTd,
     data: dataTd,
     isError: isErrorTd,
     refetch: refetchTd,
-  } = useGetAllTravel();
+  } = fun();
   const {
     isLoading: isLoadingEmp,
     data: dataEmp,
@@ -87,7 +91,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
               className="mt-10 mb-10"
               {...register("visibility")}
             >
-              <MenuItem value="All">All</MenuItem>
+              {ownerType == "HR" && <MenuItem value="All">All</MenuItem>}
               <MenuItem value="hr-emp">Hr-Emp</MenuItem>
             </Select>
             {ownerType == "HR" && (
@@ -189,7 +193,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
           </FormControl>
 
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Submitting..." : "Add New Travel Expense"}
+            {isPending ? "Submitting..." : "Add New Travel Document"}
           </Button>
         </>
       )}

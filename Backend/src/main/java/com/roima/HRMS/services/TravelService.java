@@ -5,6 +5,7 @@ import com.roima.HRMS.dtos.response.*;
 import com.roima.HRMS.entites.*;
 import com.roima.HRMS.repos.*;
 import com.roima.HRMS.specification.TravelExpenseSpecification;
+import com.roima.HRMS.util.MailTemplateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,7 @@ public class TravelService {
     private final TravelerDocumentRepository travelerDocumentRepository;
     private final CloudinaryService cloudinaryService;
     private final NotificationRepository notificationRepository;
-
+    private final EmailService emailService;
     // travel details
 
     public List<TravelDetailResponseWithOutTravelerIdDTO> getAllTravelDetails()
@@ -180,15 +181,16 @@ public class TravelService {
 
         }
 
+        String emailBody= MailTemplateUtil.expenseAddedEmailTemplate(traveler.getTravelDetail().getTitle(),traveler.getUser().getUserName(),dto.getExpenseDate().toString());
+        emailService.sendMail(List.of(traveler.getTravelDetail().getCreatedBy().getCompanyEmail()), "New Expense added in "+traveler.getTravelDetail().getTitle(), emailBody);
+
+
         travelExpenseRepository.save(travelExpense);
         travelerRepository.save(traveler);
         newDocuments.forEach(x->
             x.setTravelExpense(travelExpense)
         );
         documentRepository.saveAll(newDocuments);
-
-
-
 
         return new BasicResponse(id==-1 ?"created successfully":"updated successfully");
     }
@@ -233,11 +235,16 @@ public class TravelService {
                  newEmp.setUser(user);
                  newEmp.setTravelDetail(travelDetail);
                  travelDetail.getTravelers().add(newEmp);
+
                  Notification notification=new Notification();
                  notification.setDescription("New travel added for you :"+travelDetail.getTitle());
                  notification.setTitle("New Travel added");
                  notification.setUser(user);
                  notificationRepository.save(notification);
+
+                 String emailBody= MailTemplateUtil.travelerAddedEmailTemplate(travelDetail.getTitle(),travelDetail.getStartDate().toString(),travelDetail.getEndDate().toString());
+                emailService.sendMail(List.of(user.getCompanyEmail()), "New Travel for you ", emailBody);
+
                 travelerRepository.save(newEmp);
             }
         }
