@@ -70,7 +70,7 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
   };
 
   const handleBooking = () => {
-    if (slot.length == 0 || emp.length != 1 || emp.length != 3) {
+    if (slot.length == 0 ||emp.length==0) {
       alert("select player and slot properly");
       return;
     }

@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 function ChartCard({ data, id, team = false }) {
   const userId = useSelector((state) => state.user.userId);
   const navigator = useNavigate();
-  var color = "#bccb76";
+  var color = "#94b5ee";
 
   if (id == data.userId) {
-    color = "#0a71df";
+    color = "#097bf4";
   }
 
   return (
@@ -31,14 +31,20 @@ function ChartCard({ data, id, team = false }) {
       {data.manager != null && <ChartCard data={data.manager} id={id} />}
 
       <Card sx={{ maxWidth: 200 , maxHeight:250,backgroundColor: color, margin: 5 }}>
-        <img src={data.imageUrl} className="h-10 w-10"></img>
+        <div className="flex flex-row justify-center w-full">
+        <img src={data.imageUrl} className="h-10 w-10 m-2"></img>
+        </div>
 
         <CardContent>
-          <Typography gutterBottom variant="h4" component="div">
-            {data.name}
+           <div className="flex flex-row justify-center w-full">
+          <Typography gutterBottom variant="h5" component="div">
+            {data.name.toUpperCase()}
+            
           </Typography>
+          </div>
+          <hr />
           <Typography
-            sx={{ fontSize: 18, mb: 1.5 }}
+            sx={{ fontSize: 18, mb: 1.5 ,mt:1}}
             variant="h5"
             color="text.secondary"
           >
@@ -58,7 +64,7 @@ function ChartCard({ data, id, team = false }) {
             variant="h5"
             color="text.secondary"
           >
-            Dept :{data.departmentName}
+            Dept :{data.departmentName?data.departmentName:'N/A'}
           </Typography>
         </CardContent>
       </Card>

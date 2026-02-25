@@ -2,7 +2,7 @@ package com.roima.HRMS.services;
 
 import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.response.*;
-import com.roima.HRMS.entites.*;
+import com.roima.HRMS.entities.*;
 import com.roima.HRMS.repos.*;
 import com.roima.HRMS.specification.TravelExpenseSpecification;
 import com.roima.HRMS.util.MailTemplateUtil;
@@ -254,9 +254,12 @@ public class TravelService {
 
     }
     public BasicResponse removeEmployee(Long id, Long userId) {
+
         TravelDetail travelDetail=findTravelDetailById(id);
         User emp= findUserById(userId);
+
         Traveler travelerToRemove=null;
+
         for(Traveler traveler: travelDetail.getTravelers())
         {
            if(traveler.getUser().equals(emp))
@@ -276,15 +279,16 @@ public class TravelService {
         notification.setUser(emp);
         notificationRepository.save(notification);
 
+
             travelDetail.getTravelers().remove(travelerToRemove);
             travelerToRemove.getTravelerDocuments().size();
             travelerToRemove.getTravelExpenses().size();
 
             travelDetailRepository.save(travelDetail);
             travelerRepository.delete(travelerToRemove);
+
+
             return new BasicResponse("Updated successfully");
-
-
     }
 
      //traveler document
@@ -301,15 +305,19 @@ public class TravelService {
         User user=findUserById(id);
         List<TravelerDocument> travelerDocuments=new ArrayList<>();
         List<Traveler> travelers=new ArrayList<>();
-                user.getTeamMember().forEach(
-                        a->travelers.addAll(a.getTravelers())
-                    );
+        if (!user.getTeamMember().isEmpty()) {
+            user.getTeamMember().forEach(
+                    a -> travelers.addAll(a.getTravelers())
+            );
+        }
+        if (!travelers.isEmpty()) {
+            travelers.forEach(
+                    a -> travelerDocuments.addAll(a.getTravelerDocuments())
+            );
+        }
+        //log.info(" i>>{} i2>>{}",travelers.size(),user.getTeamMember().get(0).getTravelers().size());
 
-        travelers.forEach(
-                a->travelerDocuments.addAll(a.getTravelerDocuments())
-        );
-        log.info(" i>>{} i2>>{}",travelers.size(),user.getTeamMember().get(0).getTravelers().size());
-        return travelerDocuments.stream().map(
+        return travelerDocuments.isEmpty()?new ArrayList<>(): travelerDocuments.stream().map(
                 a->modelMapper.map(a, TravelerDocumentResponseDTO.class)
         ).toList();
     }

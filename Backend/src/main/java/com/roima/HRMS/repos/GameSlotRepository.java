@@ -1,8 +1,8 @@
 package com.roima.HRMS.repos;
 
-import com.roima.HRMS.componets.StatusType;
-import com.roima.HRMS.entites.Game;
-import com.roima.HRMS.entites.GameSlot;
+import com.roima.HRMS.components.StatusType;
+import com.roima.HRMS.entities.Game;
+import com.roima.HRMS.entities.GameSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

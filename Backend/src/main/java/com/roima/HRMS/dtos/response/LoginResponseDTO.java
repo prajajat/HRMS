@@ -12,6 +12,8 @@ public class LoginResponseDTO {
      private String refreshToken;
      private long userId;
      private List<RoleDTO> roles;
+     private String imageUrl;
+
 
 }
 

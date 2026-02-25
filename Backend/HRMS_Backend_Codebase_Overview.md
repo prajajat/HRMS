@@ -6,16 +6,16 @@
   - [`Main.java`](src/main/java/com/roima/HRMS/Main.java): Bootstraps the Spring Boot application and enables scheduling.
 
 - **Configuration**
-  - [`Config/Security/`](src/main/java/com/roima/HRMS/Config/Security/): Security configuration, JWT utilities, and CORS setup.
-  - [`Config/mapping/`](src/main/java/com/roima/HRMS/Config/mapping/): Likely contains mapping configurations for DTOs and entities.
+  - [`Config/Security/`](src/main/java/com/roima/HRMS/config/Security/): Security configuration, JWT utilities, and CORS setup.
+  - [`Config/mapping/`](src/main/java/com/roima/HRMS/config/mapping/): Likely contains mapping configurations for DTOs and entities.
 
 - **Entities**
-  - [`entites/`](src/main/java/com/roima/HRMS/entites/): JPA entities representing database tables, such as:
-    - [`User`](src/main/java/com/roima/HRMS/entites/User.java)
-    - [`Game`](src/main/java/com/roima/HRMS/entites/Game.java)
-    - [`Document`](src/main/java/com/roima/HRMS/entites/Document.java)
-    - [`TravelDetail`](src/main/java/com/roima/HRMS/entites/TravelDetail.java)
-    - [`Notification`](src/main/java/com/roima/HRMS/entites/Notification.java)
+  - [`entites/`](src/main/java/com/roima/HRMS/entities/): JPA entities representing database tables, such as:
+    - [`User`](src/main/java/com/roima/HRMS/entities/User.java)
+    - [`Game`](src/main/java/com/roima/HRMS/entities/Game.java)
+    - [`Document`](src/main/java/com/roima/HRMS/entities/Document.java)
+    - [`TravelDetail`](src/main/java/com/roima/HRMS/entities/TravelDetail.java)
+    - [`Notification`](src/main/java/com/roima/HRMS/entities/Notification.java)
     - ...and others for bookings, slots, roles, permissions, etc.
 
 - **Controllers**
@@ -38,7 +38,7 @@
     - Example: [`GameService`](src/main/java/com/roima/HRMS/services/GameService.java), [`TravelService`](src/main/java/com/roima/HRMS/services/TravelService.java)
 
 - **Schedulers**
-  - [`Schedulers/QueueScheduler.java`](src/main/java/com/roima/HRMS/Schedulers/QueueScheduler.java): Scheduled tasks for slot assignment and cycle updates.
+  - [`Schedulers/QueueScheduler.java`](src/main/java/com/roima/HRMS/schedulers/QueueScheduler.java): Scheduled tasks for slot assignment and cycle updates.
 
 - **Security & Filters**
   - [`filter/JwtAuthenticationFilter.java`](src/main/java/com/roima/HRMS/filter/JwtAuthenticationFilter.java): JWT authentication filter for securing endpoints.

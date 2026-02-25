@@ -1,21 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useGetTeamMember } from "../Query/useQueries";
+
 import {
-  useGetALLUser,
-  useGetTeamMember,
-  useGetUserById,
-} from "../Query/useQueries";
-import ChartCard from "../Components/ChartCard";
-import {
-  Box,
   Button,
   Card,
-  CardActions,
   CardContent,
-  CardMedia,
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { blue } from "@mui/material/colors";
 
 function ManagerTeamMember() {
   const navigator = useNavigate();
@@ -37,22 +29,28 @@ function ManagerTeamMember() {
           <Typography fontSize={36}>Your Team</Typography>
           <hr />
           <br />
-          <div className="mb-4 max-w-xs">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {dataAll?.data?.map((user) => (
               <Card
                 sx={{
                   maxWidth: 200,
-                  maxHeight: 280,
-                  backgroundColor: blue,
+                  backgroundColor: "#94b5ee",
                   margin: 5,
                 }}
+                key={user.userId}
               >
-                <img src={user.imageUrl} className="h-10 w-10"></img>
+                <div className="flex flex-row justify-center w-full">
+                  <img src={user.imageUrl} className="h-10 w-10 m-2"></img>
+                </div>
 
                 <CardContent>
-                  <Typography gutterBottom variant="h4" component="div">
-                    {user.name}
-                  </Typography>
+                  <div className="flex flex-row justify-center w-full">
+                    <Typography gutterBottom variant="h5" component="div">
+                      {user.name.toUpperCase()}
+                    </Typography>
+                  </div>
+                  <hr />
                   <Typography
                     sx={{ fontSize: 18, mb: 1.5 }}
                     variant="h5"

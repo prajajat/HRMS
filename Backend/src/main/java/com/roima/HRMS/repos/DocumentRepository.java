@@ -1,8 +1,8 @@
 package com.roima.HRMS.repos;
 
-import com.roima.HRMS.entites.Document;
-import com.roima.HRMS.entites.TravelExpense;
-import com.roima.HRMS.entites.User;
+import com.roima.HRMS.entities.Document;
+import com.roima.HRMS.entities.TravelExpense;
+import com.roima.HRMS.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

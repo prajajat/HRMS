@@ -7,12 +7,14 @@ interface PostCardProps {
   post: any;
   view: "hr" | "employee";
   onCommentClick?: (postId: number) => void;
+   
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
   post,
   view,
   onCommentClick,
+  onscroll,
 }) => {
   const userId = useSelector((state: any) => state.user.userId);
   const { mutate: likePost, isPending: isLiking } = useLikePost();
@@ -110,13 +112,13 @@ export const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <div className={styles.postCard}>
+    <div className={styles.postCard} onScrollEndCapture={onscroll}>
       {/* Header */}
       <div className={styles.postHeader}>
         <div className={styles.authorInfo}>
           <div className="flex flex-row">
             <img
-              src={post.authorImageUrl || "/letter-r.png"}
+              src={post.authorImageUrl?post.authorImageUrl: "/letter-r.png"}
               className="h-10 w-10"
             ></img>
             <h3>{post.authorName || "System"}</h3>

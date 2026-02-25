@@ -29,6 +29,7 @@ function Login() {
           login({
             userId: response.data.userId,
             roles: response.data.roles,
+            imageUrl:response.data.imageUrl,
           }),
         );
         if (response.data.accessToken != null) {

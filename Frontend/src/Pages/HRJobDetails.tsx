@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import {
   useGetAllJobs,
@@ -118,6 +119,10 @@ function HRJobDetails() {
           <p className="text-red-600">Job not found</p>
         </div>
       ) : (
+        <div>
+           <Typography fontSize={36}>JOb Config</Typography>
+      <hr />
+      <br />
         <div className="max-w-4xl">
           <div className="bg-sky-100 shadow-md rounded-lg p-6 mb-6">
             <h2 className="mb-1">{job.title}</h2>
@@ -280,7 +285,9 @@ function HRJobDetails() {
             </div>
           </div>
         </div>
+        </div>
       )}
+      
     </div>
   );
 }

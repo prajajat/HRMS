@@ -23,7 +23,7 @@ export const CreateCommentForm: React.FC<CreateCommentFormProps> = ({
   const { mutate: addComment, isPending: isAdding } = useAddComment();
   const { mutate: replyComment, isPending: isReplying } = useReplyComment();
   const { mutate: updateComment, isPending: isUpdating } = useUpdateComment();
-
+  console.log(postId,parentCommentId,editingCommentId,editingCommentText);
   useEffect(() => {
     if (editingCommentText) {
       setDesc(editingCommentText);
@@ -65,7 +65,7 @@ export const CreateCommentForm: React.FC<CreateCommentFormProps> = ({
           },
           {
             onSuccess: () => {
-              console.log('Reply posted successfully');
+              console.log('Reply posted successfully'+parentCommentId);
               setDesc('');
               onSuccess?.();
             },

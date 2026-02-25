@@ -17,7 +17,7 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
   console.log(data);
   return (
     <Grid item xs={12} md={4}>
-      <Card sx={{  margin:5,backgroundColor:"#f2f5ee"}}>
+      <Card sx={{  margin:5,backgroundColor:"#afcafdee"}}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {data.title}
@@ -25,45 +25,46 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
 
           {data.description}
 
-          <div className="bg- m-3 rounded-sm">
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> startDate </div>
-              <div className="bg-gray-100 m-3 rounded-sm">
-                {" "}
-                {data.startDate}
-              </div>
-            </div>
-
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> endDate </div>
-              <div className="bg-gray-100 m-3 rounded-sm"> {data.endDate}</div>
-            </div>
-
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> createdAt </div>
-              <div className="bg-gray-100 m-3 rounded-sm">{data.createdAt}</div>
-            </div>
-
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> updateAt </div>
-              <div className="bg-gray-100 m-3 rounded-sm">{data.updateAt}</div>
-            </div>
-
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> createdName </div>
-              <div className="bg-gray-100 m-3 rounded-sm">
+          <div className="flex flex-row justify-between bg-blue-100 m-1 h-10 w-full">
+              <div className="  rounded-sm"> Created Name </div>
+              <div className="  rounded-sm">
                 {data.createdName}
               </div>
             </div>
 
-            <div className="flex flex-row justify-items-stretch">
-              <div className="bg-gray-100 m-3 rounded-sm"> maxAmoutPerDay </div>
-              <div className="bg-gray-100 m-3 rounded-sm">
+            <div className="flex flex-row justify-between  bg-blue-200 m-1 h-10 w-full">
+              <div className="  rounded-sm"> Max Amout Per Day </div>
+              <div className=" rounded-sm">
                 {data.maxAmoutPerDay}
               </div>
             </div>
-          </div>
-          <div className="bg-blue-100">
+
+           
+            <div className="flex flex-row justify-between bg-blue-100 m-1 h-10 w-full">
+              <div className=" rounded-sm"> Start Date </div>
+              <div className=" rounded-sm">
+                
+                {data.startDate.replace("T", ",")}
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-between bg-blue-200 m-1 h-10 w-full">
+              <div className=" rounded-sm"> End Date </div>
+              <div className=" rounded-sm"> {data.endDate.replace("T", ",")}</div>
+            </div>
+
+            <div className="flex flex-row justify-between bg-blue-100 m-1 h-10 w-full">
+              <div className="   rounded-sm"> Created At </div>
+              <div className="   rounded-sm">{data.createdAt.replace("T", ",")}</div>
+            </div>
+
+            <div className="flex flex-row justify-between  bg-blue-200 m-1 h-10 w-full">
+              <div className="   rounded-sm"> Updated At </div>
+              <div className="  rounded-sm">{data.updateAt?data.updateAt.replace("T", ",") :"N/A"}</div>
+            </div>
+
+         
+          <div className="">
             <div className="bg-gray-300">travelers</div>
             <List>
               {data.travelers.map((t) => {

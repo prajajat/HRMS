@@ -50,57 +50,57 @@ function GameCard({ data, isAllFields = false, view }) {
   };
   console.log(data);
   return (
-    <div className="max-w-4xl m-5 shadow-lg bg-gray-100 rounded-lg p-4">
+    <div className="max-w-4xl m-5 shadow-lg bg-blue-100 rounded-lg p-4">
       <div className="flex flex-row aline-item-center justify-center h-full">
-        <div className="flex flex-col aline-item-center justify-center w-full">
+        <div className="flex flex-col  aline-item-center justify-center w-full">
           <img src={image} className="h-50 "></img>
-          <div className="bg-gray-100 m-3 rounded-sm">{data.gameName}</div>
+          <div className=" m-3 bg-blue-200 rounded-sm">{data.gameName}</div>
         </div>
 
         <div className="flex flex-col aline-item-center justify-center w-full">
-          <div className="flex flex-row justify-between w-sm">
-            <div className="bg-gray-100 m-3 rounded-sm"> slot start time </div>
-            <div className="bg-gray-100 m-3 rounded-sm">
+          <div className="flex flex-row bg-blue-100 m-1 h-10 justify-between w-sm">
+            <div className=" m-3 rounded-sm"> Slot Start Time </div>
+            <div className=" m-3 rounded-sm">
               {" "}
               {data.slotStartTime}
             </div>
           </div>
 
-          <div className="flex flex-row justify-between w-sm">
-            <div className="bg-gray-100 m-3 rounded-sm"> slot end time </div>
-            <div className="bg-gray-100 m-3 rounded-sm">
+          <div className=" flex flex-row bg-blue-200 m-1 h-10 justify-between w-sm">
+            <div className=" m-3 rounded-sm"> Slot End Time </div>
+            <div className=" m-3 rounded-sm">
               {" "}
               {data.slotEndTime}
             </div>
           </div>
 
-          <div className="flex flex-row justify-between w-sm">
-            <div className="bg-gray-100 m-3 rounded-sm">
+          <div className=" flex flex-row bg-blue-100  m-1 h-10 justify-between w-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
-              max player per slot{" "}
+              Max Player Per Slot{" "}
             </div>
-            <div className="bg-gray-100 m-3 rounded-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
               {data.maxPlayerPerSlot}
             </div>
           </div>
-          <div className="flex flex-row justify-between w-sm">
-            <div className="bg-gray-100 m-3 rounded-sm">
+          <div className=" flex flex-row bg-blue-200 m-1 h-10 justify-between w-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
-              slot duration minutes{" "}
+              Slot Duration Minutes{" "}
             </div>
-            <div className="bg-gray-100 m-3 rounded-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
               {data.slotDurationMinutes}
             </div>
           </div>
 
-          <div className="flex flex-row justify-between w-sm">
-            <div className="bg-gray-100 m-3 rounded-sm">
+          <div className=" flex flex-row bg-blue-100 m-1 h-10 justify-between w-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
-              max slot per booking{" "}
+              Max Slot Per Booking{" "}
             </div>
-            <div className="bg-gray-100 m-3 rounded-sm">
+            <div className=" m-3 rounded-sm">
               {" "}
               {data.maxSlotPerBooking}
             </div>
@@ -108,28 +108,28 @@ function GameCard({ data, isAllFields = false, view }) {
 
           {isAllFields && (
             <div>
-              <div className="flex flex-row justify-between w-sm">
-                <div className="bg-gray-100 m-3 rounded-sm">
+              <div className=" flex flex-row bg-blue-200 m-1 h-10 justify-between w-sm">
+                <div className=" m-3 rounded-sm">
                   {" "}
-                  cycle start date{" "}
+                  Cycle Start Date{" "}
                 </div>
-                <div className="bg-gray-100 m-3 rounded-sm">
+                <div className=" m-3 rounded-sm">
                   {" "}
                   {data.cycleStartDate}
                 </div>
               </div>
-              <div className="flex flex-row justify-between w-sm">
-                <div className="bg-gray-100 m-3 rounded-sm">
+              <div className=" flex flex-row bg-blue-100 m-1 h-10 justify-between w-sm">
+                <div className=" m-3 rounded-sm">
                   {" "}
-                  cycle end date{" "}
+                  Cycle End Date{" "}
                 </div>
-                <div className="bg-gray-100 m-3 rounded-sm">
+                <div className=" m-3 rounded-sm">
                   {" "}
                   {data.cycleEndDate}
                 </div>
               </div>
               {!data.isOpenForWeekend && (
-                <div className="flex flex-row justify-between w-sm">
+                <div className=" flex flex-row bg-blue-200 m-1 h-10justify-between w-sm">
                   <div className="bg-green-100 m-3 rounded-sm">
                     {" "}
                     Open for weekend

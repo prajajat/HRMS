@@ -1,13 +1,12 @@
 package com.roima.HRMS.specification;
 
 import com.roima.HRMS.dtos.request.TravelExpenseFilterDTO;
-import com.roima.HRMS.entites.TravelExpense;
+import com.roima.HRMS.entities.TravelExpense;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 @Slf4j
 public class TravelExpenseSpecification {
     public static Specification<TravelExpense> withFilters(TravelExpenseFilterDTO filter) {

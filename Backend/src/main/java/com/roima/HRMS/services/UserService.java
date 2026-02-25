@@ -3,9 +3,7 @@ package com.roima.HRMS.services;
 
 
 import com.roima.HRMS.dtos.response.*;
-import com.roima.HRMS.entites.GameQueue;
-import com.roima.HRMS.entites.Notification;
-import com.roima.HRMS.entites.User;
+import com.roima.HRMS.entities.User;
 import com.roima.HRMS.repos.NotificationRepository;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;

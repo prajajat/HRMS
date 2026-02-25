@@ -42,17 +42,39 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   const handleSearch = (value: string) => {
     console.log("called");
     setSearchText(value);
-    setFilters((prev) => ({
-      ...prev,
-      search: value || undefined,
-    }));
   };
+
+  useEffect(() => {
+      const handler = setTimeout(() => {
+        setFilters((prev) => ({
+          ...prev,
+          search: searchText || undefined,
+        }));
+      }, 500);
+      return () => clearTimeout(handler);
+  }, [searchText]);
 
   useEffect(() => {
     handleSearch(searchParams.get("employee"));
     console.log(searchParams.get("employee"));
   }, []);
 
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //    // setSelectedPostId(null);
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+
+    
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
+
+  useEffect(()=>{
+    console.log("reply to comment"+replyingToComment);
+  },[replyingToComment])
   const handleVisibilityChange = (value: string) => {
     setVisibilityFilter(value);
     setFilters((prev) => ({
@@ -90,7 +112,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
     setShowCreateForm(true);
     setSelectedPostId(null);
   };
-
+  
   const handleCloseEditForm = () => {
     setEditingPost(null);
     setShowCreateForm(false);
@@ -236,12 +258,14 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
               isLoading={postsLoading}
               view={view}
               onCommentClick={handleCommentClick}
+              
             />
           </div>
         </main>
 
         {/* Right Sidebar - Comments */}
         {selectedPost && (
+          <div className="fixed bottom-0 right-15 w-4xl bg-gray-200 ">
           <aside className={styles.commentsSidebar}>
             <div className={styles.commentsHeader}>
               <h3>Comments</h3>
@@ -262,7 +286,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
             </div>
 
             {/* Add Comment Form */}
-            <div className={styles.addCommentSection}>
+            <div className={styles.addCommentSection} key="33333">
               {!replyingToComment && (
                 <CreateCommentForm
                   postId={selectedPostId}
@@ -293,11 +317,11 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                     />
 
                     {/* Reply Form */}
-                    {replyingToComment === comment.pkCommentId && (
+                    {replyingToComment && (
                       <div className={styles.replyFormWrapper}>
                         <CreateCommentForm
                           postId={selectedPostId}
-                          parentCommentId={comment.pkCommentId}
+                          parentCommentId={replyingToComment}
                           onSuccess={() => setReplyingToComment(null)}
                           onCancel={() => setReplyingToComment(null)}
                         />
@@ -308,6 +332,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
               )}
             </div>
           </aside>
+          </div>
         )}
       </div>
     </div>

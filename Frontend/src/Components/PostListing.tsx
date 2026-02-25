@@ -7,6 +7,7 @@ interface PostListingProps {
   isLoading: boolean;
   view: "hr" | "employee";
   onCommentClick?: (postId: number) => void;
+ 
 }
 
 export const PostListing: React.FC<PostListingProps> = ({
@@ -14,6 +15,7 @@ export const PostListing: React.FC<PostListingProps> = ({
   isLoading,
   view,
   onCommentClick,
+  onscroll
 }) => {
   if (isLoading) {
     return (
@@ -32,13 +34,14 @@ export const PostListing: React.FC<PostListingProps> = ({
   }
 
   return (
-    <div className={styles.postListing}>
+    <div className={styles.postListing} onScrollEndCapture={onscroll}>
       {posts.map((post) => (
         <PostCard
           key={post.pkPostId}
           post={post}
           view={view}
           onCommentClick={onCommentClick}
+           
         />
       ))}
     </div>

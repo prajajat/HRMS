@@ -2,7 +2,7 @@ package com.roima.HRMS.services;
 
 import com.roima.HRMS.dtos.request.*;
 import com.roima.HRMS.dtos.response.*;
-import com.roima.HRMS.entites.*;
+import com.roima.HRMS.entities.*;
 import com.roima.HRMS.repos.*;
 import com.roima.HRMS.util.MailTemplateUtil;
 import lombok.RequiredArgsConstructor;

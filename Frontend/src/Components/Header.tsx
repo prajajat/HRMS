@@ -5,7 +5,7 @@ import { logout } from "../Store/userSlice";
 import { removeToken } from "../Store/tokenSlice";
 
 function Header() {
-  const { userId, roles } = useSelector((state) => state.user);
+  const { userId, roles,imageUrl } = useSelector((state) => state.user);
   const navigator = useNavigate();
   const dispatch = useDispatch();
   const handleClick = () => {
@@ -17,9 +17,12 @@ function Header() {
     }
   };
 
+  console.log(imageUrl);
   return (
     <div className="flex justify-between items-center bg-blue-400 w-full ">
-      <div className="text-black-600">Roima HRMS</div>
+      <div className="text-Black-800 ml-10 font-bold rounded p-3 flex flex-row justify-start">
+        <img src='/letter-r.png' height={30} width={30}></img>Roima HRMS
+        </div>
       <div className="flex felx-row justify-end">
         <List className="flex felx-row">
           {roles.map((r) => {
@@ -48,6 +51,9 @@ function Header() {
         )}
         <Button onClick={handleClick} sx={{ color: "#1c1c1f" }}>
           {userId == -1 ? "login" : "logout"}
+        </Button>
+        <Button onClick={() => navigator("/notification/all")} sx={{ color: "#1c1c1f" }}>
+            <img src={imageUrl} className="h-10 w-10"></img>
         </Button>
       </div>
     </div>

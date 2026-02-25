@@ -1,12 +1,12 @@
 package com.roima.HRMS.services;
 
 
-import com.roima.HRMS.Config.Security.JwtUtil;
+import com.roima.HRMS.config.Security.JwtUtil;
 import com.roima.HRMS.dtos.request.LoginDTO;
 import com.roima.HRMS.dtos.response.LoginResponseDTO;
 import com.roima.HRMS.dtos.response.RefreshTokenResponseDTO;
 import com.roima.HRMS.dtos.response.RoleDTO;
-import com.roima.HRMS.entites.User;
+import com.roima.HRMS.entities.User;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +58,7 @@ public class AuthService {
                 user.getRoles().stream().map(
                         a->modelMapper.map(a, RoleDTO.class)
                 ).toList());
+        response.setImageUrl(user.getImageUrl());
         return response;
     }
 

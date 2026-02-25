@@ -1,12 +1,12 @@
 package com.roima.HRMS.services;
 
 
-import com.roima.HRMS.componets.StatusType;
+import com.roima.HRMS.components.StatusType;
 import com.roima.HRMS.dtos.request.GameBookingDTO;
 import com.roima.HRMS.dtos.request.GameConfigDTO;
 import com.roima.HRMS.dtos.request.GameInterestDTO;
 import com.roima.HRMS.dtos.response.*;
-import com.roima.HRMS.entites.*;
+import com.roima.HRMS.entities.*;
 import com.roima.HRMS.repos.*;
 import com.roima.HRMS.util.MailTemplateUtil;
 import jakarta.transaction.Transactional;
@@ -20,6 +20,7 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.sql.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -74,7 +75,7 @@ public class GameService {
              {
                  GameQueue gameQueue=new GameQueue();
                  gameQueue.setPenalty(0);
-                 gameQueue.setTotalPlayedInCycle(10);
+                 gameQueue.setTotalPlayedInCycle(0);
                  gameQueue.setIsActive(false);
                  gameQueue.setPlayer(user);
                  gameQueue.setGame(game);
@@ -149,7 +150,7 @@ public class GameService {
         List<User> players=dto.getAllPlayers()!=null?dto.getAllPlayers().stream().map(p->findUserById(p)).toList():new ArrayList<>();
         log.info("slot>>>{}",gameSlots.get(0).getGameSlotId());
         Game game=findGameById(dto.getGameId());
-
+         AtomicBoolean slotBooked= new AtomicBoolean(false);
         if(!createdBy.getInterestedGames().contains(game))
         {
             throw new RuntimeException("user not have this game as interested");
@@ -176,10 +177,10 @@ public class GameService {
             {
                 throw new RuntimeException("player can't book early then"+game.getMaxDayOfBookingAllow()+" days.");
             }
-//            else if(gameSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
-//            {
-//                throw new RuntimeException(" slot is not avialable");
-//            }
+            else if(gameSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
+            {
+                slotBooked.set(true);
+            }
             else if(
                     gameSlot.getDate().before(game.getCycleStartDate()) ||
                     gameSlot.getDate().after(game.getCycleEndDate()))
@@ -201,7 +202,7 @@ public class GameService {
                             )
                     ))
             {
-                throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
+                //throw new RuntimeException(" you already have booking for "+game.getGameName()+" game and date");
             }
 
         });
@@ -218,7 +219,7 @@ public class GameService {
         gameBooking.setGame(game);
         List<GameQueue> gameQueues=new ArrayList<>();
         // update queue
-        if(played){
+        if(played||slotBooked.get()){
             players.forEach(x->{
                     updateQueue(x,game,true,0);
                     gameQueues.add(findGameQueueByPlayerAndGame(x,game));
@@ -258,6 +259,15 @@ public class GameService {
         gameBookingRepository.save(gameBooking);
         gameSlots.forEach(x->x.getCurrentGameBookings().add(gameBooking));
         gameSlotRepository.saveAll(gameSlots);
+
+
+        if(slotBooked.get())
+        {
+            gameQueues.forEach(x->{
+                x.setGameBooking(gameBooking);
+            });
+        }
+        gameQueueRepository.saveAll(gameQueues);
 
       return new BasicResponse("Booking created successfully");
     }
@@ -365,7 +375,7 @@ public class GameService {
         gameSlots.forEach(gs-> {
                     if(gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now()))
                     {
-                        throw new RuntimeException("you miss cancel slot time, slot is already started");
+                       // throw new RuntimeException("you miss cancel slot time, slot is already started");
                     }
                     if(gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED)&& gameBooking.getStatus().equals((StatusType.BookingStatus.BOOKED))) {
                         gs.getCancellers().addAll(gameBooking.getParticipants());

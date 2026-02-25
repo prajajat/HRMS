@@ -1,6 +1,6 @@
 package com.roima.HRMS.repos;
 
-import com.roima.HRMS.entites.SystemConfig;
+import com.roima.HRMS.entities.SystemConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

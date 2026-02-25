@@ -18,12 +18,12 @@ function EmployeeJobListing() {
     return () => clearTimeout(handler);
   }, [search]);
 
-  useEffect(() => {
-    if (query) {
-      console.log("API Call with:", query);
-      setQuery(search);
-    }
-  }, [query]);
+  // useEffect(() => {
+  //   if (query) {
+  //     console.log("API Call with:", query);
+  //     setQuery(search);
+  //   }
+  // }, [query]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);

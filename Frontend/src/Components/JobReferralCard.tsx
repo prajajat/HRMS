@@ -8,7 +8,7 @@ function JobReferralCard({ data }) {
             {data.jobTitle}
           </div>
         </div>
-        to
+        To
         <div className=" border border-blue-500 flex flex-row m-2 p-3 rounded-sm">
           <h3> Friend</h3>
           <div className="bg-blue-400 mx-2 px-2 rounded-sm ">
@@ -18,14 +18,14 @@ function JobReferralCard({ data }) {
       </div>
 
       <div className="mb-3 flex flex-col m-2 p-3 rounded-sm">
-        <div className="bg-blue-200 flex flex-row rounded-sm m-1">
+        <div className="bg-blue-100 flex flex-row rounded-sm m-1">
           Email:
           {data.friendMail}
         </div>
         <div className="bg-blue-200 flex flex-row rounded-sm m-1">
           Phone: {data.phone || "N/A"}
         </div>
-        <div className="bg-blue-200 flex flex-row rounded-sm m-1">
+        <div className="bg-blue-100 flex flex-row rounded-sm m-1">
           Time: {data.datetime || "N/A"}
         </div>
       </div>
