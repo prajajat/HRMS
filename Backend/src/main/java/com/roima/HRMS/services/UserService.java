@@ -3,6 +3,7 @@ package com.roima.HRMS.services;
 
 
 import com.roima.HRMS.dtos.response.*;
+import com.roima.HRMS.entities.Notification;
 import com.roima.HRMS.entities.User;
 import com.roima.HRMS.repos.NotificationRepository;
 import com.roima.HRMS.repos.UserRepository;
@@ -51,11 +52,37 @@ public class UserService {
                x -> modelMapper.map(x, NotificationResponseDTO.class)
        ).toList());
        notificationResponseDTOS.sort(Comparator.comparingLong(NotificationResponseDTO::getNotificationId).reversed());
+
+       List<Notification> notifications =notificationRepository.findByUser(user);
+       notifications.forEach(
+               n->n.setIsRead(true)
+       );
+       notificationRepository.saveAll(notifications);
        return notificationResponseDTOS;
     }
+
+    public Long getNewNotificationCount(Long userId)
+    {   User user=userRepo.findById(userId).orElseThrow(()->new RuntimeException("user not found"));
+
+        return  notificationRepository.countByUserAndIsRead(user,false);
+    }
+
     public List<UserResponseForEmailDTO> getAllUser()
     {
        List<User> user = userRepo.findAll();
+
+        return user.stream()
+                .map(a ->
+                        modelMapper.map(a, UserResponseForEmailDTO.class)
+                ).toList();
+    }
+    public List<UserResponseForEmailDTO> getAllUserWithHrRole()
+    {
+        List<User> user = userRepo.findAll().stream().filter(
+                 u ->u.getRoles().stream().anyMatch(
+                         r->r.getTitle().equals("hr")
+                 )
+        ).toList();
 
         return user.stream()
                 .map(a ->

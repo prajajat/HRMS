@@ -17,7 +17,7 @@ interface PostDashboardProps {
 }
 
 export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
-  const userData = useSelector((state: any) => state.user.userData);
+  const userId = useSelector((state: any) => state.user.userId);
   const [filters, setFilters] = useState<any>({});
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const [editingPost, setEditingPost] = useState<any>(null);
@@ -30,7 +30,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   const [authorFilter, setAuthorFilter] = useState<string>("");
   const [searchParams] = useSearchParams();
   const { data: posts = [], isLoading: postsLoading } = useGetAllPosts(filters);
-  const { data: comments = [], isLoading: commentsLoading } = useGetComments(
+  const { data: comments = [], isLoading: commentsLoading,refetch:refetchComment } = useGetComments(
     selectedPostId || 0,
   );
   const { data: tags = [] } = useGetAllTags();
@@ -45,13 +45,13 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   };
 
   useEffect(() => {
-      const handler = setTimeout(() => {
-        setFilters((prev) => ({
-          ...prev,
-          search: searchText || undefined,
-        }));
-      }, 500);
-      return () => clearTimeout(handler);
+    const handler = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        search: searchText || undefined,
+      }));
+    }, 500);
+    return () => clearTimeout(handler);
   }, [searchText]);
 
   useEffect(() => {
@@ -59,22 +59,21 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
     console.log(searchParams.get("employee"));
   }, []);
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //    // setSelectedPostId(null);
-  //   };
+  useEffect(() => {
+    const handleScroll = () => {
+      setSelectedPostId(null);
+    };
 
-  //   window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
-    
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-  useEffect(()=>{
-    console.log("reply to comment"+replyingToComment);
-  },[replyingToComment])
+  useEffect(() => {
+    console.log("reply to comment" + replyingToComment);
+  }, [replyingToComment]);
   const handleVisibilityChange = (value: string) => {
     setVisibilityFilter(value);
     setFilters((prev) => ({
@@ -86,7 +85,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
   const handleTagFilter = (tagId: number) => {
     setFilters((prev) => ({
       ...prev,
-      tagId: prev.tagId === tagId ? undefined : tagId,
+      tagId: prev.tagId === tagId ||tagId==-1 ? undefined : tagId,
     }));
   };
 
@@ -96,7 +95,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
       // Filter to show only user's own posts
       setFilters((prev) => ({
         ...prev,
-        authorId: userData?.userId,
+        authorId: userId,
       }));
     } else if (value === "all") {
       // Show all posts
@@ -112,7 +111,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
     setShowCreateForm(true);
     setSelectedPostId(null);
   };
-  
+
   const handleCloseEditForm = () => {
     setEditingPost(null);
     setShowCreateForm(false);
@@ -174,10 +173,8 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                 className={styles.filterInput}
               >
                 <option value="">All</option>
-                <option value="all">All Employees</option>
-                <option value="department">Department</option>
                 <option value="manager">Manager</option>
-                <option value="private">Private</option>
+                
               </select>
             </div>
 
@@ -198,19 +195,27 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
             {/* Tags Filter */}
             <div className={styles.filterGroup}>
               <label>Tags</label>
-              <div className={styles.tagFilterList}>
-                {tags.map((tag: any) => (
-                  <button
-                    key={tag.pkTagId}
-                    className={`${styles.tagFilterBtn} ${
-                      filters.tagId === tag.pkTagId ? styles.active : ""
-                    }`}
-                    onClick={() => handleTagFilter(tag.pkTagId)}
-                  >
-                    {tag.tagName}
-                  </button>
-                ))}
-              </div>
+
+              <select
+                id="tag"
+                value={filters.tagId?filters.tagId:-1}
+                onChange={(e) => handleTagFilter(parseInt(e.target.value))}
+                className={styles.filterInput}
+              >   <option value={-1}>All</option>
+                  
+                  {tags.map((tag: any) => (
+                    <option
+                      value={tag.pkTagId}
+                      className={`${styles.tagFilterBtn} ${
+                        filters.tagId === tag.pkTagId ? styles.active : ""
+                      }`}
+                    >
+                      {" "}
+                      #{tag.tagName}
+                    </option>
+                  ))}
+             
+              </select>
             </div>
 
             {/* Clear Filters */}
@@ -223,7 +228,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
                   setSearchText("");
                   setVisibilityFilter("");
                   setAuthorFilter("");
-                  setFilters({});
+                  setFilters({tagId:undefined});
                 }}
                 className={styles.clearFiltersBtn}
               >
@@ -258,7 +263,6 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
               isLoading={postsLoading}
               view={view}
               onCommentClick={handleCommentClick}
-              
             />
           </div>
         </main>
@@ -266,72 +270,73 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
         {/* Right Sidebar - Comments */}
         {selectedPost && (
           <div className="fixed bottom-0 right-15 w-4xl bg-gray-200 ">
-          <aside className={styles.commentsSidebar}>
-            <div className={styles.commentsHeader}>
-              <h3>Comments</h3>
-              <button
-                onClick={() => setSelectedPostId(null)}
-                className={styles.closeBtn}
-              >
-                ✕
-              </button>
-            </div>
+            <aside className={styles.commentsSidebar}>
+              <div className={styles.commentsHeader}>
+                <h3>Comments</h3>
+                <button
+                  onClick={() => setSelectedPostId(null)}
+                  className={styles.closeBtn}
+                >
+                  ✕
+                </button>
+              </div>
 
-            {/* Post Preview */}
-            <div className={styles.postPreview}>
-              <h4>{selectedPost.title}</h4>
-              <p className={styles.postPreviewAuthor}>
-                by {selectedPost.authorName}
-              </p>
-            </div>
+              {/* Post Preview */}
+              <div className={styles.postPreview}>
+                <h4>{selectedPost.title}</h4>
+                <p className={styles.postPreviewAuthor}>
+                  by {selectedPost.authorName}
+                </p>
+              </div>
 
-            {/* Add Comment Form */}
-            <div className={styles.addCommentSection} key="33333">
-              {!replyingToComment && (
-                <CreateCommentForm
-                  postId={selectedPostId}
-                  onSuccess={() => {
-                    // Comments will auto-refresh via useGetComments
-                  }}
-                />
-              )}
-            </div>
+              {/* Add Comment Form */}
+              <div className={styles.addCommentSection} key="33333">
+                {!replyingToComment && (
+                  <CreateCommentForm
+                    postId={selectedPostId}
+                    onSuccess={() => {
+                      // Comments will auto-refresh via useGetComments
+                    }}
+                  />
+                )}
+              </div>
 
-            {/* Comments List */}
-            <div className={styles.commentsList}>
-              {commentsLoading ? (
-                <p>Loading comments...</p>
-              ) : comments.length === 0 ? (
-                <p className={styles.noComments}>No comments yet</p>
-              ) : (
-                comments.map((comment: any) => (
-                  <div
-                    key={comment.pkCommentId}
-                    className={styles.commentItemWrapper}
-                  >
-                    <CommentCard
-                      comment={comment}
-                      postId={selectedPostId}
-                      view={view}
-                      onReply={(commentId) => setReplyingToComment(commentId)}
-                    />
+              {/* Comments List */}
+              <div className={styles.commentsList}>
+                {commentsLoading ? (
+                  <p>Loading comments...</p>
+                ) : comments.length === 0 ? (
+                  <p className={styles.noComments}>No comments yet</p>
+                ) : (
+                  comments.map((comment: any) => (
+                    <div
+                      key={comment.pkCommentId}
+                      className={styles.commentItemWrapper}
+                    >
+                      <CommentCard
+                        comment={comment}
+                        postId={selectedPostId}
+                        view={view}
+                        onReply={(commentId) => setReplyingToComment(commentId)}
+                        refetchComment={refetchComment}
+                      />
 
-                    {/* Reply Form */}
-                    {replyingToComment && (
-                      <div className={styles.replyFormWrapper}>
-                        <CreateCommentForm
-                          postId={selectedPostId}
-                          parentCommentId={replyingToComment}
-                          onSuccess={() => setReplyingToComment(null)}
-                          onCancel={() => setReplyingToComment(null)}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </aside>
+                      {/* Reply Form */}
+                      {replyingToComment && (
+                        <div className={styles.replyFormWrapper}>
+                          <CreateCommentForm
+                            postId={selectedPostId}
+                            parentCommentId={replyingToComment}
+                            onSuccess={() => setReplyingToComment(null)}
+                            onCancel={() => setReplyingToComment(null)}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </aside>
           </div>
         )}
       </div>

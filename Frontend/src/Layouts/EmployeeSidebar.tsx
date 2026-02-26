@@ -3,13 +3,13 @@ import { NavLink } from "react-router-dom";
 function EmployeeSidebar() {
   return (
  
-      <div className="flex flex-col h-full bg-blue-300  w-30">
+      <div className="flex flex-col h-full bg-blue-300  w-45 ">
      
     
       <NavLink
         to="/employee/travel/details"
         className={({ isActive }) =>
-          isActive ? "text-indigo-800 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-800 m-3" : "text-blue-500 m-3"
         }
       >
         Travel Details
@@ -17,7 +17,7 @@ function EmployeeSidebar() {
       <NavLink
         to="/employee/game/details"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Games
@@ -26,7 +26,7 @@ function EmployeeSidebar() {
       <NavLink
         to="/employee/achievement/posts"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Achievements
@@ -35,7 +35,7 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/listing"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Jobs Listing
@@ -43,7 +43,7 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/referrals"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Jobs Referrals
@@ -51,7 +51,7 @@ function EmployeeSidebar() {
        <NavLink
         to="/employee/job/shares"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Jobs Shares

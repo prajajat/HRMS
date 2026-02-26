@@ -54,6 +54,8 @@ import {
   createTag,
   updateInterest,
   getTeamMember,
+  getNewNotificationCount,
+  getAllHr,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -140,7 +142,7 @@ export const useCreateBooking = () => {
   return useMutation({
     mutationFn: CreateBooking,
     onSuccess: (response) => {
-      console.log(response);
+      alert(response.data.message);
     },
     onError: (error) => {
       console.log(error);
@@ -183,6 +185,10 @@ export const useGetGameConfigById = (id) => {
 
 export const useGetAllNotification = () => {
   return useQuery({ queryKey: ["notification"], queryFn: getAllNotification });
+};
+
+export const useGetNewNotificationCount = () => {
+  return useQuery({ queryKey: ["notificationCount"], queryFn: getNewNotificationCount });
 };
 
 export const useGetExpenceBytraveler = (id, search) => {
@@ -234,6 +240,9 @@ export const useGetTravelById = (id) => {
 
 export const useGetALLUser = () => {
   return useQuery({ queryKey: ["user"], queryFn: getALLUser });
+};
+export const useGetALLHr = () => {
+  return useQuery({ queryKey: ["user_hr"], queryFn: getAllHr });
 };
 
 export const useGetUserById = (id) => {

@@ -21,6 +21,12 @@ public class QueueScheduler {
         gameService.assignSlot();
     }
 
+    @Scheduled(fixedDelay = 30*60*1000)//30 min
+    public void runForMoveToExpired(){
+        log.info("auto call expired");
+        gameService.cleanUpSlotAndBooking();
+    }
+
     @Scheduled(cron ="0 5 0 * * ?")
   // @Scheduled(fixedDelay = 4*60*1000)
     public void runForGenerateSlot(){

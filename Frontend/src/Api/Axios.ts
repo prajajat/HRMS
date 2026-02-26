@@ -87,6 +87,9 @@ export const getGameDetailsById = async (id) =>
 export const getAllNotification = async () =>
   await instance.get("/api/user/notification/all").then((res) => res);
 
+export const getNewNotificationCount = async () =>
+  await instance.get("/api/user/notification/count").then((res) => res);
+
 export const CreateBooking = async (data: any) =>
   await instance.post("/game/booking", data).then((res) => res);
 
@@ -110,6 +113,9 @@ export const addReviewer = async (jobId, data: any) =>
 
 export const addHr = async (jobId, data: any) =>
   await instance.post(`/job/${jobId}/hr`, data).then((res) => res);
+
+export const getAllHr= async () =>
+  await instance.get("/api/user/hr/all").then((res) => res);
 
 export const createJobReferral = async (jobId, data: any) =>
   await instance.post(`/job/${jobId}/refer`, data).then((res) => res);
@@ -190,6 +196,7 @@ export const createTag = async (data: any) =>
 
 export const getTeamMember = async () =>
   await instance.get("/api/user/team-members").then((res) => res);
+
 
 
 instance.interceptors.request.use((config) => {

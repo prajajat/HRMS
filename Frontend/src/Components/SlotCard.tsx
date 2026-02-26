@@ -1,7 +1,7 @@
 function SlotCard({ data }) {
   return (
     <div
-      className={`m-4 flex flex-col justify-items-center rounded-b-lg   ${data.slotStatus === "BOOKED" ? " bg-red-100" : "bg-green-200"}`}
+      className={` flex flex-col justify-items-center rounded-b-lg   ${data.slotStatus === "BOOKED" ? " bg-red-100" :data.slotStatus === "EXPIRED"||data.slotStatus === "COMPLETED"  ?"bg-blue-100":"bg-blue-300"}`}
     >
       <div className="flex flex-row aline-item-center justify-center w-full">
         <div>Slot</div>
@@ -10,7 +10,7 @@ function SlotCard({ data }) {
       <div className="flex flex-row aline-item-center justify-between w-full">
         <div>{data.gameSlotId}</div>
 
-        <div className={" rounded-lg"}>{data.slotStatus}</div>
+        <div className={" rounded-lg"}>{data.slotStatus=="PENDING"?"Avialable":data.slotStatus }</div>
       </div>
 
       <div className="flex flex-row aline-item-center justify-center w-full">

@@ -12,10 +12,13 @@ import {
   Chip,
 } from "@mui/material";
 import { useGetAllNotification } from "../Query/useQueries";
+import { resetCount } from "../Store/userSlice";
+import { useDispatch } from "react-redux";
 
 function Notification() {
   const { isLoading, data, isError } = useGetAllNotification();
-
+    const dispatch = useDispatch();
+  dispatch(resetCount());
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>

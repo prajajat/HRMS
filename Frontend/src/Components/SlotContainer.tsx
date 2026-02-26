@@ -4,7 +4,7 @@ import SlotCard from "./SlotCard";
 import { Button, List, ListItem, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
 
-function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
+function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer,setView }) {
   console.log(data);
   const {
     isLoading: isEmpLoading,
@@ -61,6 +61,11 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
     ) {
       return;
     }
+    if(newSlot.slotStatus=="EXPIRED"||newSlot.slotStatus=="COMPLETED")
+    {
+      alert("you selected slot is  either EXPIRED or COMPLETED ");
+      return ;
+    }
 
     if (slot.length + 1 > maxSlot) {
       alert("max slot allowed is only " + maxSlot);
@@ -94,6 +99,9 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
       onSuccess: (response: any) => {
         // alert(response);
         console.log(response);
+        setEmp([]);
+        setSlot([]);
+        setView("");
         refetch();
       },
       onError: (error) => {
@@ -165,15 +173,17 @@ function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer }) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {groupByDate[date].map((slot, indexOfSlot) => (
+              {groupByDate[date].map((s, indexOfSlot) => (
                 <div>
                   <hr />
                   <div
-                    key={slot.gameSlotId}
-                    onClick={() => handleSlotAdd(slot)}
-                    className={`rounded-lg p-3 mb-3 ${(indexOfDate % 2 == 0 && indexOfSlot % 2 == 1) || (indexOfDate % 2 == 1 && indexOfSlot % 2 == 0) ? "bg-blue-300" : "bg-green-100"}`}
+                    key={s.gameSlotId}
+                    onClick={() => handleSlotAdd(s)}
+                    className={`rounded-lg p-1 mb-3 
+                      ${ slot.find((e) => e.gameSlotId == s.gameSlotId) ? "bg-green-900" :(indexOfDate % 2 == 0 && indexOfSlot % 2 == 1) || (indexOfDate % 2 == 1 && indexOfSlot % 2 == 0) ? "bg-gray-300" : "bg-violet-300" }
+                    `}
                   >
-                    <SlotCard data={slot} />
+                    <SlotCard data={s} />
                   </div>
                   <hr />
                 </div>

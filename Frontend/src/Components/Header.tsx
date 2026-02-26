@@ -1,11 +1,13 @@
 import { Button, List, ListItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../Store/userSlice";
+import { logout, setCount } from "../Store/userSlice";
 import { removeToken } from "../Store/tokenSlice";
+import { useGetNewNotificationCount } from "../Query/useQueries";
+import { useEffect } from "react";
 
 function Header() {
-  const { userId, roles,imageUrl } = useSelector((state) => state.user);
+  const { userId, roles,imageUrl, notiicationCount } = useSelector((state) => state.user);
   const navigator = useNavigate();
   const dispatch = useDispatch();
   const handleClick = () => {
@@ -18,8 +20,21 @@ function Header() {
   };
 
   console.log(imageUrl);
+
+    const { isLoading, data, isError } = useGetNewNotificationCount();
+    useEffect(()=>{
+       if(data!=undefined){
+        dispatch(setCount({notiicationCount:data?.data}));
+        
+      console.log(data);  
+
+       }
+        
+     
+    },[data]);
+  
   return (
-    <div className="flex justify-between items-center bg-blue-400 w-full ">
+    <div className="flex justify-between items-center bg-blue-400 w-full h-15 ">
       <div className="text-Black-800 ml-10 font-bold rounded p-3 flex flex-row justify-start">
         <img src='/letter-r.png' height={30} width={30}></img>Roima HRMS
         </div>
@@ -45,7 +60,10 @@ function Header() {
               Org. Chart
             </Button>
             <Button onClick={() => navigator("/notification/all")}>
-              <img src="/bellBlack.png" className="h-8 w-8"></img>
+              <img src="/bellBlack.png" className="h-6 w-6"></img>
+              <div className="text-green-900 mb-10">
+               {notiicationCount}
+               </div>
             </Button>
           </>
         )}

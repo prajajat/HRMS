@@ -35,12 +35,24 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
+    @PreAuthorize("hasAuthority('All-User')")
+    @GetMapping("/hr/all")
+    public ResponseEntity<List<UserResponseForEmailDTO>> getAllUserWithHrRole(){
+        return ResponseEntity.ok(userService.getAllUserWithHrRole());
+    }
+
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/notification/all")
     public ResponseEntity<List<NotificationResponseDTO>> getAllNotification(){
 
         return ResponseEntity.ok(userService.getAllNotification((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+    }
+    @PreAuthorize("hasAuthority('All-User')")
+    @GetMapping("/notification/count")
+    public ResponseEntity<Long> getNewNotificationCount(){
+
+        return ResponseEntity.ok(userService.getNewNotificationCount((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
 

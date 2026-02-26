@@ -2,11 +2,11 @@ import { NavLink } from "react-router-dom";
 
 function HRSidebar() {
   return (
-    <div className="flex flex-col h-full  bg-blue-300  w-30">
+    <div className="flex flex-col h-full  bg-blue-300  w-45">
       <NavLink
         to="/hr/travel/details"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Travel Details
@@ -14,7 +14,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/travel/expense"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Travel Expense
@@ -22,7 +22,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/travel/document"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Travel Document
@@ -31,7 +31,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/game/details"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Game Config
@@ -40,7 +40,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/achievement/posts"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Achievements
@@ -49,7 +49,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/job/dashboard"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         Jobs
@@ -58,7 +58,7 @@ function HRSidebar() {
       <NavLink
         to="/hr/system-config"
         className={({ isActive }) =>
-          isActive ? "text-indigo-700 m-1" : "text-blue-500 m-1"
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
         }
       >
         System Configuration

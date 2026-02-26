@@ -6,7 +6,8 @@ public class StatusType {
         BOOKED,
         PENDING,
         QUEUED,
-        REJECTED,
-        CANCELLED
+        CANCELLED,
+        EXPIRED,
+        COMPLETED
     }
 }

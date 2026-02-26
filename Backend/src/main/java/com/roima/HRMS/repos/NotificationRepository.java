@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface NotificationRepository  extends JpaRepository<Notification,Long> {
  List<Notification> findByUser(User user);
+ Long countByUserAndIsRead(User user,Boolean isRead);
 }

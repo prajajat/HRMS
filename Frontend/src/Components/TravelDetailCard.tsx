@@ -23,7 +23,7 @@ function TravelDetailCard({
   console.log(data);
   return (
     <Grid item xs={12} md={4}>
-      <Card sx={{ margin:5,backgroundColor:"#d1ddf3ee",boxShadow:4}}>
+      <Card sx={{ margin:5,backgroundColor:"#dbeafe",boxShadow:4}}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {data.title}

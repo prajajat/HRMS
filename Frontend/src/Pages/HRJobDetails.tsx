@@ -17,6 +17,7 @@ import {
   useGetAllEmp,
   useGetALLUser,
   useUpdateJobStatus,
+  useGetALLHr,
 } from "../Query/useQueries";
 import { useForm } from "react-hook-form";
 
@@ -36,7 +37,7 @@ function HRJobDetails() {
     data: dataEmp,
     isError: isErrorEmp,
     refetch: refetchEmp,
-  } = useGetALLUser();
+  } = useGetALLHr();
 
   const { mutate: addReviewerMutation, isPending: isReviewerLoading } =
     useAddReviewer();

@@ -14,6 +14,7 @@ interface CommentCardProps {
   view: "hr" | "employee";
   onReply?: (commentId: number) => void;
   onEdit?: (comment: any) => void;
+  reFetch
 }
 
 export const CommentCard: React.FC<CommentCardProps> = ({
@@ -22,6 +23,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   view,
   onReply,
   onEdit,
+  refetchComment
 }) => {
   const userId = useSelector((state: any) => state.user.userId);
   const { mutate: likeComment, isPending: isLiking } = useLikeComment();
@@ -60,13 +62,22 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   }, [isAuthor, currentUserId, commentAuthorId, view]);
 
   const handleLike = () => {
-    likeComment(comment.pkCommentId);
+    likeComment(comment.pkCommentId,
+       {
+        onSuccess: () => {
+          setIsEditing(false);
+          refetchComment();
+        },
+      }
+    );
+ 
   };
 
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       deleteComment({ commentId: comment.pkCommentId, postId });
       setShowOptions(false);
+      refetchComment()
     }
   };
 
@@ -86,6 +97,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       {
         onSuccess: () => {
           setIsEditing(false);
+          refetchComment();
         },
         onError: (error) => {
           console.error("Error updating comment:", error);
@@ -93,6 +105,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
         },
       },
     );
+   
   };
 
   const handleCancelEdit = () => {

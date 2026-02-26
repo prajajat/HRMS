@@ -81,6 +81,7 @@ function GameDetails() {
                 maxPlayer={data?.data.maxPlayerPerSlot}
                 maxSlot={data?.data.maxSlotPerBooking}
                 refetch={refetch}
+                setView={setView}
               />
             </div>
           )}

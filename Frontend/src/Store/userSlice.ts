@@ -7,9 +7,11 @@ const initialState = {
     {
       roleId: -1,
       title: "",
-      imageUrl:"/boy.png"
+      
     },
   ],
+  imageUrl:"/boy.png",
+  notiicationCount:0
 };
 
 export const userSlice = createSlice({
@@ -26,11 +28,19 @@ export const userSlice = createSlice({
       state.userId = -1;
       state.roles = [];
       state.imageUrl="/boy.png";
+      state.notiicationCount=0;
     },
+    setCount:(state,action)=>{
+       state.notiicationCount=action.payload.notiicationCount;
+    },
+    resetCount:(state,action)=>
+    {
+        state.notiicationCount=0;
+    }
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout ,setCount,resetCount} = userSlice.actions;
 export const selectUser = (state: RootState) => state.user;
 
 export default userSlice.reducer;

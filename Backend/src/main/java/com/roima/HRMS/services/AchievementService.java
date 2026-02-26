@@ -82,8 +82,13 @@ public class AchievementService {
      * Get feed with filters
      */
     public List<PostResponseDTO> getFeed(PostFilterDTO filter) {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts =new ArrayList<>( postRepository.findByVisibility("all"));
         Long currentUserId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user=findUserById(currentUserId);
+        if(user.getRoles().stream().anyMatch(r->r.getTitle().equals("manager")))
+        {
+            posts.addAll(new ArrayList<>(postRepository.findByVisibility("manager")));
+        }
         posts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
         return posts.stream()
                 .filter(post -> post.getIsActive())

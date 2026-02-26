@@ -253,7 +253,7 @@ export const CreatePostForm: React.FC<CreatePostFormProps> = ({
                   onChange={() => handleTagSelect(tag.pkTagId)}
                   disabled={isLoading || isCreatingTag}
                 />
-                <span>{tag.tagName}</span>
+                <span>#{tag.tagName}</span>
               </label>
             ))}
           </div>
