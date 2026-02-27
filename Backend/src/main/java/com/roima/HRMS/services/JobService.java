@@ -31,6 +31,7 @@ public class JobService {
     private final CloudinaryService cloudinaryService;
     private final EmailService emailService;
     private final ModelMapper modelMapper;
+    private final JobReferReviewRepository jobReferReviewRepository;
 
 
     public BasicResponse createJob(JobCreateDTO dto, MultipartFile document) {
@@ -136,7 +137,7 @@ public class JobService {
 
 
         String emailBody = MailTemplateUtil.reviewerAddedEmailTemplate(job.getTitle(), job.getJobId().toString());
-        emailService.sendMail(List.of(reviewer.getPersonalEmail()), "Added as CV Reviewer for " + job.getTitle(), emailBody);
+        emailService.sendMail(List.of(reviewer.getCompanyEmail()), "Added as CV Reviewer for " + job.getTitle(), emailBody);
 
 
             Notification notification = new Notification();
@@ -164,7 +165,7 @@ public class JobService {
         jobRepository.save(job);
 
         String emailBody = MailTemplateUtil.hrAddedEmailTemplate(job.getTitle(), job.getJobId().toString());
-        emailService.sendMail(List.of(hr.getPersonalEmail()), "Assigned to manage job: " + job.getTitle(), emailBody);
+        emailService.sendMail(List.of(hr.getCompanyEmail()), "Assigned to manage job: " + job.getTitle(), emailBody);
 
             Notification notification = new Notification();
             notification.setTitle("New Job Assignment");
@@ -208,14 +209,36 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
-    public List<JobReferResponseDTO> getUserReferrals() {
+    public JobReferResponsewithReviewAndStatusDTO getUserReferrals() {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = findUserById(userId);
+        JobReferResponsewithReviewAndStatusDTO response=new JobReferResponsewithReviewAndStatusDTO();
 
-        return jobReferRepository.findByReferer(user)
+        response.setMyRefers(jobReferRepository.findByReferer(user)
                 .stream()
-                .map(x->modelMapper.map(x,JobReferResponseDTO.class))
-                .collect(Collectors.toList());
+                .map(x->{JobReferResponseBaseDTO dto= modelMapper.map(x,JobReferResponseBaseDTO.class);
+                    dto.setStatus(  x.getJobReferReviews().isEmpty()
+                            ?"PENDING"
+                            : x.getJobReferReviews().get(x.getJobReferReviews().size()-1).getStatus());
+
+                    return dto;
+                })
+                .toList());
+
+        response.setReferToReview(
+                user.getJobToReview().stream().flatMap(
+                        job ->job.getJobRefers().stream().map(
+                                jr->{JobReferResponseWithReviewDTO dto= modelMapper.map(jr,JobReferResponseWithReviewDTO.class);
+                                    dto.setStatus(  jr.getJobReferReviews().isEmpty()
+                                            ?"PENDING"
+                                            : jr.getJobReferReviews().get(jr.getJobReferReviews().size()-1).getStatus());
+
+                                    return dto;
+                                }
+                        )
+                ).toList()
+        );
+        return response;
     }
 
 
@@ -228,6 +251,24 @@ public class JobService {
                 .map(x->modelMapper.map(x,JobShareResponseDTO.class))
                 .collect(Collectors.toList());
     }
+    public BasicResponse createReferralReview(JobReferReviewDTO dto)
+    {
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = findUserById(userId);
+        JobRefer jobRefer=jobReferRepository.findById(dto.getJobReferId()).orElseThrow(()->new RuntimeException("refer not found"));
+        if(!jobRefer.getJob().getReviewers().contains(user)&&!jobRefer.getJob().getHrs().contains((user)))
+        {
+             throw new RuntimeException("Only hr and reviewer for this job can update status");
+        }
+        JobReferReview jobReferReview=new JobReferReview();
+        jobReferReview.setJobRefer(jobRefer);
+        jobReferReview.setUpdatedBy(user);
+        jobReferReview.setStatus(dto.getStatus());
+        jobReferReviewRepository.save(jobReferReview);
+
+        return new BasicResponse("refer status updated successfully");
+
+    }
 
     public BasicResponse createReferral(Long jobId, JobReferCreateDTO dto, MultipartFile cv) {
         Job job = findJobById(jobId);
@@ -238,7 +279,7 @@ public class JobService {
         jobRefer.setFriendMail(dto.getFriendMail());
 
         jobRefer.setShortNote(dto.getShortNote());
-        jobRefer.setStatus("PENDING");
+
 
         jobRefer.setJob(job);
         jobRefer.setReferer(referer);
@@ -264,10 +305,15 @@ public class JobService {
 
         if (job.getHrs() != null) {
             hrEmails.addAll(job.getHrs().stream()
-                    .map(User::getPersonalEmail)
-                    .collect(Collectors.toList()));
+                    .map(User::getCompanyEmail)
+                    .toList());
         }
-
+        if(job.getReviewers()!=null)
+        {
+            hrEmails.addAll(job.getReviewers().stream()
+                    .map(User::getCompanyEmail)
+                    .toList());
+        }
         SystemConfig defaultHr = systemConfigRepository.findByConfigKey("default_hr").orElse(null);
 
         if (defaultHr != null && !defaultHr.getConfigValue().isEmpty()) {

@@ -90,7 +90,6 @@ public class User {
     @OneToMany(mappedBy = "uploadedBy")
     private List<Document> Documents;
 
-
     @OneToMany(mappedBy = "createdBy")
     private List<GameBooking> gameBookingsCreatedByMe;
 
@@ -120,6 +119,9 @@ public class User {
 
     @ManyToMany(mappedBy = "interestedPlayers")
     private List<Game> interestedGames;
+
+    @OneToMany(mappedBy = "updatedBy")
+    private List<JobReferReview> jobReviews;
 
 }
 

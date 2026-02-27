@@ -39,7 +39,8 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
           {view != "doc" ? "Add new doc" : "cancel"}
         </Button>
       </div>
-      <div className="flex flex-row justify-between my-4 w-full justify-center">
+      <div className="flex flex-row my-4 w-full justify-center">
+         
         {view == "doc" && (
           <NewDocumentForm
             travelerId={travelerId}
@@ -47,6 +48,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
             ownerType={ownerType}
           />
         )}
+         
       </div>
       <div className="mx-20">
         <TableContainer component={Paper}>

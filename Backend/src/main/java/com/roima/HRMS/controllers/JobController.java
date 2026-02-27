@@ -3,6 +3,9 @@ package com.roima.HRMS.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import com.roima.HRMS.dtos.request.*;
+import com.roima.HRMS.dtos.response.*;
+import com.roima.HRMS.entities.JobReferReview;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,19 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.roima.HRMS.dtos.request.AddHrDTO;
-import com.roima.HRMS.dtos.request.AddReviewerDTO;
-import com.roima.HRMS.dtos.request.JobCreateDTO;
-import com.roima.HRMS.dtos.request.JobFilterDTO;
-import com.roima.HRMS.dtos.request.JobReferCreateDTO;
-import com.roima.HRMS.dtos.request.JobShareCreateDTO;
-import com.roima.HRMS.dtos.request.JobStatusPatchDTO;
-import com.roima.HRMS.dtos.request.SystemConfigPatchDTO;
-import com.roima.HRMS.dtos.response.BasicResponse;
-import com.roima.HRMS.dtos.response.JobReferResponseDTO;
-import com.roima.HRMS.dtos.response.JobResponseDTO;
-import com.roima.HRMS.dtos.response.JobShareResponseDTO;
-import com.roima.HRMS.dtos.response.SystemConfigResponseDTO;
+
 import com.roima.HRMS.services.JobService;
 
 import lombok.RequiredArgsConstructor;
@@ -108,7 +99,7 @@ public class JobController {
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/refers")
-    public ResponseEntity<List<JobReferResponseDTO>> getUserReferrals() {
+    public ResponseEntity<JobReferResponsewithReviewAndStatusDTO> getUserReferrals() {
         log.info("Fetching user referrals");
         return ResponseEntity.ok(jobService.getUserReferrals());
     }
@@ -140,6 +131,13 @@ public class JobController {
             @RequestBody JobShareCreateDTO dto) {
         log.info("Sharing job: {}", jobId);
         return ResponseEntity.ok(jobService.shareJob(jobId, dto));
+    }
+
+    @PreAuthorize("hasAuthority('All-User')")
+    @PostMapping("/refer/review")
+    public ResponseEntity<BasicResponse> createReferralReview(@RequestBody  JobReferReviewDTO dto) {
+        log.info("Updating job refer status: {}", dto.getJobReferId());
+        return ResponseEntity.ok(jobService.createReferralReview(dto));
     }
 
     @PreAuthorize("hasAuthority('manage-job')")

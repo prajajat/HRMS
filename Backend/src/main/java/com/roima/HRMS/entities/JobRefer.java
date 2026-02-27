@@ -9,6 +9,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -40,8 +41,8 @@ public class JobRefer {
     @JoinColumn(name="fk_job_id")
     private Job job;
 
-    @Column(name = "status")
-    private String status;
+    @OneToMany(mappedBy = "jobRefer")
+    private List<JobReferReview> jobReferReviews;
 
     @OneToOne
     @JoinColumn(name="fk_doc_id")

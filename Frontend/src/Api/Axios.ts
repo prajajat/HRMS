@@ -197,7 +197,8 @@ export const createTag = async (data: any) =>
 export const getTeamMember = async () =>
   await instance.get("/api/user/team-members").then((res) => res);
 
-
+export const updateReferralStatus = async (data: any) =>
+  await instance.post("/job/refer/review", data).then((res) => res);
 
 instance.interceptors.request.use((config) => {
   console.log(config.url);

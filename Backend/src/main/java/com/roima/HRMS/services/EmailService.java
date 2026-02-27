@@ -20,13 +20,13 @@ public class EmailService {
     {
         SimpleMailMessage message=new SimpleMailMessage();
         message.setFrom("prajapatijatin233@gmail.com");
-        to.forEach(
-               x-> message.setTo(x)
-        );
+
+        message.setTo(to.toArray(new String[0]));
+
         message.setSubject(subject);
         message.setText(body);
-        log.info("mail sender{}{}{}",body,subject,to.get(0));
-       // mailSender.send(message);
+        log.info("mail sender{}{}{}{}",body,subject,to.size(),to);
+        mailSender.send(message);
     }
 
 }

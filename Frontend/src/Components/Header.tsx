@@ -61,8 +61,10 @@ function Header() {
             </Button>
             <Button onClick={() => navigator("/notification/all")}>
               <img src="/bellBlack.png" className="h-6 w-6"></img>
-              <div className="text-green-900 mb-10">
+              <div className="text-white mb-10 bg-green-700 rounded-full mt-3 w-5 h-5">
+              
                {notiicationCount}
+               
                </div>
             </Button>
           </>

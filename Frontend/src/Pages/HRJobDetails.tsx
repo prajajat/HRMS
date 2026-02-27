@@ -39,6 +39,13 @@ function HRJobDetails() {
     refetch: refetchEmp,
   } = useGetALLHr();
 
+  const {
+    isLoading: isLoadingAllUser,
+    data: dataAllUser,
+    isError: isErrorAllUser,
+    refetch: refetchAllUser,
+  } = useGetALLUser();
+
   const { mutate: addReviewerMutation, isPending: isReviewerLoading } =
     useAddReviewer();
   const { mutate: addHrMutation, isPending: isHrLoading } = useAddHr();
@@ -228,7 +235,7 @@ function HRJobDetails() {
                         required: "Email is required",
                       })}
                     >
-                      {dataEmp?.data.map((emp) => {
+                      {dataAllUser?.data.map((emp) => {
                         return (
                           <MenuItem value={emp.userId}>
                             {" "}

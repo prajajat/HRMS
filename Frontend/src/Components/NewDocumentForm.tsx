@@ -79,10 +79,10 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
+      className="rounded-lg bg-blue-100 max-w-2xl  p-3 flex flex-col justify-center"
     >
       {!isLoadingEmp && !isLoadingTd && (
-        <>
+        <> Add New Travel Document
           <FormControl>
             <InputLabel>Visibility</InputLabel>
             <Select
@@ -177,7 +177,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
               multiple
               accept="image/*,.pdf,.doc,.docx"
               onChange={handleFileSelect}
-              className="mt-10 mb-10"
+              className="mt-10 mb-10" 
             />
           </FormControl>
 

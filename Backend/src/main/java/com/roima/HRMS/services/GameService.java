@@ -310,7 +310,9 @@ public class GameService {
                          x -> x.getGameBooking().getBookingSlots().contains(gameSlot)
                  )
                  .toList());
+         allPlayer=allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())).toList();
         log.info("auto : all player size{}",allPlayer.size());
+        if(allPlayer.isEmpty())  return null;
 
              allPlayer
                 .sort(
@@ -330,10 +332,18 @@ public class GameService {
                                 .thenComparing(GameQueue::getQueueTime)
                 );
 
-              if(allPlayer.isEmpty())  return null;
-        log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
-             return allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())
-                                  ).toList().get((0));
+             Boolean played=false;
+             if(gameSlot.getSlotStartTime().toLocalTime().isBefore(LocalTime.now().plusMinutes(30)))
+             {  //comming soon ...
+
+             }else{
+                 return null;
+             }
+
+             log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
+
+
+             return ;
 
     }
 
@@ -418,9 +428,9 @@ public class GameService {
 
         gameBookingRepository.save(gameBooking);
         gameSlotRepository.saveAll(gameSlots);
-        log.info(" jatin now calling for auto assign {}",bookingId);
+        log.info(" now calling for auto assign {}",bookingId);
         assignKnownSlot(gameSlots);
-        log.info(" jatin  end calling for auto assign {}",bookingId);
+        log.info(" end calling for auto assign {}",bookingId);
           return new BasicResponse("slot cancelled successfully");
     }
 
@@ -483,16 +493,21 @@ public class GameService {
                         Double perDayMaxPlayerGotChance=perDaytime*game.getMaxPlayerPerSlot();
                          int days=(int) Math.ceil(110/perDayMaxPlayerGotChance);
                          int totalDayNeeded=0;
+                         int calenderDays=0;
                          if(game.getIsOpenForWeekend())
                          {
                              totalDayNeeded=days;
                          }else {
-                             for (int i = 0; i!= days; totalDayNeeded++) {
-                                 if (LocalDate.now().plusDays(i).getDayOfWeek() != DayOfWeek.SATURDAY &&
-                                         LocalDate.now().plusDays(i).getDayOfWeek() != DayOfWeek.SUNDAY ) {
-                                     i++;
+                             int weekDaysCount=0;
+                              while(weekDaysCount<days){
+                                 DayOfWeek day= LocalDate.now().plusDays(calenderDays).getDayOfWeek();
+                                 if (day != DayOfWeek.SATURDAY &&
+                                         day!= DayOfWeek.SUNDAY ) {
+                                     weekDaysCount++;
                                  }
+                                 calenderDays++;
                              }
+                              totalDayNeeded=calenderDays;
                          }
                          endDate=Date.valueOf(LocalDate.now().plusDays(totalDayNeeded-1));
 
@@ -524,7 +539,7 @@ public class GameService {
     @Transactional
     public void cleanUpSlotAndBooking()
     {
-        List<GameSlot> gameSlots =gameSlotRepository.findBySlotStatusAndSlotStartTimeBefore(Time.valueOf(LocalTime.now()),Date.valueOf(LocalDate.now()));
+        List<GameSlot> gameSlots =gameSlotRepository.findBySlotStatusAndSlotStartTimeBefore(Time.valueOf(LocalTime.now()),Date.valueOf(LocalDate.now()),Date.valueOf(LocalDate.now().minusDays(1)));
         log.info(" auto cleanUp total game slot{}", gameSlots.size());
         gameSlots.forEach(
                 gs-> {
@@ -539,32 +554,32 @@ public class GameService {
                         gs.setSlotStatus(StatusType.BookingStatus.COMPLETED);
                     }
 
-                    List<GameBooking> gameBookings=gs.getCurrentGameBookings();
-                    gameBookings.forEach(
-                            gb->{
-                                log.info(" auto cleanUp game booking{}",gb.getGameBookingId());
-                                 if(gb.getStatus().equals(StatusType.BookingStatus.BOOKED))
-                                 {
-                                     gb.setStatus(StatusType.BookingStatus.COMPLETED);
-                                 }
-                                 else if(gb.getStatus().equals(StatusType.BookingStatus.QUEUED))
-                                 {
-                                     gb.setStatus(StatusType.BookingStatus.EXPIRED);
-                                 }
+                    if(gs.getSlotStatus().equals(StatusType.BookingStatus.PENDING)||gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
+                    {
+                        List<GameBooking> gameBookings = gs.getCurrentGameBookings();
+                        gameBookings.forEach(
+                                gb -> {
+                                    log.info(" auto cleanUp game booking{}", gb.getGameBookingId());
+                                    if (gb.getStatus().equals(StatusType.BookingStatus.BOOKED)) {
+                                        gb.setStatus(StatusType.BookingStatus.COMPLETED);
+                                    } else if (gb.getStatus().equals(StatusType.BookingStatus.QUEUED)) {
+                                        gb.setStatus(StatusType.BookingStatus.EXPIRED);
+                                    }
 
 
-                                List<GameQueue> gameQueues=gb.getGameQueues();
-                                gameQueues.forEach(
-                                         gq -> {
-                                             log.info(" auto cleanUp game queue{}",gq.getGameQueueId());
-                                               gq.setIsActive(false);
-                                         }
-                                 );
-                                 gameQueueRepository.saveAll(gameQueues);
-                            }
+                                    List<GameQueue> gameQueues = gb.getGameQueues();
+                                    gameQueues.forEach(
+                                            gq -> {
+                                                log.info(" auto cleanUp game queue{}", gq.getGameQueueId());
+                                                gq.setIsActive(false);
+                                            }
+                                    );
+                                    gameQueueRepository.saveAll(gameQueues);
+                                }
 
-                    );
-                    gameBookingRepository.saveAll(gameBookings);
+                        );
+                        gameBookingRepository.saveAll(gameBookings);
+                    }
                 }
         );
 

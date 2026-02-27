@@ -19,6 +19,7 @@ function TravelDetails() {
   const { mutate, isPending: isPendingCreate } = useCreateTravel();
   const { register, handleSubmit } = useForm({
     shouldUseNativeValidation: true,
+    mode:"onSubmit"
   });
 
   const onSubmit = (dto) => {

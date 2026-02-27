@@ -57,6 +57,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       ),
     ];
   }, [dataEp]);
+
   var uniqueEmp = useMemo(() => {
     if (dataEp?.data.length == 0) return [];
     return [
@@ -65,14 +66,17 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       ),
     ];
   }, [dataEp]);
+
   var uniqueDate = useMemo(() => {
     if (dataEp?.data.length == 0) return [];
     return [...new Set(list.map((item) => item.expenseDate))];
   }, [dataEp]);
+
   var uniqueStatus = useMemo(() => {
     if (dataEp?.data.length == 0) return [];
     return [...new Set(list.map((item) => item.status))];
   }, [dataEp]);
+
   const [filterEmp, setFilterEmp] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterTravel, setFilterTravel] = useState("");
@@ -124,7 +128,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <FormLabel>Select employee</FormLabel>
             <Select
               type="text"
-              defaultValue=""
+              // defaultValue=""
               className="mt-2 mb-2"
               onChange={(e) => {
                 setFilterEmp(
@@ -214,14 +218,29 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
               })}
             </Select>
           </div>
-          <div className="w-20 h-10">
+          <div className=" flex flex-col ">
             <Button
               variant="contained"
               size="sm"
               onClick={handleApplyFilter}
-              sx={{ marginY: 1 }}
+              sx={{ margin: 1, height: 40 }}
             >
               Apply Filter
+            </Button>
+            <Button
+              variant="contained"
+              size="sm"
+              onClick={() => {
+                setFilterEmp("");
+                setFilterEndDate("");
+                setFilterStartDate("");
+                setFilterStatus("");
+                setFilterTravel("");
+                setSearch("");
+              }}
+              sx={{ margin: 1, height: 40 }}
+            >
+              Clear filter
             </Button>
           </div>
         </div>

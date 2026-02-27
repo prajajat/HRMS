@@ -64,7 +64,7 @@ public class MailTemplateUtil {
 
     public static String contentWarningEmailTemplate(String content, String postTitle) {
         return "Dear User,\n\n" +
-                "Your have been founded as wrong by HR team:\n\n" +
+                "Your content have been founded as wrong by HR team:\n\n" +
                 "Post Title: " + postTitle + "\n" +
                 "Content Type : " + content + "\n\n" +
                 "Please be aware of content policy.\n\n" +

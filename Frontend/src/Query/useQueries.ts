@@ -56,6 +56,7 @@ import {
   getTeamMember,
   getNewNotificationCount,
   getAllHr,
+  updateReferralStatus,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -286,6 +287,8 @@ export const useUpdateJobStatus = () => {
     mutationFn: ({ jobId, data }) => updateJobStatus(jobId, data),
     onSuccess: (response) => {
       console.log(response);
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+
     },
   });
 };
@@ -295,6 +298,7 @@ export const useAddReviewer = () => {
     mutationFn: ({ jobId, data }) => addReviewer(jobId, data),
     onSuccess: (response) => {
       console.log(response);
+        queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
 };
@@ -304,6 +308,7 @@ export const useAddHr = () => {
     mutationFn: ({ jobId, data }) => addHr(jobId, data),
     onSuccess: (response) => {
       console.log(response);
+        queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
 };
@@ -532,6 +537,15 @@ export const useCreateTag = () => {
     mutationFn: (data: any) => createTag(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tags"] });
+    },
+  });
+};
+
+export const useUpdateReferralStatus = () => {
+  return useMutation({
+    mutationFn: (data: any) => updateReferralStatus(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userReferrals"] });
     },
   });
 };

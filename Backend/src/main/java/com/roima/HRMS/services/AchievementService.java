@@ -122,8 +122,11 @@ public class AchievementService {
                 .filter(post -> {
                     if (filter.getSearch() != null && !filter.getSearch().isEmpty()) {
                         String search = filter.getSearch().toLowerCase();
+
                         return post.getTitle().toLowerCase().contains(search) ||
-                               post.getDescription().toLowerCase().contains(search);
+                               post.getDescription().toLowerCase().contains(search)||
+                                (post.getAuthor()==null?"system":post.getAuthor().getUserName().toLowerCase()).contains(search)
+                                ;
                     }
                     return true;
                 })
