@@ -40,11 +40,15 @@ function HRUpdate() {
     dto.employees = emp.map((e) => {
       return e.userId;
     });
-
+    if(emp.length==0){
+      alert("please select employee first");
+      return;
+    }
     console.log(dto);
     mutate(dto, {
       onSuccess: (response: any) => {
         console.log("save");
+        alert("new Emp added to travel");
         refetch();
       },
     });
@@ -68,7 +72,7 @@ function HRUpdate() {
             
              
               {!isEmpLoading && (
-                <div className="mt-10 w-max-2xl flex flex-col bg-gray-200 rounded m-3 p-3">
+                <div className="mt-10 w-max-2xl flex flex-col bg-blue-200 rounded m-3 p-3">
                    <br />
                    Add Employee to travel
                   <Select
@@ -102,7 +106,7 @@ function HRUpdate() {
                     </List>
                    
                   )}
-                  <Button onClick={handelAssign}>Add Employes</Button>
+                  <Button onClick={handelAssign}>{assign?"Adding":"Add Employes"}</Button>
                 </div>
               )}
            

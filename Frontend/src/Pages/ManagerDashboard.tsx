@@ -8,7 +8,7 @@ function ManagerDashboard() {
           Manager Dashboard
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          Oversee team documents, travel assignments, and game bookings.
+          Oversee team documents and achievement.
         </Typography>
       </Box>
     </Container>

@@ -13,6 +13,7 @@ public class LoginResponseDTO {
      private long userId;
      private List<RoleDTO> roles;
      private String imageUrl;
+     private String userName;
 
 
 }

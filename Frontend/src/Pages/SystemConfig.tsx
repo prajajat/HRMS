@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useGetSystemConfig, useUpdateSystemConfig } from '../Query/useQueries';
+import { useGetSystemConfig, useUpdateSystemConfig, useUpdateSystemConfigWithDocument } from '../Query/useQueries';
 import styles from '../Styles/systemConfig.module.css';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 export const SystemConfig: React.FC = () => {
   const [configs, setConfigs] = useState<any[]>([]);
@@ -10,9 +8,13 @@ export const SystemConfig: React.FC = () => {
   const [editValue, setEditValue] = useState('');
   const [searchText, setSearchText] = useState('');
   const [originalValue, setOriginalValue] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { data: systemConfigs = [], isLoading, error, refetch } = useGetSystemConfig();
   const { mutate: updateConfig, isPending: isUpdating } = useUpdateSystemConfig();
+  const { mutate: updateConfigWithDocument, isPending: isUploadingDocument } = useUpdateSystemConfigWithDocument();
+
+  const documentConfigKeys = ['birthday_post_document_id', 'anniversary_post_document_id'];
 
   useEffect(() => {
     if (systemConfigs && Array.isArray(systemConfigs)) {
@@ -30,37 +32,61 @@ export const SystemConfig: React.FC = () => {
     setEditingId(config.configKey);
     setEditValue(config.configValue || '');
     setOriginalValue(config.configValue || '');
+    setSelectedFile(null);
   };
 
   const handleCancel = () => {
     setEditingId(null);
     setEditValue('');
     setOriginalValue('');
+    setSelectedFile(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setSelectedFile(file);
   };
 
   const handleSave = (configKey: string) => {
-    if (editValue === originalValue) {
+    // If a file is selected for document configs, upload it
+    if (documentConfigKeys.includes(configKey) && selectedFile) {
+      updateConfigWithDocument(
+        { configKey, file: selectedFile },
+        {
+          onSuccess: () => {
+            console.log(`Config ${configKey} updated with document successfully`);
+            refetch();
+            handleCancel();
+          },
+          onError: (error) => {
+            console.error('Error updating config with document:', error);
+            alert('Failed to update configuration with document');
+          }
+        }
+      );
+    } else if (editValue === originalValue && !selectedFile) {
       handleCancel();
       return;
-    }
-
-    updateConfig(
-      {
-        configKey,
-        configValue: editValue
-      },
-      {
-        onSuccess: () => {
-          console.log(`Config ${configKey} updated successfully`);
-          refetch();
-          handleCancel();
+    } else if (!documentConfigKeys.includes(configKey)) {
+      // Regular config update (not a document)
+      updateConfig(
+        {
+          configKey,
+          configValue: editValue
         },
-        onError: (error) => {
-          console.error('Error updating config:', error);
-          alert('Failed to update configuration');
+        {
+          onSuccess: () => {
+            console.log(`Config ${configKey} updated successfully`);
+            refetch();
+            handleCancel();
+          },
+          onError: (error) => {
+            console.error('Error updating config:', error);
+            alert('Failed to update configuration');
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   if (isLoading) {
@@ -120,15 +146,47 @@ export const SystemConfig: React.FC = () => {
                   </td>
                   <td className={styles.valueCell}>
                     {editingId === config.configKey ? (
-                      <textarea
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                        className={styles.editInput}
-                        rows={editValue.split('\n').length > 1 ? 3 : 1}
-                        disabled={isUpdating}
-                      />
+                      <div>
+                        {documentConfigKeys.includes(config.configKey) ? (
+                          <div className={styles.fileUploadContainer}>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleFileChange}
+                              disabled={isUploadingDocument}
+                              className={styles.fileInput}
+                            />
+                            {selectedFile && (
+                              <div className={styles.selectedFile}>
+                                Selected: {selectedFile.name}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <textarea
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className={styles.editInput}
+                            rows={editValue.split('\n').length > 1 ? 3 : 1}
+                            disabled={isUpdating || isUploadingDocument}
+                          />
+                        )}
+                      </div>
                     ) : (
-                      <span className={styles.valueText}>{config.configValue || '(empty)'}</span>
+                      <div>
+                        {documentConfigKeys.includes(config.configKey) && config.configValue ? (
+                          <div className={styles.imagePreview}>
+                            <img 
+                              src={config.configValue} 
+                              alt={config.configKey}
+                              className={styles.previewImage}
+                            />
+                            <p className={styles.imageUrl}>{config.configValue}</p>
+                          </div>
+                        ) : (
+                          <span className={styles.valueText}>{config.configValue || '(empty)'}</span>
+                        )}
+                      </div>
                     )}
                   </td>
                   <td className={styles.actionsCell}>
@@ -136,14 +194,14 @@ export const SystemConfig: React.FC = () => {
                       <div className={styles.actionButtons}>
                         <button
                           onClick={() => handleSave(config.configKey)}
-                          disabled={isUpdating}
+                          disabled={isUpdating || isUploadingDocument || (documentConfigKeys.includes(config.configKey) && !selectedFile)}
                           className={styles.saveBtn}
                         >
-                          {isUpdating ? 'Saving...' : 'Save'}
+                          {isUpdating || isUploadingDocument ? 'Saving...' : 'Save'}
                         </button>
                         <button
                           onClick={handleCancel}
-                          disabled={isUpdating}
+                          disabled={isUpdating || isUploadingDocument}
                           className={styles.cancelBtn}
                         >
                           Cancel

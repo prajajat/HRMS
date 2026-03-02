@@ -34,9 +34,10 @@ public class AuthService {
 
         User user = userRepo.findByCompanyEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
 
-        log.info("user >>> {}", user);
+
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            log.info("Invalid credentials for {}", user.getCompanyEmail());
             throw new RuntimeException("Invalid credentials");
         }
 
@@ -59,6 +60,8 @@ public class AuthService {
                         a->modelMapper.map(a, RoleDTO.class)
                 ).toList());
         response.setImageUrl(user.getImageUrl());
+        response.setUserName(user.getUserName());
+        log.info("Login successfull for {}", user.getCompanyEmail());
         return response;
     }
 
@@ -68,6 +71,7 @@ public class AuthService {
 
         RefreshTokenResponseDTO response = new RefreshTokenResponseDTO();
         response.setAccessToken(jwtUtil.generateToken(user));
+        log.info("Generate new access token for user {}", user.getCompanyEmail());
         return response;
 
 

@@ -21,22 +21,19 @@ function GameBookingCard({ data, refetch }) {
   var color = "green";
   switch (data.status) {
     case "BOOKED":
-      color = "green";
+      color = "bg-green-200";
       break;
     case "PENDING":
-      color = "yellow";
+      color = "bg-blue-200";
       break;
     case "QUEUED":
-      color = "blue";
-      break;
-    case "REJECTED":
-      color = "red";
+      color = "bg-blue-200";
       break;
     case "CANCELLED":
-      color = "red";
+      color = "bg-red-300";
       break;
     default:
-      color = "red";
+      color = "bg-red-200";
   }
   const {
     mutate,
@@ -67,7 +64,7 @@ function GameBookingCard({ data, refetch }) {
         <div className="flex flex-col aline-item-center justify-center h-full ">
           <div className="flex flex-row aline-item-center justify-between w-full">
             <div>{data.gameBookingId}</div>
-            <div className={"bg-" + color + "-200"}>{data.status}</div>
+            <div className={color}>{data.status}</div>
           </div>
 
           <hr />

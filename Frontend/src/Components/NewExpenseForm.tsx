@@ -9,7 +9,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
     shouldUseNativeValidation: true,
   });
   const [fileList, setFileList] = useState([]);
-  const { mutate, isPending, isError, error } = useCreateExpense();
+  const { mutate, isPending, isError, error,reset } = useCreateExpense(travelerId);
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -58,6 +58,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
       onSuccess: (response) => {
         console.log("success");
         alert("expense created");
+        reset();  
       },
     });
   };

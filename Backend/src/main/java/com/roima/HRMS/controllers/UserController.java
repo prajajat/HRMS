@@ -25,6 +25,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/employee/all")
     public ResponseEntity<List<UserResponseForEmailDTO>> getAllEmployee(){
+        log.info("Fetching all employees ");
         return ResponseEntity.ok(userService.getAllUserWithNameAndEmail());
     }
 
@@ -32,12 +33,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/all")
     public ResponseEntity<List<UserResponseForEmailDTO>> getAllUser(){
+        log.info("Fetching all User");
         return ResponseEntity.ok(userService.getAllUser());
     }
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/hr/all")
     public ResponseEntity<List<UserResponseForEmailDTO>> getAllUserWithHrRole(){
+        log.info("Fetching all User with HR role");
         return ResponseEntity.ok(userService.getAllUserWithHrRole());
     }
 
@@ -45,26 +48,31 @@ public class UserController {
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/notification/all")
     public ResponseEntity<List<NotificationResponseDTO>> getAllNotification(){
-
-        return ResponseEntity.ok(userService.getAllNotification((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        Long id=(Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Fetching all notifications for user by id: {}",id);
+        return ResponseEntity.ok(userService.getAllNotification(id));
     }
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/notification/count")
     public ResponseEntity<Long> getNewNotificationCount(){
-
-        return ResponseEntity.ok(userService.getNewNotificationCount((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        Long id=(Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Fetching new notifications count for user by id: {}",id);
+        return ResponseEntity.ok(userService.getNewNotificationCount(id));
     }
 
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/team-members")
     public ResponseEntity<List<UserResponceBaseDTO>> getTeamMemberByManager(){
-        return ResponseEntity.ok(userService.getTeamMemberByManager());
+        Long id=(Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Fetching Team members by manager id : {}",id);
+        return ResponseEntity.ok(userService.getTeamMemberByManager(id));
     }
 
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponceWithManagerAndTeamDTO> getUserById(@PathVariable Long id){
+        log.info("Fetching all User by id : {}",id);
         return ResponseEntity.ok(userService.getUserById(id));
     }
 }

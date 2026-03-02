@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 function EmployeeSidebar() {
+    const { userId } = useSelector((state) => state.user);
   return (
  
       <div className="flex flex-col h-full bg-blue-300  w-45 ">
@@ -21,6 +23,14 @@ function EmployeeSidebar() {
         }
       >
         Games
+      </NavLink>
+        <NavLink
+        to={"/employee/org-chart/"+userId}
+        className={({ isActive }) =>
+          isActive ? "text-indigo-700 m-3" : "text-blue-500 m-3"
+        }
+      >
+        Org.chart
       </NavLink>
 
       <NavLink

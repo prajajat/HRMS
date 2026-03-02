@@ -79,7 +79,8 @@ public class JobService {
     }
 
     public List<JobResponseDTO> getAllJobs(JobFilterDTO filter) {
-        List<Job> jobs = jobRepository.findAll();
+        List<Job> jobs = new ArrayList<>(jobRepository.findAll());
+        jobs.sort(Comparator.comparingLong(Job::getJobId).reversed());
 
         return jobs.stream()
                 .filter(job -> {
@@ -178,9 +179,24 @@ public class JobService {
     }
 
     public List<SystemConfigResponseDTO> getSystemConfig() {
-        return systemConfigRepository.findAll().stream().map(
-                config -> modelMapper.map(config, SystemConfigResponseDTO.class))
-                .collect(Collectors.toList());
+        return systemConfigRepository.findAll().stream().map(config -> {
+            SystemConfigResponseDTO dto = modelMapper.map(config, SystemConfigResponseDTO.class);
+            
+
+            if (config.getConfigKey().equals("birthday_post_document_id") || 
+                config.getConfigKey().equals("anniversary_post_document_id")) {
+                try {
+                    Long docId = Long.parseLong(config.getConfigValue());
+                    Document doc = documentRepository.findById(docId).orElse(null);
+                    if (doc != null) {
+                        dto.setConfigValue(doc.getUrl());
+                    }
+                } catch (NumberFormatException e) {
+                    log.warn("Invalid document ID in config: {}", config.getConfigKey());
+                }
+            }
+            return dto;
+        }).collect(Collectors.toList());
     }
 
 
@@ -195,7 +211,7 @@ public class JobService {
 
 
     public List<JobResponseDTO> getActiveJobs(String search) {
-        return jobRepository.findByStatus(true)
+        List<JobResponseDTO>  jobResponseDTOS=new ArrayList<>(jobRepository.findByStatus(true)
                 .stream()
                 .filter(job -> {
                     if (search == null || search.isEmpty()) {
@@ -206,7 +222,10 @@ public class JobService {
                             job.getDescription().toLowerCase().contains(lowerSearch);
                 })
                 .map(x->modelMapper.map(x,JobResponseDTO.class))
-                .collect(Collectors.toList());
+                .toList());
+                jobResponseDTOS.sort(Comparator.comparingLong(JobResponseDTO::getJobId).reversed());
+        return  jobResponseDTOS;
+
     }
 
     public JobReferResponsewithReviewAndStatusDTO getUserReferrals() {
@@ -238,6 +257,7 @@ public class JobService {
                         )
                 ).toList()
         );
+
         return response;
     }
 
@@ -245,11 +265,12 @@ public class JobService {
     public List<JobShareResponseDTO> getUserShares() {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = findUserById(userId);
-
-        return jobShareRepository.findBySender(user)
+        List<JobShareResponseDTO> jobShareResponseDTOS=new ArrayList<>( jobShareRepository.findBySender(user)
                 .stream()
                 .map(x->modelMapper.map(x,JobShareResponseDTO.class))
-                .collect(Collectors.toList());
+                .toList());
+        jobShareResponseDTOS.sort(Comparator.comparing(JobShareResponseDTO::getJobJobId).reversed());
+        return jobShareResponseDTOS;
     }
     public BasicResponse createReferralReview(JobReferReviewDTO dto)
     {
@@ -377,6 +398,41 @@ public class JobService {
         return new BasicResponse("Job shared successfully");
     }
 
+
+    public BasicResponse updateSystemConfigWithDocument(String configKey, MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("File is required");
+        }
+
+        try {
+
+            String url = cloudinaryService.uploadFile(file);
+
+
+            Document doc = new Document();
+            doc.setFileName(file.getOriginalFilename());
+            doc.setUrl(url);
+            doc.setOwnerType("HR");
+            doc.setDocumentType("photo");
+            doc.setUploadedBy(findUserById((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+            documentRepository.save(doc);
+
+            log.info("Document created with ID: {} for config key: {}", doc.getDocumentId(), configKey);
+
+
+            SystemConfig config = systemConfigRepository.findByConfigKey(configKey)
+                    .orElseThrow(() -> new RuntimeException("System config not found for key: " + configKey));
+
+            config.setConfigValue(doc.getDocumentId().toString());
+            systemConfigRepository.save(config);
+
+            log.info("SystemConfig updated for key: {} with document ID: {}", configKey, doc.getDocumentId());
+            return new BasicResponse("Configuration updated successfully");
+        } catch (Exception e) {
+            log.error("Error updating system config with document for key: {}", configKey, e);
+            throw new RuntimeException("Failed to update configuration: " + e.getMessage());
+        }
+    }
 
     private Job findJobById(Long jobId) {
         return jobRepository.findById(jobId)

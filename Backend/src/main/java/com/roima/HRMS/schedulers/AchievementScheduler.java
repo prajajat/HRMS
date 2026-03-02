@@ -34,7 +34,7 @@ public class AchievementScheduler {
     @Scheduled(cron = "0 0 0 * * *") // Runs daily at midnight
     //@Scheduled(fixedDelay = 1*60*1000)
     public void createAchievementPosts() {
-        log.info("Starting achievement post scheduler");
+        log.info(" auto - achievement post scheduler - running ");
 
         try {
             LocalDate today = LocalDate.now();
@@ -54,7 +54,7 @@ public class AchievementScheduler {
                 }
             }
 
-            log.info("Achievement post scheduler completed");
+            log.info("auto - achievement post scheduler - ended ");
         } catch (Exception e) {
             log.error("Error in achievement post scheduler", e);
         }
@@ -119,7 +119,7 @@ public class AchievementScheduler {
             }
 
             postRepository.save(post);
-            log.info("Birthday post created for user: {}", user.getUserId());
+            log.info(" auto - achievement post scheduler - birthday post created for user: {}", user.getUserId());
         } catch (Exception e) {
             log.error("Error creating birthday post for user: {}", user.getUserId(), e);
         }
@@ -163,7 +163,7 @@ public class AchievementScheduler {
             }
 
             postRepository.save(post);
-            log.info("Anniversary post created for user: {}", user.getUserId());
+            log.info("auto -  achievement post scheduler - anniversary post created for user: {}", user.getUserId());
         } catch (Exception e) {
             log.error("Error creating anniversary post for user: {}", user.getUserId(), e);
         }

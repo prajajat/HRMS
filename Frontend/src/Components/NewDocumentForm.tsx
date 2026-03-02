@@ -25,7 +25,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   };
   const [val, setVal] = useState();
   const [file, setFile] = useState();
-  const { mutate, isPending, isError, error } = useCreateDocument();
+  const { mutate, isPending, isError, error,reset } = useCreateDocument(travelerId);
   var fun = Math.random;
   if (ownerType == "HR") {
     fun = useGetAllTravel;
@@ -72,6 +72,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
       onSuccess: (response) => {
         console.log("success");
         alert("doc created");
+        reset();
       },
     });
   };
@@ -177,7 +178,7 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
               multiple
               accept="image/*,.pdf,.doc,.docx"
               onChange={handleFileSelect}
-              className="mt-10 mb-10" 
+              className="mt-10 mb-10 bg-blue-200"
             />
           </FormControl>
 

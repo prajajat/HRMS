@@ -138,6 +138,17 @@ export const getSystemConfig = async () =>
 export const updateSystemConfig = async (data: any) =>
   await instance.patch("/job/config", data).then((res) => res);
 
+export const updateSystemConfigWithDocument = async (configKey: string, file: File) => {
+  const formData = new FormData();
+  formData.append('configKey', configKey);
+  formData.append('file', file);
+  return await instance.post("/job/system-config-update-docs", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  }).then((res) => res);
+};
+
 // Achievement APIs
 export const getAllPosts = async (filters: any) =>
   await instance.get("/achievement/post/all", { params: filters }).then((res) => res);
@@ -223,7 +234,13 @@ instance.interceptors.response.use(
       window.open("http://localhost:5173/refresh");
       return Promise.reject(error);
     } else {
+      if(error.response.data.msg.length>50){
+        alert("internal error");
+      }
+      else{
       alert(error.response.data.msg);
+      }
+       return Promise.reject(error);
     }
   },
 );

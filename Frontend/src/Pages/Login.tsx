@@ -30,6 +30,7 @@ function Login() {
             userId: response.data.userId,
             roles: response.data.roles,
             imageUrl:response.data.imageUrl,
+            userName:response.data.userName,
           }),
         );
         if (response.data.accessToken != null) {

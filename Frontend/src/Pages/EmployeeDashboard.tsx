@@ -8,7 +8,7 @@ function EmployeeDashboard() {
           Welcome to Your Dashboard
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          Manage your travel details, expenses, and documents in one place.
+          Manage your travel details, expenses, documents, game booking  in one place .
         </Typography>
       </Box>
 

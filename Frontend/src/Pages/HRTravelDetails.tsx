@@ -17,15 +17,22 @@ function TravelDetails() {
   const [addState, setAddState] = useState(false);
 
   const { mutate, isPending: isPendingCreate } = useCreateTravel();
-  const { register, handleSubmit } = useForm({
-    shouldUseNativeValidation: true,
+  const { register, handleSubmit , formState:{errors}} = useForm({
+   
     mode:"onSubmit"
   });
 
   const onSubmit = (dto) => {
+    if(dto.endDate<dto.startDate)
+    {
+      alert("start date must be before end date");
+      return;
+    }
     mutate(dto, {
       onSuccess: (response) => {
         refetch();
+        setAddState(false);
+        alert("new travel added successfully");
         setAddState(false);
       },
     });
@@ -94,12 +101,10 @@ function TravelDetails() {
             />
           </FormControl>
 
-          <Input
+          <input
             type="hidden"
             value={userId}
-            {...register("creadtedBy", {
-              required: "Please enter creadtedBy",
-            })}
+            {...register("creadtedBy",)}
           />
 
           <Button
@@ -110,6 +115,7 @@ function TravelDetails() {
           >
             {isPendingCreate ? "Submitting..." : "Add new travel"}
           </Button>
+          {errors.title&&<p className="text-red-500 text-sm">{errors.title.message}</p>}
         </form>
       )}
 
@@ -132,7 +138,7 @@ function TravelDetails() {
       )}
 
       {!isLoading && data?.data && data.data.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
           {data.data.map((td) => (
             <TravelDetailCard key={td.travelDetailsId} data={td} />
           ))}

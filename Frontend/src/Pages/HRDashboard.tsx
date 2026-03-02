@@ -8,7 +8,7 @@ function HRDashboard() {
           HR Management Dashboard
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          Manage travel approvals, expenses, documents, and game bookings.
+          Manage travel approvals, expenses, documents, and game bookings, manage job and System configurations.
         </Typography>
       </Box>
     </Container>

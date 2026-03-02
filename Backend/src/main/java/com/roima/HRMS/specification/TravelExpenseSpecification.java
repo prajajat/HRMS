@@ -2,6 +2,7 @@ package com.roima.HRMS.specification;
 
 import com.roima.HRMS.dtos.request.TravelExpenseFilterDTO;
 import com.roima.HRMS.entities.TravelExpense;
+import jakarta.persistence.criteria.Join;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -27,8 +28,6 @@ public class TravelExpenseSpecification {
             ));
         }
 
-
-
         if (filter.getTravelId() != null) {
             spec = spec.and(hasTravelId(filter.getTravelId()));
         }
@@ -44,9 +43,9 @@ public class TravelExpenseSpecification {
     }
 
     private static Specification<TravelExpense> hasTravelId(Long travelId) {
-        //log.info("2 {}",travelId);
+        //log.info("2 {}",travelId)
          return (root, query, cb) ->
-                   cb.equal(root.join("traveler").join("travel").get("id"), travelId);
+                   cb.equal(root.join("traveler").join("travelDetail").get("id"), travelId);
      }
 
      private static Specification<TravelExpense> hasStatus(String status) {

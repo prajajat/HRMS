@@ -22,6 +22,7 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
           <Typography gutterBottom variant="h5" component="div">
             {data.title}
           </Typography>
+          <hr />
 
           {data.description}
 

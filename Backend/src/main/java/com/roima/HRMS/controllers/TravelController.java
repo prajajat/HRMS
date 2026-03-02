@@ -33,31 +33,36 @@ public class TravelController {
     @PreAuthorize("hasAuthority('manage-travel')")
     @GetMapping("/details/all")
     public ResponseEntity<List<TravelDetailResponseWithOutTravelerIdDTO>> getAllDetails(){
+        log.info("Fetching all travel details");
       return ResponseEntity.ok(travelService.getAllTravelDetails());
     }
 
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/details/{id}")
     public ResponseEntity<TravelDetailResponseWithOutTravelerIdDTO> getDetail(@PathVariable long id) {
+        log.info("Fetching travel details by id  : {}",id);
          return ResponseEntity.ok(travelService.getTravelDetails(id));
     }
 
     @PreAuthorize("hasAuthority('manage-travel')")
     @GetMapping("/details/creater/all/{id}")
     public ResponseEntity<List<TravelDetailResponseWithTravelerIdDTO>> getDetailByCreater(@PathVariable long id) {
+        log.info("Fetching travel details by create id : {}",id);
         return ResponseEntity.ok(travelService.getTravelDetailsByCreater(id));
     }
 
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/details/traveler/all")
     public ResponseEntity<List<TravelDetailsResponseWithInTeavelerIdDTO>> getDetailByTraveler() {
-
-        return ResponseEntity.ok(travelService.getTravelDetailsByTraveler((Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        Long id=(Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Fetching travel details by traveler id : {}",id);
+        return ResponseEntity.ok(travelService.getTravelDetailsByTraveler(id));
     }
 
     @PreAuthorize("hasAuthority('manage-travel')")
     @PostMapping("/details")
     public ResponseEntity<BasicResponse> createTravelDetail(@RequestBody TravelDetailDTO dto) {
+        log.info("Creating travel details: {}",dto.getTitle());
         return ResponseEntity.ok(travelService.createTravelDetail(dto));
     }
 
@@ -65,6 +70,7 @@ public class TravelController {
     @PutMapping("/details/{id}")
     public ResponseEntity<BasicResponse> updateTravelDetails(@RequestBody TravelDetailDTO dto, @PathVariable long id)
     {
+        log.info("Updating travel details: {}",dto.getTitle());
         return ResponseEntity.ok(travelService.updateTravelDetails(id,dto));
     }
 
@@ -72,6 +78,7 @@ public class TravelController {
     @DeleteMapping("/details/{id}")
     public ResponseEntity<BasicResponse> deleteTravelDetails(@PathVariable long id)
     {
+        log.info("Deleting travel details by id : {}",id);
         return ResponseEntity.ok(travelService.deleteTravelDetails(id));
     }
 
@@ -81,6 +88,7 @@ public class TravelController {
     @PostMapping("/details/employee")
     public ResponseEntity<BasicResponse> addEmployees(@RequestBody AddEmployeeDTO dto)
     {
+        log.info("Add Employee to travel Details : {} {}",dto.getTravelDetailsId(),dto.getEmployees());
         return ResponseEntity.ok(travelService.addEmployees(dto));
     }
 
@@ -88,7 +96,7 @@ public class TravelController {
     @DeleteMapping("/details/{id}/employee/{userId}")
     public ResponseEntity<BasicResponse> removeEmployee(@PathVariable long id, @PathVariable long userId)
     {
-         log.info(" 1 -> {}->>>{}",id,userId);
+         log.info("Remove Employee :{} ,from travel details :{}",userId,id);
         return ResponseEntity.ok(travelService.removeEmployee(id,userId));
     }
 
@@ -106,6 +114,7 @@ public class TravelController {
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/expense/all/{travelerId}")
     public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpenseByTravelerId(@PathVariable long travelerId){
+        log.info("Fetching travel expense by traveler id:{}",travelerId);
         return ResponseEntity.ok(travelService.getAllTravelExpenseByTravelerId(travelerId));
     }
 
@@ -113,6 +122,7 @@ public class TravelController {
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/expense/all")
     public ResponseEntity<List<TravelExpenseResponseDTO>> getAllTravelExpense( @ModelAttribute TravelExpenseFilterDTO filter){
+        log.info("Fetching all travel expense with filter {}",filter.toString());
         return ResponseEntity.ok(travelService.getAllTravelExpenseByFilter(filter));
     }
 
@@ -128,7 +138,7 @@ public class TravelController {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         TravelExpenseDTO newDTO = mapper.readValue(dto, TravelExpenseDTO.class);
-        log.info("req in controller");
+        log.info("Creating travel expense for traveler id : {}",newDTO.getTraveler());
         return ResponseEntity.ok(travelService.createUpdateTravelExpense(newDTO,documents,(long)-1));
     }
 
@@ -142,6 +152,7 @@ public class TravelController {
     @PreAuthorize("hasAuthority('manage-travel')")
     @PatchMapping("/expense/{id}/user/{userId}")
     public ResponseEntity<BasicResponse> patchTravelExpense(@RequestBody TravelExpenceStatusDTO dto, @PathVariable long id, @PathVariable long userId) {
+        log.info("Updating travel expense {}   by:{} ",id,userId);
         return ResponseEntity.ok(travelService.patchTravelExpense(dto,id,userId));
     }
 
@@ -149,6 +160,7 @@ public class TravelController {
     @DeleteMapping("/expense/{id}")
     public ResponseEntity<BasicResponse> deleteTravelExpense(@PathVariable long id)
     {
+        log.info("Deleting travel expense by id : {}",id);
         return ResponseEntity.ok(travelService.deleteTravelExpense(id));
     }
 
@@ -157,12 +169,14 @@ public class TravelController {
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/document/uploader/all/")
     public ResponseEntity<List<DocumentResponseDTO>> getAllTravelerDocument(){
+        log.info("Fetching all travel documents");
         return ResponseEntity.ok(travelService.getAllTravelerDocuments());
     }
 
     @PreAuthorize("hasAuthority('access-travel')")
     @GetMapping("/document/traveler/all/{travelerId}")
     public ResponseEntity<List<TravelerDocumentResponseDTO>> getAllTravelerDocumentByTravelerId(@PathVariable long travelerId){
+        log.info("Fetching travel documents by traveler id:{}",travelerId);
         return ResponseEntity.ok(travelService.getAllTravelerDocumentByTravelerId(travelerId));
     }
 
@@ -175,7 +189,7 @@ public class TravelController {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         TravelerDocumentDTO newDTO = mapper.readValue(dto, TravelerDocumentDTO.class);
-        log.info("req in controller");
+        log.info("Creating travel document for travel details id:{}",newDTO.getTravelDetailId());
         return ResponseEntity.ok(travelService.createTravelerDocument(newDTO,document,(Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
@@ -183,6 +197,7 @@ public class TravelController {
     @DeleteMapping("/document/{id}")
     public ResponseEntity<BasicResponse> deleteTravelerDocument(@PathVariable long id)
     {
+        log.info("Deleting travel document by id : {}",id);
         return ResponseEntity.ok(travelService.deleteTravelerDocument(id));
     }
 
@@ -191,6 +206,7 @@ public class TravelController {
     @PreAuthorize("hasAuthority('view-travel-doc')")
     @GetMapping("/document/manager/{id}")
     public ResponseEntity<List<TravelerDocumentResponseDTO>> getAllTravelerDocumentForManager(@PathVariable Long id){
+        log.info("Fetching all travel documents by manager id: {}",id);
         return ResponseEntity.ok(travelService.getAllTravelerDocumentForManager(id));
     }
 

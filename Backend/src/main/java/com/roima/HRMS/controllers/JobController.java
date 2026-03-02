@@ -147,4 +147,13 @@ public class JobController {
         log.info("Patching system config: {}", dto.getConfigKey());
         return ResponseEntity.ok(jobService.patchSystemConfig(dto));
     }
+
+    @PreAuthorize("hasAuthority('manage-job')")
+    @PostMapping(value = "/system-config-update-docs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BasicResponse> updateSystemConfigWithDocument(
+            @RequestParam("configKey") String configKey,
+            @RequestParam("file") MultipartFile file) {
+        log.info("Updating system config with document for key: {}", configKey);
+        return ResponseEntity.ok(jobService.updateSystemConfigWithDocument(configKey, file));
+    }
 }

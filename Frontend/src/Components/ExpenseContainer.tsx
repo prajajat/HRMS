@@ -87,7 +87,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
     var searchVal = "?";
     if (filterEmp != "") searchVal += "userId=" + filterEmp + "&";
     if (filterStatus != "") searchVal += "status=" + filterStatus + "&";
-    if (filterTravel != "") searchVal += "travel=" + filterTravel + "&";
+    if (filterTravel != "") searchVal += "travelId=" + filterTravel + "&";
     if (filterStartDate != "")
       searchVal += "expenseStartDate=" + filterStartDate + "&";
     if (filterEndDate != "")
@@ -236,7 +236,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
                 setFilterStartDate("");
                 setFilterStatus("");
                 setFilterTravel("");
-                setSearch("");
+                setSearch("?");
               }}
               sx={{ margin: 1, height: 40 }}
             >

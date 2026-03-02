@@ -37,12 +37,11 @@ public class TravelService {
     private final EmailService emailService;
     // travel details
 
-    public List<TravelDetailResponseWithOutTravelerIdDTO> getAllTravelDetails()
-    {
-       List<TravelDetail> travelDetailList=travelDetailRepository.findAll();
-        return  travelDetailList.stream().map(a ->
-                                                        modelMapper.map(a, TravelDetailResponseWithOutTravelerIdDTO.class)
-                                                ).collect(Collectors.toList());
+    public List<TravelDetailResponseWithOutTravelerIdDTO> getAllTravelDetails() {
+        List<TravelDetail> travelDetailList = travelDetailRepository.findAll();
+        return travelDetailList.stream().map(a ->
+                modelMapper.map(a, TravelDetailResponseWithOutTravelerIdDTO.class)
+        ).toList();
     }
 
     public TravelDetailResponseWithOutTravelerIdDTO getTravelDetails(Long id)
@@ -64,15 +63,15 @@ public class TravelService {
     {
         User user=findUserById(id);
         List<TravelDetail> travelDetailList=travelDetailRepository.findByTravelersUser(user);
-        List<TravelDetailsResponseWithInTeavelerIdDTO> travelDetailsResponseWithInTeavelerIdDTOS=new ArrayList<>();
+        List<TravelDetailsResponseWithInTeavelerIdDTO> travelDetailsResponseWithInTravelerIdDTOS =new ArrayList<>();
         for(TravelDetail travelDetail:travelDetailList)
         {
             TravelDetailsResponseWithInTeavelerIdDTO travelDetailsResponseWithInTeavelerIdDTO =modelMapper.map(travelDetail,TravelDetailsResponseWithInTeavelerIdDTO.class);
             travelDetailsResponseWithInTeavelerIdDTO.setTravelerId(
              travelerRepository.findByUserAndTravelDetail(user,travelDetail).get().getTravelerId());
-            travelDetailsResponseWithInTeavelerIdDTOS.add(travelDetailsResponseWithInTeavelerIdDTO);
+            travelDetailsResponseWithInTravelerIdDTOS.add(travelDetailsResponseWithInTeavelerIdDTO);
         }
-        return  travelDetailsResponseWithInTeavelerIdDTOS;
+        return travelDetailsResponseWithInTravelerIdDTOS;
     }
 
     public BasicResponse createTravelDetail(TravelDetailDTO dto)
@@ -81,7 +80,8 @@ public class TravelService {
         TravelDetail travelDetail=modelMapper.map(dto,TravelDetail.class);
         travelDetail.setCreatedBy(createdBy);
         travelDetailRepository.save(travelDetail);
-        return new BasicResponse("created successfully");
+        log.info("Created travel detail : {}-{}",travelDetail.getTarvelDetailId(),travelDetail.getTitle());
+        return new BasicResponse("Created successfully");
     }
 
     public BasicResponse updateTravelDetails(Long id, TravelDetailDTO dto) {
@@ -90,11 +90,13 @@ public class TravelService {
         travelDetail.setCreatedBy(createdBy);
         modelMapper.map(dto,travelDetail);
         travelDetailRepository.save(travelDetail);
-        return new BasicResponse("updated  sucessfully");
+        log.info("Updated travel detail : {}-{}",travelDetail.getTarvelDetailId(),travelDetail.getTitle());
+        return new BasicResponse("Updated  sucessfully");
     }
     public BasicResponse deleteTravelDetails(Long id) {
         travelDetailRepository.deleteById(id);
-        return new BasicResponse("deleted successfully");
+        log.info("Deleted travel detail : {}",id);
+        return new BasicResponse("Deleted successfully");
     }
 
 
@@ -129,21 +131,24 @@ public class TravelService {
     {
         Traveler traveler=findTravelerById(dto.getTraveler());
         long maxAmount=maxRemaingAount(traveler);
-        log.info("req in service");
         if(documents.isEmpty())
         {
-            throw new RuntimeException("expense need atleast one document");
+            log.info("expense need least one document");
+            throw new RuntimeException("expense need least one document");
         }
         else if(LocalDateTime.now().isBefore(traveler.getTravelDetail().getStartDate()))
         {
+            log.info("travel not start yet");
             throw new RuntimeException("travel not start yet");
         }
         else if(LocalDateTime.now().isAfter(traveler.getTravelDetail().getEndDate().plusDays(10)))
         {
+            log.info("sorry... travel expense last date gone");
             throw new RuntimeException("sorry... travel expense last date gone");
         }
         else if(dto.getAmount()>maxAmount)
         {
+            log.info("you reach max amount per day. your can add till "+maxAmount);
             throw new RuntimeException("you reach max amount per day. your can add till "+maxAmount);
         }
         User user=findUserById((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
@@ -152,7 +157,7 @@ public class TravelService {
         {
             urls.add( cloudinaryService.uploadFile(multipartFile));
         }
-        log.info("lll>>>{}",dto.getFileNameList());
+
         List<Document>newDocuments=new ArrayList<>();
         for(String url:urls)
         {
@@ -176,9 +181,7 @@ public class TravelService {
         travelExpense.setDocuments(newDocuments);
 
         if(id!=-1){
-            //todo userId -> travelerId baki chhe
             travelExpense.setTravelExpensesId(findTravelExpenseById(id).getTravelExpensesId());
-
         }
 
         String emailBody= MailTemplateUtil.expenseAddedEmailTemplate(traveler.getTravelDetail().getTitle(),traveler.getUser().getUserName(),dto.getExpenseDate().toString());
@@ -191,8 +194,8 @@ public class TravelService {
             x.setTravelExpense(travelExpense)
         );
         documentRepository.saveAll(newDocuments);
-
-        return new BasicResponse(id==-1 ?"created successfully":"updated successfully");
+        log.info(id==-1 ?"Created Travel expense successfully {}":"Updated successfully :{}",travelExpense.getTravelExpensesId());
+        return new BasicResponse(id==-1 ?"created Travel expense successfully":"updated Travel expense successfully");
     }
     public BasicResponse patchTravelExpense(TravelExpenceStatusDTO dto,Long id,Long useId)
     {
@@ -200,15 +203,17 @@ public class TravelService {
         User user=findUserById(useId);
         if(dto.getStatus().equals("Rejected")&&dto.getRemark().isEmpty())
         {
-            throw new RuntimeException("For reject status remark can't be empty");
+            throw new RuntimeException("For reject status, remark can't be empty");
         }
         modelMapper.map(dto,travelExpense);
         travelExpense.setUpdateBy(user);
         travelExpenseRepository.save(travelExpense);
-        return new BasicResponse("Updated sucessfully");
+       log.info("Updated Travel expense : {}",travelExpense.getTravelExpensesId());
+        return new BasicResponse("Updated Travel expense successfully");
     }
     public BasicResponse deleteTravelExpense(Long id) {
         travelExpenseRepository.deleteById(id);
+        log.info("Deleted Travel expense : {}",id);
         return new BasicResponse("deleted successfully");
     }
 
@@ -244,14 +249,13 @@ public class TravelService {
 
                  String emailBody= MailTemplateUtil.travelerAddedEmailTemplate(travelDetail.getTitle(),travelDetail.getStartDate().toString(),travelDetail.getEndDate().toString());
                 emailService.sendMail(List.of(user.getCompanyEmail()), "New Travel for you ", emailBody);
-
+                log.info("New Employee :{} added to tarvel :{}",newEmp.getUser().getUserName(),travelDetail.getTitle());
                 travelerRepository.save(newEmp);
             }
         }
 
         travelDetailRepository.save(travelDetail);
         return new BasicResponse("All employee added successfully");
-
     }
     public BasicResponse removeEmployee(Long id, Long userId) {
 
@@ -270,7 +274,10 @@ public class TravelService {
            }
         }
         if(travelerToRemove==null)
-        {return new BasicResponse(" Emp not found");}
+        {
+            log.info("Emp :{}  not found in travel detail : {} as traveler",emp.getUserName(),travelDetail.getTitle());
+            return new BasicResponse("Emp not found");
+        }
 
 
         Notification notification=new Notification();
@@ -278,7 +285,7 @@ public class TravelService {
         notification.setTitle("Travel removed");
         notification.setUser(emp);
         notificationRepository.save(notification);
-
+        log.info("Employee :{} removed to tarvel :{}",travelerToRemove.getUser().getUserName(),travelDetail.getTitle());
 
             travelDetail.getTravelers().remove(travelerToRemove);
             travelerToRemove.getTravelerDocuments().size();
@@ -374,6 +381,7 @@ public class TravelService {
                 travelerDocument.setDocument(newDocument);
                 travelerDocument.setVisibility(dto.getVisibility());
                 travelerDocumentRepository.save(travelerDocument);
+                log.info("Created traveler document (type all) : {}",travelerDocument.getTravelerDocumentId());
             }
         }
         else{
@@ -394,15 +402,18 @@ public class TravelService {
                 travelerDocument.setDocument(newDocument);
                 travelerDocument.setVisibility(dto.getVisibility());
                 travelerDocumentRepository.save(travelerDocument);
+                log.info("Created traveler document : {}",travelerDocument.getTravelerDocumentId());
             }
             else{
                 throw new RuntimeException("This data can't be duplicate");
             }
          }
+
          return new BasicResponse("Created successfully");
     }
     public BasicResponse deleteTravelerDocument(Long id) {
         travelerDocumentRepository.deleteById(id);
+        log.info("Deleted traveler document : {}",id);
         return new BasicResponse("deleted successfully");
     }
 
@@ -411,12 +422,12 @@ public class TravelService {
     {
         List<TravelExpense>travelExpenses=traveler.getTravelExpenses();
         Long maxAmount=traveler.getTravelDetail().getMaxAmoutPerDay();
-        log.info("{}",maxAmount);
+
         for(TravelExpense travelExpense:travelExpenses)
         {
             maxAmount-=travelExpense.getAmount();
         }
-        log.info("{}",maxAmount);
+
         return maxAmount;
     }
 

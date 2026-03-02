@@ -15,7 +15,7 @@ import HRUpdate from "../Pages/HRUpdate";
 import Unauthorized from "../Pages/Unauthorized";
 import Header from "../Components/Header";
 import OrgChart from "../Pages/OrgChart";
-import OrgChartLayout from "../Layouts/OrgChartLayout";
+ 
 import ManagerLayout from "../Layouts/ManagerLayout";
 import ManagerDashboard from "../Pages/ManagerDashboard";
 import ManagerDocDetails from "../Pages/ManagerDocDetails";
@@ -138,6 +138,12 @@ const router = createBrowserRouter([
             element: <Navigate to="/employee/dashboard" replace />,
           },
           {
+            path: "org-chart/:id",
+                element: <OrgChart />,
+            
+          },
+
+          {
             path: "dashboard",
             element: <EmployeeDashboard />,
           },
@@ -206,21 +212,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Header />,
   },
-  {
-    element: <ProtectedRoute allowedRoles={["employee", "hr", "manager"]} />,
-    children: [
-      {
-        path: "/org-chart",
-        element: <OrgChartLayout />,
-        children: [
-          {
-            path: ":id",
-            element: <OrgChart />,
-          },
-        ],
-      },
-    ],
-  },
+
   {
     element: <ProtectedRoute allowedRoles={["manager"]} />,
     children: [

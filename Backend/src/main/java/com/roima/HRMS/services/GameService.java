@@ -36,6 +36,8 @@ public class GameService {
     private final ModelMapper modelMapper ;
     private final NotificationRepository notificationRepository;
     private final EmailService emailService;
+    private String gameUpdateMsg="Game booking Update";
+
 
     public List<GameResponseDTO> getAllGame(Long userId)
     {
@@ -60,7 +62,7 @@ public class GameService {
     }
      public BasicResponse UpdateGameInterest(GameInterestDTO dto)
      {
-         log.info("cal{}{}",dto.getGame(),dto.getUserId())   ;
+
          Game game= findGameById(dto.getGame());
          User user=findUserById(dto.getUserId());
 
@@ -85,6 +87,7 @@ public class GameService {
          }
 
         gameRepository.save(game);
+         log.info("Update game interest :{}  for : {}",game.getGameId(),user.getUserId());
          return new BasicResponse("game interest update successfully");
      }
     public GameResponceWithSlotAndBookingDTO getGameById(Long gameId, Long userId)
@@ -139,6 +142,7 @@ public class GameService {
          game.setSlotStartTime(Time.valueOf(dto.getSlotStartTime()));
          game.setSlotEndTime(Time.valueOf(dto.getSlotEndTime()));
          gameRepository.save(game);
+         log.info("Update game config :{}",game.getGameId());
          return new BasicResponse("config updated successfully");
      }
 
@@ -152,14 +156,13 @@ public class GameService {
         User createdBy=findUserById(dto.getCreatedBy());
 
         List<GameSlot> gameSlots=dto.getGameSlots()!=null
-                ? dto.getGameSlots().stream().map(gameSlotId-> findGameSlotById(gameSlotId)).toList()
+                ? dto.getGameSlots().stream().map(this::findGameSlotById).toList()
                 :new ArrayList<>();
 
         List<User> players=dto.getAllPlayers()!=null
-                ?dto.getAllPlayers().stream().map(p->findUserById(p)).toList()
+                ?dto.getAllPlayers().stream().map(this::findUserById).toList()
                 :new ArrayList<>();
 
-        log.info("slot>>>{}",gameSlots.get(0).getGameSlotId());
 
         Game game=findGameById(dto.getGameId());
 
@@ -167,21 +170,25 @@ public class GameService {
 
         if(!createdBy.getInterestedGames().contains(game))
         {
+            log.info("user not have this game as interested");
             throw new RuntimeException("user not have this game as interested");
         }
 
         if(!players.contains(createdBy))
         {
+            log.info("user can't book slot for others");
             throw new RuntimeException("user can't book slot for others");
         }
         // check max slot per booking
         if(game.getMaxSlotPerBooking()<gameSlots.size())
         {
+            log.info("Max slot is exceeded per booking.");
             throw new RuntimeException("Max slot is exceeded per booking.");
         }
 
         if(players.size()>game.getMaxPlayerPerSlot())
         {
+            log.info("Max player is exceeded per booking.");
             throw new RuntimeException("Max player is exceeded per booking.");
         }
 
@@ -189,6 +196,7 @@ public class GameService {
         gameSlots.forEach(gameSlot -> {
             if(isBeforeMaxLimitBookDayAllow(gameSlot.getDate(),game.getMaxDayOfBookingAllow()))
             {
+                log.info("player can't book early then{} days.", game.getMaxDayOfBookingAllow());
                 throw new RuntimeException("player can't book early then"+game.getMaxDayOfBookingAllow()+" days.");
             }
             else if(gameSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
@@ -199,11 +207,12 @@ public class GameService {
                     gameSlot.getDate().before(game.getCycleStartDate()) ||
                     gameSlot.getDate().after(game.getCycleEndDate()))
             {
-
+                log.info("Cycle either not started or you can't book early");
                 throw new RuntimeException(" Cycle either not started or you can't book early");
             }
             else if(LocalTime.now().isAfter(gameSlot.getSlotStartTime().toLocalTime())||gameSlot.getSlotStatus().equals(StatusType.BookingStatus.EXPIRED))
             {
+                log.info("Slot is expired now, you are late");
                 throw new RuntimeException("Slot is expired now, you are late");
             }
 //            else if(createdBy.getGameBookings().stream()
@@ -227,10 +236,10 @@ public class GameService {
 
        //check for are they can book direct
         boolean played=players.stream().anyMatch(x->isPlayedInCycle(x,game));
-        log.info("played {}",played);
+        log.info("Did they played in this cycle ? - {}",played);
 
         // mapping data
-        log.info("slot>>>{}",gameSlots.size());
+
         GameBooking gameBooking=new GameBooking();
         gameBooking.setCreatedBy(createdBy);
         gameBooking.setBookingSlots(gameSlots);
@@ -245,7 +254,7 @@ public class GameService {
                     gameQueues.add(findGameQueueByPlayerAndGame(x,game));
             });
             gameBooking.setStatus(StatusType.BookingStatus.QUEUED);
-            log.info("queued");
+            log.info("Game booking is in queued state");
         }
         else{
             players.forEach(x->{
@@ -254,7 +263,7 @@ public class GameService {
             });
 
             gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
-            log.info("booked");
+            log.info("Game booking is in booked state");
             gameSlots.forEach(x->x.setSlotStatus(StatusType.BookingStatus.BOOKED));
         }
 
@@ -274,18 +283,16 @@ public class GameService {
 
         Notification notification=new Notification();
         notification.setDescription("Your booking for "+game.getGameName()+"("+gameBooking.getGameBookingId()+")is "+gameBooking.getStatus()+" right now." );
-        notification.setTitle("Game booking Update");
+        notification.setTitle(gameUpdateMsg);
         notification.setUser(createdBy);
         notificationRepository.save(notification);
 
         if(slotBooked.get())
         {
-            gameQueues.forEach(x->{
-                x.setGameBooking(gameBooking);
-            });
+            gameQueues.forEach(x-> x.setGameBooking(gameBooking));
         }
         gameQueueRepository.saveAll(gameQueues);
-
+        log.info("Created game booking :{}",gameBooking.getGameBookingId());
       return new BasicResponse("Booking created successfully");
     }
 
@@ -303,6 +310,7 @@ public class GameService {
                  ).toList();
 
     }
+
     @Transactional
     public GameQueue findPlayerToAssignSlot( GameSlot gameSlot)
     {
@@ -310,9 +318,15 @@ public class GameService {
                          x -> x.getGameBooking().getBookingSlots().contains(gameSlot)
                  )
                  .toList());
-         allPlayer=allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())).toList();
-        log.info("auto : all player size{}",allPlayer.size());
-        if(allPlayer.isEmpty())  return null;
+
+         allPlayer=new ArrayList<>(allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())).toList());
+
+        log.info("auto - find player - all player size{}",allPlayer.size());
+
+        if(allPlayer.isEmpty()) {
+            log.info("auto - find player - no player found");
+            return null;
+        }
 
              allPlayer
                 .sort(
@@ -331,25 +345,26 @@ public class GameService {
                                 })
                                 .thenComparing(GameQueue::getQueueTime)
                 );
+            log.info("auto - find player - first player : {}",allPlayer.get(0).getPlayer().getUserName());
+             AtomicReference<Boolean> played= new AtomicReference<>(false);
+             allPlayer.get(0).getGameBooking().getGameQueues().forEach(
+                     gq-> {
+                         if (gq.getTotalPlayedInCycle() != 0) played.set(true);
+                     }
+                     );
 
-             Boolean played=false;
-             if(gameSlot.getSlotStartTime().toLocalTime().isBefore(LocalTime.now().plusMinutes(30)))
-             {  //comming soon ...
-
-             }else{
+             if(!gameSlot.getSlotStartTime().toLocalTime().isBefore(LocalTime.now().plusMinutes(30))&&played.get()) {
+                 log.info("auto - find player - no fresh player found or too early to assign");
                  return null;
+             }else{
+                 log.info("auto - player found : {}", allPlayer.get(0).getPlayer().getUserName());
+                 return allPlayer.get(0);
              }
-
-             log.info("auto : first player {}",allPlayer.get(0).getPlayer().getUserName());
-
-
-             return ;
-
     }
 
      public void assignSlot()
      {
-         log.info("  auto :assign slot runing");
+         log.info("auto - assign slot - assign slot running");
          List<GameSlot> gameSlotList =  findAllAvailableSlotToAssign();
          assignKnownSlot(gameSlotList);
      }
@@ -358,54 +373,57 @@ public class GameService {
     public void assignKnownSlot(List<GameSlot> gameSlotList)
     {
 
-      log.info("auto : slot found{}",gameSlotList.size());
-      gameSlotList.forEach(x -> {
-          GameQueue gameQueue = findPlayerToAssignSlot(x);
+          log.info("auto - assign slot - slot found : {}",gameSlotList.size());
+          gameSlotList.forEach(x -> {
 
-          if(gameQueue==null)return;
+                  if(x.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))return;
+                  GameQueue gameQueue = findPlayerToAssignSlot(x);
+                  if(gameQueue==null) return;
+                  log.info("auto - assign slot -  slot : {} - player found :{}",x.getGameSlotId(),gameQueue.getPlayer().getUserName());
+                  if (gameQueue != null) {
 
-          log.info(" auto :player found{}",gameQueue.getPlayer().getUserName());
-          if (gameQueue != null) {
+                      GameBooking gameBooking = gameQueue.getGameBooking();
+                      gameBooking.setParticipants(new ArrayList<>(gameQueue.getGameBooking().getParticipants()));
+                      gameBooking.setGame(x.getGame());
+                      gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
+                      x.setSlotStatus(StatusType.BookingStatus.BOOKED);
 
-              GameBooking gameBooking = gameQueue.getGameBooking();
+                      Notification notification=new Notification();
+                      notification.setDescription("your booking for "+gameQueue.getGame().getGameName()+" is "+gameBooking.getStatus()+" right now." );
+                      notification.setTitle(gameUpdateMsg);
+                      notification.setUser(gameQueue.getPlayer());
+                      notificationRepository.save(notification);
+                      gameQueue.getGameBooking().getParticipants().forEach(
+                             player->
+                              updateQueue(player,x.getGame(),false,1)
+                              );
 
-              gameBooking.setParticipants(new ArrayList<>(gameQueue.getGameBooking().getParticipants()));
-              gameBooking.setGame(x.getGame());
-              gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
-              x.setSlotStatus(StatusType.BookingStatus.BOOKED);
-
-              Notification notification=new Notification();
-              notification.setDescription("your booking for "+gameQueue.getGame().getGameName()+" is "+gameBooking.getStatus()+" right now." );
-              notification.setTitle("Game booking Update");
-              notification.setUser(gameQueue.getPlayer());
-              notificationRepository.save(notification);
-              gameQueue.getGameBooking().getParticipants().forEach(
-                     player->
-                     updateQueue(player,x.getGame(),false,1)
-              );
-
-              gameBookingRepository.save(gameBooking);
-              x.getCurrentGameBookings().add(gameBooking);
-              gameSlotRepository.save(x);
-              log.info(" auto : assign slot to:{} {}",x.getGameSlotId(),gameQueue.getPlayer().getUserName());
-          }
+                      gameBookingRepository.save(gameBooking);
+                      if(!x.getCurrentGameBookings().contains(gameBooking)) {
+                          x.getCurrentGameBookings().add(gameBooking);
+                      }
+                      gameSlotRepository.save(x);
+                      log.info("auto - assign slot -  slot : {} - assign to :{}",x.getGameSlotId(),gameQueue.getPlayer().getUserName());
+                  }
       });
   }
 
     @Transactional
     public BasicResponse cancelSlot(Long bookingId)
     {
-        log.info(" jatin starting {}",bookingId);
-        GameBooking gameBooking=findGameBookingById(bookingId);
-        List<GameSlot> gameSlots=gameBooking.getBookingSlots();
+        log.info("Cancel game booking starting : {}",bookingId);
+        GameBooking gameBooking= findGameBookingById(bookingId);
+        List<GameSlot> gameSlots=new ArrayList<>(gameBooking.getBookingSlots());
+
         //update slot
         gameSlots.forEach(gs-> {
                     if(gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now()))
                     {
-                       // throw new RuntimeException("you miss cancel slot time, slot is already started");
+                        log.info("you miss cancel slot time, slot is already started : {}",bookingId);
+                        throw new RuntimeException("you miss cancel slot time, slot is already started");
                     }
                     if(gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED)&& gameBooking.getStatus().equals((StatusType.BookingStatus.BOOKED))) {
-                        gs.getCancellers().addAll(gameBooking.getParticipants());
+                        gs.getCancellers().add(gameBooking.getCreatedBy());
                         gs.setSlotStatus(StatusType.BookingStatus.PENDING);
                     }
                 });
@@ -416,7 +434,7 @@ public class GameService {
 
         Notification notification=new Notification();
         notification.setDescription("your booking for "+gameBooking.getGame().getGameName()+" is "+gameBooking.getStatus()+" right now." );
-        notification.setTitle("Game booking Update");
+        notification.setTitle(gameUpdateMsg);
         notification.setUser(gameBooking.getCreatedBy());
         notificationRepository.save(notification);
 
@@ -428,9 +446,9 @@ public class GameService {
 
         gameBookingRepository.save(gameBooking);
         gameSlotRepository.saveAll(gameSlots);
-        log.info(" now calling for auto assign {}",bookingId);
+        log.info("Call - auto - auto assign : {}",bookingId);
         assignKnownSlot(gameSlots);
-        log.info(" end calling for auto assign {}",bookingId);
+        log.info("Finish call - auto - auto assign : {}",bookingId);
           return new BasicResponse("slot cancelled successfully");
     }
 
@@ -469,9 +487,9 @@ public class GameService {
                                 endTime = Time.valueOf(startTime.toLocalTime().plusMinutes(30));
                             }
                             date = Date.valueOf(date.toLocalDate().plusDays(1));
-                            log.info("auto : generate slot {} -{}-{}", game.getGameName(), i, game.getCycleStartDate());
+                            log.info("auto - generate slot - New Slots- Game : {}, Day : {}, Cycle Start Date : {}", game.getGameName(), i, game.getCycleStartDate());
                         }
-                    }else  log.info("auto : have slot {} -{}-{}", game.getGameName(), game.getCycleStartDate(),game.getCycleEndDate());
+                    }else  log.info("auto - generate slot - Present Slots -Game : {}, Cycle Start Date : {}, Cycle End Date : {}", game.getGameName(), game.getCycleStartDate(),game.getCycleEndDate());
                 }
         );
     }
@@ -515,7 +533,7 @@ public class GameService {
 
                          game.setCycleStartDate(startDate);
                          game.setCycleEndDate(endDate);
-                          log.info("auto : new caclulation perdaytime: {},perDayMaxPlayerGotChance: {},days{}",perDaytime,perDayMaxPlayerGotChance,days);
+                          log.info("auto - update cycle- Time per day : {},Max player per day : {}, Total Days need : {}",perDaytime,perDayMaxPlayerGotChance,totalDayNeeded);
                          new ArrayList<>(game.getGameQueues()).forEach(
                                  gq-> {
                                      gq.setTotalPlayedInCycle(0);
@@ -525,11 +543,11 @@ public class GameService {
 
                                  }
                          );
-                         log.info("auto : update cycle {}-{}-{}",game.getGameName(),game.getCycleStartDate(),game.getCycleEndDate());
+                         log.info("auto - update cycle - Update - game : {} , Cycle Start Date : {}, Cycle End Date : {}",game.getGameName(),game.getCycleStartDate(),game.getCycleEndDate());
                          gameRepository.save(game);
 
                      }
-                     else  log.info("auto : same cycle {}-{}-{}",game.getGameName(),game.getCycleStartDate(),game.getCycleEndDate());
+                     else  log.info("auto - update cycle - Present - game : {} , Cycle Start Date : {}, Cycle End Date : {}",game.getGameName(),game.getCycleStartDate(),game.getCycleEndDate());
 
                 });
 
@@ -540,11 +558,11 @@ public class GameService {
     public void cleanUpSlotAndBooking()
     {
         List<GameSlot> gameSlots =gameSlotRepository.findBySlotStatusAndSlotStartTimeBefore(Time.valueOf(LocalTime.now()),Date.valueOf(LocalDate.now()),Date.valueOf(LocalDate.now().minusDays(1)));
-        log.info(" auto cleanUp total game slot{}", gameSlots.size());
+        log.info(" auto - cleanUp - total game slot : {}", gameSlots.size());
         gameSlots.forEach(
                 gs-> {
 
-                    log.info(" auto cleanUp game slot{}",gs.getGameSlotId());
+                    log.info(" auto - cleanUp- game slot : {}",gs.getGameSlotId());
                     if(gs.getSlotStatus().equals(StatusType.BookingStatus.PENDING))
                     {
                         gs.setSlotStatus(StatusType.BookingStatus.EXPIRED);
@@ -559,7 +577,7 @@ public class GameService {
                         List<GameBooking> gameBookings = gs.getCurrentGameBookings();
                         gameBookings.forEach(
                                 gb -> {
-                                    log.info(" auto cleanUp game booking{}", gb.getGameBookingId());
+                                    log.info(" auto - cleanUp -  game slot : {},game booking : {}", gs.getGameSlotId(),gb.getGameBookingId());
                                     if (gb.getStatus().equals(StatusType.BookingStatus.BOOKED)) {
                                         gb.setStatus(StatusType.BookingStatus.COMPLETED);
                                     } else if (gb.getStatus().equals(StatusType.BookingStatus.QUEUED)) {
@@ -570,7 +588,7 @@ public class GameService {
                                     List<GameQueue> gameQueues = gb.getGameQueues();
                                     gameQueues.forEach(
                                             gq -> {
-                                                log.info(" auto cleanUp game queue{}", gq.getGameQueueId());
+                                                log.info(" auto - cleanUp - game slot : {},game booking : {}, game queue : {}", gs.getGameSlotId(),gb.getGameBookingId(), gq.getGameQueueId());
                                                 gq.setIsActive(false);
                                             }
                                     );
@@ -594,11 +612,11 @@ public class GameService {
         try {
             LocalDate givenDate =
                     date.toLocalDate();
-            log.info("ok{}", ChronoUnit.DAYS.between(today, givenDate));
+
             return ChronoUnit.DAYS.between(today, givenDate) >= maxDayDiff;
         }catch (Exception e)
         {
-            log.info("error{}",e);
+            log.info("Error in comparing date : ",e);
         }
        return false;
     }
@@ -610,7 +628,7 @@ public class GameService {
         gameQueue.setTotalPlayedInCycle(
                 Math.max(
                         gameQueue.getTotalPlayedInCycle()+changeInTotalPlayedInCycle,0));
-        if(activeStatus)gameQueue.setQueueTime(LocalDateTime.now());
+        if(Boolean.TRUE.equals(activeStatus))gameQueue.setQueueTime(LocalDateTime.now());
 
         gameQueueRepository.save(gameQueue);
     }

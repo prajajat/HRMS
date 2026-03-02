@@ -25,8 +25,8 @@ public class EmailService {
 
         message.setSubject(subject);
         message.setText(body);
-        log.info("mail sender{}{}{}{}",body,subject,to.size(),to);
-        mailSender.send(message);
+        log.info("Mail send to : {} {} with subject: {} Body: {} ",to.size(),to, subject,body);
+       // mailSender.send(message);
     }
 
 }

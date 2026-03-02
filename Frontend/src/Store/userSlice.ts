@@ -11,7 +11,8 @@ const initialState = {
     },
   ],
   imageUrl:"/boy.png",
-  notiicationCount:0
+  notiicationCount:0,
+  userName :""
 };
 
 export const userSlice = createSlice({
@@ -22,6 +23,7 @@ export const userSlice = createSlice({
       state.userId = action.payload.userId;
       state.roles = action.payload.roles;
       state.imageUrl=action.payload.imageUrl;
+      state.userName=action.payload.userName;
       //console.log(action.payload);
     },
     logout: (state, action) => {
@@ -29,6 +31,7 @@ export const userSlice = createSlice({
       state.roles = [];
       state.imageUrl="/boy.png";
       state.notiicationCount=0;
+      state.userName="";
     },
     setCount:(state,action)=>{
        state.notiicationCount=action.payload.notiicationCount;

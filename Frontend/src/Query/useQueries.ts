@@ -38,6 +38,7 @@ import {
   shareJob,
   getSystemConfig,
   updateSystemConfig,
+  updateSystemConfigWithDocument,
   getAllPosts,
   getPost,
   createPost,
@@ -102,11 +103,12 @@ export const useAssignTravelEmp = () => {
   });
 };
 
-export const useCreateExpense = () => {
+export const useCreateExpense = (id) => {
   return useMutation({
     mutationFn: CreateExpense,
     onSuccess: (response) => {
       console.log(response);
+      queryClient.invalidateQueries(['expense',id]);
     },
   });
 };
@@ -120,11 +122,13 @@ export const useUpdateGameConfig = () => {
   });
 };
 
-export const useCreateDocument = () => {
+export const useCreateDocument = (id) => {
   return useMutation({
     mutationFn: CreateDocument,
     onSuccess: (response) => {
       console.log(response);
+       queryClient.invalidateQueries(['travelerDoc',id]);
+        queryClient.invalidateQueries(['travelerDoc-']);
     },
   });
 };
@@ -132,10 +136,7 @@ export const useCreateDocument = () => {
 export const useRemoveTravelEmp = () => {
   console.log("remove emp to travel");
   return useMutation({
-    mutationFn: RemoveTravelEmp,
-    onSuccess: (response) => {
-      console.log(response);
-    },
+    mutationFn: RemoveTravelEmp
   });
 };
 
@@ -376,6 +377,18 @@ export const useUpdateSystemConfig = () => {
     },
   });
 };
+
+export const useUpdateSystemConfigWithDocument = () => {
+  return useMutation({
+    mutationFn: ({ configKey, file }: { configKey: string; file: File }) =>
+      updateSystemConfigWithDocument(configKey, file),
+    onSuccess: (response) => {
+      console.log(response);
+      queryClient.invalidateQueries({ queryKey: ["systemConfig"] });
+    },
+  });
+};
+
 // Achievement Queries - Posts
 export const useGetAllPosts = (filters: any = {}) => {
   return useQuery({

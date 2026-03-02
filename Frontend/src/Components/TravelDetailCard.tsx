@@ -22,7 +22,7 @@ function TravelDetailCard({
 
   console.log(data);
   return (
-    <Grid item xs={12} md={4}>
+    <Grid item xs={12} md={6}>
       <Card sx={{ margin:5,backgroundColor:"#dbeafe",boxShadow:4}}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -70,8 +70,8 @@ function TravelDetailCard({
               <div className="  rounded-sm">{data.updateAt?data.updateAt.replace("T", ",") :"N/A"}</div>
             </div>
 
-          <div className="bg-blue-100">
-            <div className="bg-gray-300">Travelers</div>
+          <div className="bg-blue-200">
+            <div className="bg-blue-100">Travelers</div>
             <List>
               {data.travelers.map((t) => {
                 return (

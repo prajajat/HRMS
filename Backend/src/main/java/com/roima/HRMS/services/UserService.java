@@ -26,8 +26,6 @@ public class UserService {
     public List<UserResponseForEmailDTO> getAllUserWithNameAndEmail()
     {
         List<User> user = userRepo.findByRolesTitle("employee");
-
-
         return user.stream().map(a ->
                                                 modelMapper.map(a, UserResponseForEmailDTO.class)
                                         ).collect(Collectors.toList());
@@ -38,9 +36,9 @@ public class UserService {
         return modelMapper.map(user,UserResponceWithManagerAndTeamDTO.class);
     }
 
-    public List<UserResponceBaseDTO> getTeamMemberByManager()
+    public List<UserResponceBaseDTO> getTeamMemberByManager(Long id)
     {
-        User user = userRepo.findById((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).orElseThrow(()->new RuntimeException("manager Not found"));
+        User user = userRepo.findById(id).orElseThrow(()->new RuntimeException("manager Not found"));
         return user.getTeamMember().stream().map(
                 x->modelMapper.map(x,UserResponceBaseDTO.class)
         ).toList();

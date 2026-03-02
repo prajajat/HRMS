@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { logout, setCount } from "../Store/userSlice";
 import { removeToken } from "../Store/tokenSlice";
 import { useGetNewNotificationCount } from "../Query/useQueries";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Header() {
-  const { userId, roles,imageUrl, notiicationCount } = useSelector((state) => state.user);
+  const { userId, roles,imageUrl, notiicationCount,userName } = useSelector((state) => state.user);
   const navigator = useNavigate();
   const dispatch = useDispatch();
+  const [profileHover,setProfileHover]=useState(false);
   const handleClick = () => {
     if (userId == -1) {
       navigator("/login");
@@ -53,12 +54,12 @@ function Header() {
 
         {userId != -1 && (
           <>
-            <Button
+            {/* <Button
               onClick={() => navigator("/org-chart/" + userId)}
               sx={{ color: "#1c1c1f" }}
             >
               Org. Chart
-            </Button>
+            </Button> */}
             <Button onClick={() => navigator("/notification/all")}>
               <img src="/bellBlack.png" className="h-6 w-6"></img>
               <div className="text-white mb-10 bg-green-700 rounded-full mt-3 w-5 h-5">
@@ -69,12 +70,24 @@ function Header() {
             </Button>
           </>
         )}
-        <Button onClick={handleClick} sx={{ color: "#1c1c1f" }}>
-          {userId == -1 ? "login" : "logout"}
-        </Button>
-        <Button onClick={() => navigator("/notification/all")} sx={{ color: "#1c1c1f" }}>
+        <div className="flex flex-col mt-10">
+       
+       <div onMouseEnter={() => setProfileHover(true)} onClick={() => setProfileHover(false)} >
             <img src={imageUrl} className="h-10 w-10"></img>
-        </Button>
+             
+        </div>
+         { profileHover&&
+         <div className="sticky bg-blue-100  rounded-b-lg"> 
+               <div className="flex flex-row justify-center w-full">
+               <p>{userName}</p>
+               </div>
+               <hr />
+              <Button onClick={handleClick}  >
+             {userId == -1 ? "login" : "logout"}
+            </Button>
+            </div>
+          } 
+          </div>
       </div>
     </div>
   );

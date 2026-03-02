@@ -27,7 +27,7 @@ public class GameController {
     @PreAuthorize("hasAuthority('All-User')")
     @GetMapping("/all")
     public ResponseEntity<List<GameResponseDTO>> getAllGame()
-    {
+    {       log.info("Fetching all games");
         return ResponseEntity.ok(gameService.getAllGame((Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
@@ -35,6 +35,7 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ResponseEntity<GameResponceWithSlotAndBookingDTO> getGameById(@PathVariable Long gameId)
     {
+        log.info("Fetching game by id : {}",gameId);
         return ResponseEntity.ok(gameService.getGameById(gameId,(Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
     }
 
@@ -42,6 +43,7 @@ public class GameController {
     @GetMapping("/config/{gameId}")
     public ResponseEntity<GameConfigDTO> getGameConfig(@PathVariable Long gameId)
     {
+        log.info("Fetching game config by game Id : {}",gameId);
         return ResponseEntity.ok(gameService.getGameConfig(gameId));
     }
 
@@ -50,6 +52,7 @@ public class GameController {
     @PutMapping("/")
     public ResponseEntity<BasicResponse> updateGameConfig(@RequestBody GameConfigDTO game)
     {
+        log.info("Updating game config by id : {}",game.getGameId());
         return ResponseEntity.ok(gameService.updateGameConfig(game));
     }
 
@@ -58,6 +61,7 @@ public class GameController {
     @PostMapping("/booking")
     public ResponseEntity<BasicResponse> createBooking(@RequestBody GameBookingDTO dto)
     {
+        log.info("Creating game booking for game: {} by: {}",dto.getGameId(),dto.getCreatedBy());
         return ResponseEntity.ok(gameService.createBooking(dto));
     }
 
@@ -65,13 +69,15 @@ public class GameController {
     @PostMapping("/interest")
     public ResponseEntity<BasicResponse> gameInterest(@RequestBody GameInterestDTO dto)
     {
+        log.info("Updating game interest for game: {} by: {}",dto.getGame(),dto.getUserId());
         return ResponseEntity.ok(gameService.UpdateGameInterest(dto));
     }
 
     @PreAuthorize("hasAuthority('All-User')")
     @DeleteMapping("/booking/{bookingId}")
-    public ResponseEntity<BasicResponse> createBooking(@PathVariable Long bookingId)
+    public ResponseEntity<BasicResponse> cancelBooking(@PathVariable Long bookingId)
     {
+        log.info("Cancelling game booking for game booking: {} ",bookingId);
         return ResponseEntity.ok(gameService.cancelSlot(bookingId));
     }
 

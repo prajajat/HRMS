@@ -145,6 +145,7 @@ export const PostDashboard: React.FC<PostDashboardProps> = ({ view }) => {
 
   return (
     <div className={styles.postDashboard}>
+      
       <div className={styles.dashboardContainer}>
         {/* Main Content with Filters at Top */}
         <main className={styles.mainContent}>

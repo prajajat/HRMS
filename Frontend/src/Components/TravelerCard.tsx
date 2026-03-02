@@ -14,8 +14,12 @@ function TravelerCard({
     mutate(dto, {
       onSuccess: (response: any) => {
         console.log("save");
+        
         refetch();
       },
+      onError:()=>{
+        alert("Traveler which added expense or document can't be remove");
+      }
     });
   };
   return (

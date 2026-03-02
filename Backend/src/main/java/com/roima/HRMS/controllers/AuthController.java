@@ -31,13 +31,13 @@ public class AuthController {
                 .sameSite("Lax")
                 .maxAge(Duration.ofDays(30))
                 .build();
-
+        log.info("Login for {}",request.getEmail());
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return  loginResponseDTO;
     }
     @GetMapping("/refreshToken/")
     public RefreshTokenResponseDTO checkRefreshToken(@CookieValue(value = "REFRESH_TOKEN", defaultValue = "UNKNOWN") String token) {
-     log.info("t>>{}",token);
+        log.info("Updating access token from request token {}",token);
         return authService.checkRefreshToken(token);
     }
 }

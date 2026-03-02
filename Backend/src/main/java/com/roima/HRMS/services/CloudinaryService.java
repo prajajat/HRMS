@@ -29,6 +29,7 @@ public class CloudinaryService {
                             "public_id",publicId,
                             "resource_type","auto"
                     ));
+            log.info("New File uploaded with publicId {}",publicId);
             return uploadResult.get("secure_url").toString();
 
         }catch (IOException e){

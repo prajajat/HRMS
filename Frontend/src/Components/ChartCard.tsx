@@ -25,7 +25,7 @@ function ChartCard({ data, id, team = false }) {
       onClick={(e) => {
         console.log(data.userId);
         e.stopPropagation();
-        navigator("/org-chart/" + data.userId);
+        navigator("/employee/org-chart/"+data.userId);
       }}
     >
       {data.manager != null && <ChartCard data={data.manager} id={id} />}
