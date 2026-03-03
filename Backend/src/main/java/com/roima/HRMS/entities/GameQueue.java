@@ -40,7 +40,7 @@ public class GameQueue {
     @JoinColumn(name="fk_game_id")
     private Game game;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="fk_game_book_id")
     private GameBooking gameBooking;
 

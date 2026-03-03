@@ -24,10 +24,10 @@ public class GameBooking {
     @Column(name = "status")
     private StatusType.BookingStatus status;
 
-    @ManyToMany(mappedBy = "currentGameBookings")
+    @ManyToMany(mappedBy = "currentGameBookings",fetch = FetchType.EAGER)
     private List<GameSlot> bookingSlots;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "booking_participants",
             joinColumns = @JoinColumn(name = "fk_game_booking_id"),
@@ -43,7 +43,7 @@ public class GameBooking {
     private User createdBy;
 
 
-    @OneToMany(mappedBy = "gameBooking")
+    @OneToMany(mappedBy = "gameBooking",fetch = FetchType.EAGER)
     private List<GameQueue> gameQueues;
 }
 

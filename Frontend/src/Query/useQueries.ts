@@ -58,6 +58,7 @@ import {
   getNewNotificationCount,
   getAllHr,
   updateReferralStatus,
+  getEmpDashboardInfo,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -163,6 +164,9 @@ export const usePatchExpense = () => {
   });
 };
 
+export const useGetEmpDashboardInfo = () => {
+  return useQuery({ queryKey: ["emp-Dashboard-info"], queryFn: getEmpDashboardInfo });
+};
 export const useGetAllTravel = () => {
   return useQuery({ queryKey: ["travel"], queryFn: getAllTravelDetails });
 };

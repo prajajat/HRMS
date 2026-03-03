@@ -119,7 +119,7 @@ function GameBookingCard({ data, refetch }) {
                 return <SlotCard data={s} />;
               })}
           </div>
-          {data.createdBy != null && userId == data.createdBy.userId && (
+          {data.createdBy != null && userId == data.createdBy.userId&& (data.status=="BOOKED"||data.status=="QUEUED")&& (
             <Button
               color="error"
               onClick={() => handleCancel(data.gameBookingId)}

@@ -96,7 +96,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player",fetch = FetchType.EAGER)
     private List<GameQueue> gameQueues;
 
     @ManyToMany(mappedBy = "cancellers")
@@ -122,6 +122,9 @@ public class User {
 
     @OneToMany(mappedBy = "updatedBy")
     private List<JobReferReview> jobReviews;
+
+    @OneToMany(mappedBy = "author")
+    private List<Post>  postCreated;
 
 }
 

@@ -36,14 +36,14 @@ public class GameSlot {
     @Column(name = "slot_status")
     private StatusType.BookingStatus slotStatus;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "slot_cancellers",
             joinColumns = @JoinColumn(name = "fk_slot_id"),
             inverseJoinColumns = @JoinColumn(name = "fk_user_id"))
     private List<User> cancellers;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "slot_bookings",
             joinColumns = @JoinColumn(name = "fk_slot_id"),

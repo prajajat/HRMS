@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 public class QueueScheduler {
 
     private final GameService gameService;
-    @Scheduled(cron ="0 5,35 * * * ?")
+    //@Scheduled(cron ="0 5,35 * * * ?")
     @Scheduled(fixedDelay = 30*60*1000)//30 min
     public void runForAssignSlot(){
         log.info("auto - assign slot scheduler - call assign slot");
         gameService.assignSlot();
     }
-    @Scheduled(cron ="0 5,35 * * * ?")
+   // @Scheduled(cron ="0 5,35 * * * ?")
     @Scheduled(fixedDelay = 30*60*1000)//30 min
     public void runForMoveToExpired(){
         log.info("auto -clean Up scheduler - call cleanUp slot & booking");

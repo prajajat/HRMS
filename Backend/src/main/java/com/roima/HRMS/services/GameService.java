@@ -93,7 +93,7 @@ public class GameService {
     public GameResponceWithSlotAndBookingDTO getGameById(Long gameId, Long userId)
     {
 
-         Game game=findGameById(gameId);
+        Game game=findGameById(gameId);
         User user=findUserById(userId);
         List<Long> userInterestedGameIds =user.getInterestedGames().stream().map(g->g.getGameId()).toList();
         GameResponceWithSlotAndBookingDTO dto=modelMapper.map(game, GameResponceWithSlotAndBookingDTO.class);
@@ -122,7 +122,24 @@ public class GameService {
                  gs->modelMapper.map(gs, GameSlotResponseDTO.class)
          ).toList()
          );
-
+         GameSlot upcomingSlot=gameSlots.stream().filter(
+                 gs->gs.getSlotStartTime().toLocalTime().isAfter(LocalTime.now())
+                          &&
+                         gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now().plusMinutes(30))
+         ).findFirst().orElse(null);
+         dto.setUpcomingSlot(modelMapper.map(upcomingSlot,GameSlotResponseDTO.class));
+         if(upcomingSlot!=null && upcomingSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
+         {
+             upcomingSlot.getCurrentGameBookings().stream().filter(gb -> gb.getStatus().equals(StatusType.BookingStatus.BOOKED))
+                     .findFirst()
+                     .ifPresent(
+                             upcomingBooking -> dto.setUpcomingPlayers(
+                                     upcomingBooking.getParticipants().stream().map(player ->
+                                        modelMapper.map(player, UserResponceBaseDTO.class)
+                                        ).toList()
+                                     )
+                     );
+         }
         return dto;
 
     }
@@ -234,6 +251,7 @@ public class GameService {
 
         });
 
+
        //check for are they can book direct
         boolean played=players.stream().anyMatch(x->isPlayedInCycle(x,game));
         log.info("Did they played in this cycle ? - {}",played);
@@ -287,7 +305,7 @@ public class GameService {
         notification.setUser(createdBy);
         notificationRepository.save(notification);
 
-        if(slotBooked.get())
+        if(slotBooked.get()||played)
         {
             gameQueues.forEach(x-> x.setGameBooking(gameBooking));
         }
@@ -314,14 +332,18 @@ public class GameService {
     @Transactional
     public GameQueue findPlayerToAssignSlot( GameSlot gameSlot)
     {
-         List<GameQueue> allPlayer= new ArrayList<>(gameQueueRepository.findByGameAndIsActive(gameSlot.getGame(), true).stream().filter(
-                         x -> x.getGameBooking().getBookingSlots().contains(gameSlot)
-                 )
-                 .toList());
-
-         allPlayer=new ArrayList<>(allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())).toList());
+        List<GameQueue> allPlayer= new ArrayList<>(
+                gameQueueRepository.findByGameAndIsActive(gameSlot.getGame(), true)
+                        .stream()
+                        .filter(
+                        x -> x.getGameBooking().getBookingSlots().stream().anyMatch(gs->gs.getGameSlotId().equals(gameSlot.getGameSlotId()))
+                )
+                .toList());
+        log.info("auto - find player - all player size{}",allPlayer.size());
+        allPlayer=new ArrayList<>(allPlayer.stream().filter( e->!gameSlot.getCancellers().contains(e.getPlayer())).toList());
 
         log.info("auto - find player - all player size{}",allPlayer.size());
+
 
         if(allPlayer.isEmpty()) {
             log.info("auto - find player - no player found");
@@ -330,7 +352,7 @@ public class GameService {
 
              allPlayer
                 .sort(
-                        Comparator.comparingInt(
+                        Comparator.comparingDouble(
                                 (GameQueue b)->{
                                     List<GameQueue> playersQueue=b.getGameBooking().getParticipants().stream().map(p->findGameQueueByPlayerAndGame(p,gameSlot.getGame())).toList();
                                     int totalPlayedAsTeam = playersQueue.stream()
@@ -340,8 +362,8 @@ public class GameService {
                                     int totalPenaltyAsTeam = playersQueue.stream()
                                             .map(GameQueue::getPenalty)
                                             .reduce(0, Integer::sum);
-
-                                    return totalPlayedAsTeam+totalPenaltyAsTeam;
+                                     if(playersQueue.isEmpty()){return 0;}
+                                    return (double) (totalPlayedAsTeam + totalPenaltyAsTeam) /playersQueue.size();
                                 })
                                 .thenComparing(GameQueue::getQueueTime)
                 );
@@ -423,12 +445,12 @@ public class GameService {
                         throw new RuntimeException("you miss cancel slot time, slot is already started");
                     }
                     if(gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED)&& gameBooking.getStatus().equals((StatusType.BookingStatus.BOOKED))) {
-                        gs.getCancellers().add(gameBooking.getCreatedBy());
+                        gs.getCancellers().addAll(gameBooking.getParticipants());
                         gs.setSlotStatus(StatusType.BookingStatus.PENDING);
                     }
                 });
 
-
+        int change=gameBooking.getStatus().equals(StatusType.BookingStatus.BOOKED)?gameSlots.size()*-1:0;
         //update booking
         gameBooking.setStatus(StatusType.BookingStatus.CANCELLED);
 
@@ -439,9 +461,10 @@ public class GameService {
         notificationRepository.save(notification);
 
         //update queue
+
         gameBooking.getParticipants().forEach(
                 player->
-                        updateQueue(player,gameBooking.getGame(),false,gameSlots.size()*-1)
+                        updateQueue(player,gameBooking.getGame(),false,change)
         );
 
         gameBookingRepository.save(gameBooking);
@@ -562,7 +585,7 @@ public class GameService {
         gameSlots.forEach(
                 gs-> {
 
-                    log.info(" auto - cleanUp- game slot : {}",gs.getGameSlotId());
+                    log.info(" auto - cleanUp- game slot : {} {}",gs.getGameSlotId(),gs.getSlotStatus());
                     if(gs.getSlotStatus().equals(StatusType.BookingStatus.PENDING))
                     {
                         gs.setSlotStatus(StatusType.BookingStatus.EXPIRED);
@@ -572,9 +595,9 @@ public class GameService {
                         gs.setSlotStatus(StatusType.BookingStatus.COMPLETED);
                     }
 
-                    if(gs.getSlotStatus().equals(StatusType.BookingStatus.PENDING)||gs.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
-                    {
+
                         List<GameBooking> gameBookings = gs.getCurrentGameBookings();
+                        log.info("game booking : {}",gameBookings.size());
                         gameBookings.forEach(
                                 gb -> {
                                     log.info(" auto - cleanUp -  game slot : {},game booking : {}", gs.getGameSlotId(),gb.getGameBookingId());
@@ -597,7 +620,7 @@ public class GameService {
 
                         );
                         gameBookingRepository.saveAll(gameBookings);
-                    }
+
                 }
         );
 

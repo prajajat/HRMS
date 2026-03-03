@@ -21,8 +21,8 @@ public interface GameSlotRepository  extends JpaRepository<GameSlot,Long> {
     @Query(value = "select * from game_slots" +
             "  where  " +
 
-            "          date = :date and  slot_start_time <  CAST(:slotStartTime as TIME )" +
-            "",nativeQuery = true)
+            "          date = :date and  slot_start_time <  CAST(:slotStartTime as TIME )"
+            ,nativeQuery = true)
     List<GameSlot> findBySlotStatusAndSlotStartTimeBefore(@Param("slotStartTime") Time slotStartTime, @Param("date") Date date, @Param("pastDate") Date pastDate);
 
    // List<GameSlot> findBySlotStatusAndSlotStartTimeBefore(StatusType.BookingStatus slotStatus,Time slotStartTime);

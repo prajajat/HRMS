@@ -1,5 +1,6 @@
 package com.roima.HRMS.dtos.response;
 
+import com.roima.HRMS.entities.GameSlot;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,8 @@ public class GameResponceWithSlotAndBookingDTO extends GameResponseDTO {
 
     private List<GameBookingResponseDTO> gameBookings;
     private List<GameSlotResponseDTO> gameSlots;
+    private GameSlotResponseDTO upcomingSlot;
+    private List<UserResponceBaseDTO> upcomingPlayers;
 
 
 }

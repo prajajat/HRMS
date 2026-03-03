@@ -211,6 +211,11 @@ export const getTeamMember = async () =>
 export const updateReferralStatus = async (data: any) =>
   await instance.post("/job/refer/review", data).then((res) => res);
 
+
+export const getEmpDashboardInfo = async () =>
+  await instance.get(`/api/user/employee/dashboard`).then((res) => res);
+
+
 instance.interceptors.request.use((config) => {
   console.log(config.url);
   const state = store.getState();
