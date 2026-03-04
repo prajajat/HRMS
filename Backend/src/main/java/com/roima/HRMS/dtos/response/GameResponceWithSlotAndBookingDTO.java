@@ -18,6 +18,7 @@ public class GameResponceWithSlotAndBookingDTO extends GameResponseDTO {
     private List<GameSlotResponseDTO> gameSlots;
     private GameSlotResponseDTO upcomingSlot;
     private List<UserResponceBaseDTO> upcomingPlayers;
+    private List<GameWithTotalSlotPlayedAndPlayerResponseDTO> mostPlayed;
 
 
 }

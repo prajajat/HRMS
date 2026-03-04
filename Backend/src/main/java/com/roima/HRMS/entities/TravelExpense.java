@@ -26,7 +26,7 @@ public class TravelExpense {
 
     @PositiveOrZero
     @Column(name = "amount",nullable = false)
-    private Long amount;
+    private Double amount;
 
     @Column(name = "expense_date")
     private LocalDateTime expenseDate;
@@ -47,7 +47,7 @@ public class TravelExpense {
 
     @ManyToOne
     @JoinColumn(name = "update_by_pk_user_id")
-    private User UpdateBy;
+    private User updateBy;
 
     @ManyToOne
     @JoinColumn(name = "fk_traveler_id")

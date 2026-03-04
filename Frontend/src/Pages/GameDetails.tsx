@@ -17,7 +17,7 @@ import SlotCard from "../Components/SlotCard";
 function GameDetails() {
   const { id } = useParams();
   const { isLoading, data, isError, refetch } = useGetGameDetailsById(id);
-  const [view, setView] = useState("");
+  const [view, setView] = useState("overview");
   const userId = useSelector((state) => state.user.userId);
 
   return (
@@ -84,68 +84,105 @@ function GameDetails() {
           )}
 
           {view === "overview" && (
-            <div className="p-4 flex flex-row justify-center bg-slate-100 rounded ">
-              <div>
-                <p>Upcoming Slot</p>
-                {data?.data.upcomingSlot != null ? (
-                  <SlotCard data={data?.data.upcomingSlot} />
-                ) : (
-                  <p>No slot found for next 30 mins.</p>
-                )}
-                <p>Upcoming Team</p>
-                {data?.data.upcomingPlayers != null ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
-                    {data?.data.upcomingPlayers.map((player) => {
-                      return (
-                        <Card
-                          sx={{
-                            maxWidth: 200,
-                            backgroundColor: "#94b5ee",
-                            margin: 5,
-                          }}
-                          key={player.userId}
-                        >
-                          <div className="flex flex-row justify-center w-full">
-                            <img
-                              src={player.imageUrl}
-                              className="h-10 w-10 m-2"
-                            ></img>
-                          </div>
-
-                          <CardContent>
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6 mb-8  bg-slate-100 rounded h-full ">
+              <div className="row-span-3 bg-white shadow rounded-lg">
+                <div className="flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
+                  <span>Upcoming Slot</span>
+                </div>
+                <div className="overflow-y-auto">
+                  {data?.data.upcomingSlot != null ? (
+                    <SlotCard data={data?.data.upcomingSlot} />
+                  ) : (
+                    <p>No slot found for next 30 mins.</p>
+                  )}
+                </div>
+              </div>
+              <div className="row-span-3 bg-white shadow rounded-lg">
+                <div className="flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
+                  <span>Upcoming Team</span>
+                </div>
+                <div className="overflow-y-auto">
+                  {data?.data.upcomingPlayers != null ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
+                      {data?.data.upcomingPlayers.map((player) => {
+                        return (
+                          <Card
+                            sx={{
+                              maxWidth: 200,
+                              backgroundColor: "#94b5ee",
+                              margin: 5,
+                            }}
+                            key={player.userId}
+                          >
                             <div className="flex flex-row justify-center w-full">
-                              <Typography
-                                gutterBottom
-                                variant="h5"
-                                component="div"
-                              >
-                                {player.name.toUpperCase()}
-                              </Typography>
+                              <img
+                                src={player.imageUrl}
+                                className="h-10 w-10 m-2"
+                              ></img>
                             </div>
-                            <hr />
-                            <Typography
-                              sx={{ fontSize: 18, mb: 1.5 }}
-                              variant="h5"
-                              color="text.secondary"
-                            >
-                              {player.companyEmail}
-                            </Typography>
 
-                            <Typography
-                              sx={{ fontSize: 18, mb: 1.5 }}
-                              variant="h5"
-                              color="text.secondary"
-                            >
-                              Dept :{player.departmentName?player.departmentName:'N/A' }
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                            <CardContent>
+                              <div className="flex flex-row justify-center w-full">
+                                <Typography
+                                  gutterBottom
+                                  variant="h5"
+                                  component="div"
+                                >
+                                  {player.name.toUpperCase()}
+                                </Typography>
+                              </div>
+                              <hr />
+                              <Typography
+                                sx={{ fontSize: 18, mb: 1.5 }}
+                                variant="h5"
+                                color="text.secondary"
+                              >
+                                {player.companyEmail}
+                              </Typography>
+
+                              <Typography
+                                sx={{ fontSize: 18, mb: 1.5 }}
+                                variant="h5"
+                                color="text.secondary"
+                              >
+                                Dept :
+                                {player.departmentName
+                                  ? player.departmentName
+                                  : "N/A"}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p>No team playing in next 30 mins.</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <div className="row-span-3 bg-white shadow rounded-lg">
+                  <div className="flex items-center justify-between px-6 py-5 font-semibold border-b border-gray-100">
+                    <span>Most Slot Played by</span>
                   </div>
-                ) : (
-                  <p>No team playing in next 30 mins.</p>
-                )}
+                  <div className="overflow-y-auto">
+                    <ul className="p-6 space-y-6">
+                      {data?.data.mostPlayed.map((player) => {
+                        return (
+                          <li className="flex items-center">
+                            <span className="text-gray-600">
+                              {player.playerName}
+                            </span>
+                            <span className="ml-auto font-semibold">
+                              {player.totalSlotPlayed}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           )}

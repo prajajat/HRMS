@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class TravelExpenseResponseDTO {
     private Long travelExpensesId;
-    private Long amount;
+    private Double amount;
     private LocalDateTime expenseDate;
     private String status;
     private String remark;

@@ -1,6 +1,7 @@
 import {
   Button,
   FormLabel,
+  InputLabel,
   MenuItem,
   Paper,
   Select,
@@ -13,7 +14,12 @@ import {
   Typography,
 } from "@mui/material";
 import ExpenseCard from "./ExpenseCard";
-import { useGetAllExpence, useGetExpenceBytraveler } from "../Query/useQueries";
+import {
+  useGetAllCurrencies,
+  useGetAllExpence,
+  useGetCurrencyInINR,
+  useGetExpenceBytraveler,
+} from "../Query/useQueries";
 import { useEffect, useMemo, useState } from "react";
 import NewExpenseForm from "./NewExpenseForm";
 
@@ -77,6 +83,14 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
     return [...new Set(list.map((item) => item.status))];
   }, [dataEp]);
 
+  const {
+    isLoading: isLoadingAllCurrencies,
+    data: dataAllCurrencies,
+    isError: isErrorAllCurrencies,
+    refetch: refetchCurrencies,
+  } = useGetAllCurrencies();
+
+  const [currency, setCurrency] = useState("inr");
   const [filterEmp, setFilterEmp] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterTravel, setFilterTravel] = useState("");
@@ -253,7 +267,46 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
               <TableHead>
                 <TableRow>
                   {ownerType === "HR" && <TableCell>Action</TableCell>}
-                  <TableCell> Amount</TableCell>
+                  <TableCell>
+                    {" "}
+                    Amount
+                    {!isLoadingAllCurrencies &&
+                      dataAllCurrencies != undefined && (
+                        <Select
+                          type="text"
+                          defaultValue=""
+                          className="mt-10 mb-10"
+                          onBlur={(e) => {
+                            setCurrency(e.target.value);
+                          }}
+                        >
+                          <MenuItem value={"inr"}>
+                            {" "}
+                            {dataAllCurrencies.data.inr}
+                          </MenuItem>
+                          <MenuItem value={"aud"}>
+                            {" "}
+                            {dataAllCurrencies.data.aud}
+                          </MenuItem>
+                          <MenuItem value={"eur"}>
+                            {" "}
+                            {dataAllCurrencies.data.eur}
+                          </MenuItem>
+                          <MenuItem value={"jpy"}>
+                            {" "}
+                            {dataAllCurrencies.data.jpy}
+                          </MenuItem>
+                          <MenuItem value={"mxn"}>
+                            {" "}
+                            {dataAllCurrencies.data.mxn}
+                          </MenuItem>
+                          <MenuItem value={"cad"}>
+                            {" "}
+                            {dataAllCurrencies.data.cad}
+                          </MenuItem>
+                        </Select>
+                      )}
+                  </TableCell>
                   <TableCell align="right">Date</TableCell>
                   <TableCell align="right">Status</TableCell>
                   <TableCell align="right">Remark</TableCell>
@@ -277,6 +330,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
                         ownerType={ownerType}
                         refetch={refetchEp}
                         key={dataEp.data.travelExpensesId}
+                        currency={currency}
                       />
                     );
                   })}

@@ -88,7 +88,7 @@ public class User {
     private List<Traveler> travelers;
 
     @OneToMany(mappedBy = "uploadedBy")
-    private List<Document> Documents;
+    private List<Document> documents;
 
     @OneToMany(mappedBy = "createdBy")
     private List<GameBooking> gameBookingsCreatedByMe;
@@ -125,6 +125,9 @@ public class User {
 
     @OneToMany(mappedBy = "author")
     private List<Post>  postCreated;
+
+    @OneToMany(mappedBy = "updateBy")
+    private List<TravelExpense>  travelExpensesReviewed;
 
 }
 

@@ -93,9 +93,9 @@ public class UserService {
                 ).toList();
     }
 
-    public EmployeeWithInfoResponseDTO getEmployeeInfo(Long Id)
+    public EmployeeWithInfoResponseDTO getEmployeeInfo(Long id)
     {
-         User user=findUserById(Id);
+         User user=findUserById(id);
          EmployeeWithInfoResponseDTO responseDTO=new EmployeeWithInfoResponseDTO();
          Map<String, Integer> map = new HashMap<>();
         gameRepository.findAll().forEach(
@@ -132,6 +132,15 @@ public class UserService {
          return responseDTO;
     }
 
+    public HRWithInfoResponseDTO getHRInfo(Long id)
+    {
+        User user=findUserById(id);
+        HRWithInfoResponseDTO responseDTO=new HRWithInfoResponseDTO();
+        responseDTO.setTotalJobCreated((long)user.getCreatedJobs().size());
+        responseDTO.setTotalTravelCreated((long)user.getCreatedTravelDetails().size());
+        responseDTO.setTotalExpenseReviewed((long)user.getTravelExpensesReviewed().size());
+        return responseDTO;
+    }
 
 
     public User findUserById(Long id)

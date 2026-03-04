@@ -83,4 +83,13 @@ public class UserController {
         log.info("Fetching employee dashboard info : {}",id);
         return ResponseEntity.ok(userService.getEmployeeInfo(id));
     }
+
+
+    @PreAuthorize("hasAuthority('Hr-dashboard')")
+    @GetMapping("/hr/dashboard")
+    public ResponseEntity<HRWithInfoResponseDTO> getHRInfo(){
+        Long id=(Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("Fetching hr dashboard info : {}",id);
+        return ResponseEntity.ok(userService.getHRInfo(id));
+    }
 }

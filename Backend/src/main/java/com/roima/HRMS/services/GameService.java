@@ -122,12 +122,18 @@ public class GameService {
                  gs->modelMapper.map(gs, GameSlotResponseDTO.class)
          ).toList()
          );
+
          GameSlot upcomingSlot=gameSlots.stream().filter(
                  gs->gs.getSlotStartTime().toLocalTime().isAfter(LocalTime.now())
                           &&
                          gs.getSlotStartTime().toLocalTime().isBefore(LocalTime.now().plusMinutes(30))
          ).findFirst().orElse(null);
+         if(upcomingSlot==null){
+             dto.setUpcomingSlot(null);
+         }
+         else
          dto.setUpcomingSlot(modelMapper.map(upcomingSlot,GameSlotResponseDTO.class));
+
          if(upcomingSlot!=null && upcomingSlot.getSlotStatus().equals(StatusType.BookingStatus.BOOKED))
          {
              upcomingSlot.getCurrentGameBookings().stream().filter(gb -> gb.getStatus().equals(StatusType.BookingStatus.BOOKED))
@@ -140,6 +146,31 @@ public class GameService {
                                      )
                      );
          }
+          Map<String, Integer> map = new HashMap<>();
+          userRepository.findAll().forEach(player-> player.getGameBookings().forEach(
+                          gb -> {
+                              if (gb.getStatus().equals(StatusType.BookingStatus.COMPLETED) && gb.getGame().getGameId().equals(gameId)) {
+
+                                  map.putIfAbsent(player.getUserName(), 0);
+                                  map.put(player.getUserName(),map.get(player.getUserName())+1);
+                              }
+                          }
+                  )
+          );
+        List<Map.Entry<String, Integer> > list =
+                new LinkedList<>(map.entrySet());
+        list.sort(Map.Entry.comparingByValue());
+        List<GameWithTotalSlotPlayedAndPlayerResponseDTO> listOfTopPlayer=new ArrayList<>();
+        for(int i=list.size()-1;i>=0&&i>=list.size()-4;i--)
+        {
+            GameWithTotalSlotPlayedAndPlayerResponseDTO newPlayerDTO=new GameWithTotalSlotPlayedAndPlayerResponseDTO();
+            newPlayerDTO.setPlayerName(list.get(i).getKey());
+            newPlayerDTO.setTotalSlotPlayed((long)list.get(i).getValue());
+            newPlayerDTO.setGameName(game.getGameName());
+            listOfTopPlayer.add(newPlayerDTO);
+        }
+        dto.setMostPlayed(listOfTopPlayer);
+
         return dto;
 
     }

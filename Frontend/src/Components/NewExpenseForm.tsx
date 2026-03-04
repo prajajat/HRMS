@@ -1,16 +1,43 @@
-import { Button, FormControl, Input, InputLabel } from "@mui/material";
-import { useCreateExpense } from "../Query/useQueries";
+import {
+  Button,
+  FormControl,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import {
+  useCreateExpense,
+  useGetAllCurrencies,
+  useGetCurrencyInINR,
+} from "../Query/useQueries";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { original } from "@reduxjs/toolkit";
 
 function NewExpenseForm({ travelerId, ownerType }) {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     shouldUseNativeValidation: true,
   });
-  const [fileList, setFileList] = useState([]);
-  const { mutate, isPending, isError, error,reset } = useCreateExpense(travelerId);
+  const watchAmount = watch("amount");
+  const watchCurrency = watch("currency", "inr");
 
+  const [fileList, setFileList] = useState([]);
+  const { mutate, isPending, isError, error, reset } =
+    useCreateExpense(travelerId);
+  const {
+    isLoading: isLoadingAllCurrencies,
+    data: dataAllCurrencies,
+    isError: isErrorAllCurrencies,
+    refetch: refetchCurrencies,
+  } = useGetAllCurrencies();
+  const [amountInINR, setAmountInINR] = useState();
+  const {
+    isLoading: isLoadingINR,
+    data: dataINR,
+    isError: isErrorINR,
+    refetch: refetchINR,
+  } = useGetCurrencyInINR();
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     const newFiles = files.map((file) => ({
@@ -26,6 +53,14 @@ function NewExpenseForm({ travelerId, ownerType }) {
     updatedFiles[idx].userName = newName;
     setFileList(updatedFiles);
   };
+
+  const Converter = () => {
+    console.log(dataINR?.data.inr);
+    console.log(dataINR?.data.inr[watchCurrency], watchCurrency);
+
+    return watchAmount / dataINR?.data.inr[watchCurrency];
+  };
+
   const onSubmit = (data) => {
     const filesWithoutNames = fileList.filter((f) => !f.userName.trim());
     if (filesWithoutNames.length > 0) {
@@ -36,7 +71,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
     const formData = new FormData();
 
     const expenseDTO = {
-      amount: data.amount,
+      amount: amountInINR,
       expenseDate: data.expenseDate,
       traveler: data.travelerId,
       documentType: data.documentType,
@@ -58,18 +93,46 @@ function NewExpenseForm({ travelerId, ownerType }) {
       onSuccess: (response) => {
         console.log("success");
         alert("expense created");
-        reset();  
+        reset();
       },
     });
   };
 
+  useEffect(() => {
+    console.log(dataAllCurrencies);
+  }, [dataAllCurrencies]);
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
-    >
+    >  Add new Expense
+    <hr />
+      {!isLoadingAllCurrencies && dataAllCurrencies != undefined && (
+        <FormControl>
+          <label>Currency</label>
+          <Select
+            type="text"
+            defaultValue=""
+            className="mt-10 mb-10"
+            {...register("currency")}
+            onBlur={() => {
+              console.log(watchCurrency);
+              setAmountInINR(Converter());
+            }}
+          >
+            <MenuItem value={"inr"}> {dataAllCurrencies.data.inr}</MenuItem>
+            <MenuItem value={"aud"}> {dataAllCurrencies.data.aud}</MenuItem>
+            <MenuItem value={"eur"}> {dataAllCurrencies.data.eur}</MenuItem>
+            <MenuItem value={"jpy"}> {dataAllCurrencies.data.jpy}</MenuItem>
+            <MenuItem value={"mxn"}> {dataAllCurrencies.data.mxn}</MenuItem>
+            <MenuItem value={"cad"}> {dataAllCurrencies.data.cad}</MenuItem>
+          </Select>
+        </FormControl>
+      )}
+
       <FormControl>
         <label htmlFor="amount">Amount</label>
+         <p className="text-green-800 text-sm">in INR {amountInINR}</p>
         <Input
           type="number"
           className="mt-10 mb-10"
@@ -77,8 +140,13 @@ function NewExpenseForm({ travelerId, ownerType }) {
             required: "Please enter amount",
             min: { value: 0, message: "Amount must be positive" },
           })}
+          onBlur={() => {
+            console.log(watchAmount);
+            setAmountInINR(Converter());
+          }}
         />
       </FormControl>
+     
       <FormControl>
         <Input
           type="number"

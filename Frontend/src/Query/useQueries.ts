@@ -59,6 +59,9 @@ import {
   getAllHr,
   updateReferralStatus,
   getEmpDashboardInfo,
+  getHrDashboardInfo,
+  getCurrencyInINR,
+  getAllCurrencies,
 } from "../Api/Axios";
 import queryClient from "./Client";
 
@@ -166,6 +169,9 @@ export const usePatchExpense = () => {
 
 export const useGetEmpDashboardInfo = () => {
   return useQuery({ queryKey: ["emp-Dashboard-info"], queryFn: getEmpDashboardInfo });
+};
+export const useGetHrDashboardInfo = () => {
+  return useQuery({ queryKey: ["Hr-Dashboard-info"], queryFn: getHrDashboardInfo });
 };
 export const useGetAllTravel = () => {
   return useQuery({ queryKey: ["travel"], queryFn: getAllTravelDetails });
@@ -354,6 +360,21 @@ export const useGetUserShares = () => {
   return useQuery({
     queryKey: ["userShares"],
     queryFn: getUserShares,
+  });
+};
+
+export const useGetCurrencyInINR = () => {
+  return useQuery({
+    queryKey: ["INR"],
+    queryFn: getCurrencyInINR,
+    staleTime: 1000,
+  });
+};
+export const useGetAllCurrencies = () => {
+  return useQuery({
+    queryKey: ["AllCurrency"],
+    queryFn: getAllCurrencies,
+    staleTime: 5*60*1000,
   });
 };
 
@@ -566,3 +587,5 @@ export const useUpdateReferralStatus = () => {
     },
   });
 };
+
+

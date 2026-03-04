@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class TravelExpenseDTO {
     @PositiveOrZero
-    private Long amount;
+    private Double amount;
     @NotNull
     private LocalDateTime expenseDate;
 

@@ -7,6 +7,18 @@ const instance = axios.create({
 
   withCredentials: true,
 });
+const instanceForCurrencies = axios.create({
+  baseURL: "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/",
+  timeout: 10000,
+ 
+});
+
+export const getAllCurrencies = async () =>
+  await instanceForCurrencies.get("currencies.json").then((res) =>{return  res;});
+
+export const getCurrencyInINR= async () =>
+  await instanceForCurrencies.get("currencies/inr.json").then((res) => res);
+
 
 export const loginApi = async (data: any) =>
   await instance.post("/auth/login", data).then((res) => res);
@@ -214,6 +226,9 @@ export const updateReferralStatus = async (data: any) =>
 
 export const getEmpDashboardInfo = async () =>
   await instance.get(`/api/user/employee/dashboard`).then((res) => res);
+
+export const getHrDashboardInfo = async () =>
+  await instance.get(`/api/user/hr/dashboard`).then((res) => res);
 
 
 instance.interceptors.request.use((config) => {

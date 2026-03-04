@@ -15,15 +15,28 @@ import {
 } from "@mui/material";
 import TravelerCard from "./TravelerCard";
 import { useState } from "react";
-import { usePatchExpense } from "../Query/useQueries";
+import { useGetCurrencyInINR, usePatchExpense } from "../Query/useQueries";
 import { useSelector } from "react-redux";
 
-function ExpenseCard({ data, ownerType, refetch }) {
+function ExpenseCard({ data, ownerType, refetch, currency }) {
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(data.status);
   const [remark, setRemark] = useState(data.remark);
   const userId = useSelector((state) => state.user.userId);
   const { mutate, isPending, isError, error } = usePatchExpense();
+  const {
+    isLoading: isLoadingINR,
+    data: dataINR,
+    isError: isErrorINR,
+    refetch: refetchINR,
+  } = useGetCurrencyInINR();
+
+  const getAmount = (amount) => {
+    console.log(dataINR?.data.inr);
+    console.log(dataINR?.data.inr[currency], currency);
+
+    return amount * dataINR?.data.inr[currency];
+  };
   const handleSave = () => {
     const dto = {
       status: status,
@@ -66,7 +79,7 @@ function ExpenseCard({ data, ownerType, refetch }) {
         </TableCell>
       )}
       <TableCell component="th" scope="row">
-        {data.amount}
+        {Math.round(getAmount(data.amount) * 10000) / 10000}
       </TableCell>
       <TableCell align="right">{data.expenseDate.replace("T", ",")}</TableCell>
 
