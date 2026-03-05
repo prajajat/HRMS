@@ -13,7 +13,7 @@ import {
 import TravelerCard from "./TravelerCard";
 import { useSelector } from "react-redux";
 
-function DocumentCard({ data }) {
+function DocumentCard({ data,view="employee" }) {
   const userId = useSelector((state) => state.user.userId);
   console.log(data);
   return (
@@ -36,6 +36,11 @@ function DocumentCard({ data }) {
       <TableCell align="right">
         {data.traveler.travelerTravelDetailTitle}
       </TableCell>
+      { view=="manager"&&
+         <TableCell align="right">
+        {data.traveler.travelerTravelDetailStartDate.replace('T',',')+" to "+data.traveler.travelerTravelDetailEndDate.replace('T',',')}
+      </TableCell>
+}
     </TableRow>
   );
 }

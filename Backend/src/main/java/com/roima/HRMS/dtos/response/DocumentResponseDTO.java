@@ -27,7 +27,9 @@ class UserDto
 class TravelerDocDto{
     private String visibility;
     private UserDto traveler;
-    private String travelerTravelDetailTarvelDetailId;
+    private String travelerTravelDetailTravelDetailId;
     private String travelerTravelDetailTitle;
+    private String travelerTravelDetailStartDate;
+    private String travelerTravelDetailEndDate;
 
 }

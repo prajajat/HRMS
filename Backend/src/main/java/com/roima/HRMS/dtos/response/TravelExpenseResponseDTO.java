@@ -17,6 +17,10 @@ public class TravelExpenseResponseDTO {
     private  String UpdateByUserName;
     private Long travelerTravelDetailId;
     private String travelerTravelDetailTitle;
+    private Double travelerTravelDetailMaxAmountPerDay;
+    private LocalDateTime travelerTravelDetailStartDate;
+    private LocalDateTime travelerTravelDetailEndDate;
+
     private List<DocDto> documents;
 }
 

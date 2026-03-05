@@ -59,11 +59,14 @@ function ManagerDocDetails() {
                 <TableCell sx={{ fontWeight: 600 }} align="right">
                   Travel
                 </TableCell>
+                 <TableCell sx={{ fontWeight: 600 }} align="right">
+                  Date
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.data.map((d) => (
-                <DocumentCard key={d.documentId} data={d} />
+                <DocumentCard key={d.documentId} data={d} view={"manager"} />
               ))}
             </TableBody>
           </Table>

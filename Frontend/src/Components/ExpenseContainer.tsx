@@ -22,6 +22,7 @@ import {
 } from "../Query/useQueries";
 import { useEffect, useMemo, useState } from "react";
 import NewExpenseForm from "./NewExpenseForm";
+import ExpenseChart from "./ExpenseChart";
 
 function ExpenseContainer({ travelerId = 0, ownerType }) {
   const [search, setSearch] = useState("?");
@@ -29,7 +30,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   if (ownerType == "HR") {
     fun = useGetAllExpence;
   }
-
+ 
   const [view, SetView] = useState("");
   const {
     isLoading: isLoadingEp,
@@ -259,9 +260,10 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
           </div>
         </div>
       )}
-
+      
       {!isLoadingEp && (
         <div className="mx-20">
+          {dataEp?.data.length>0&&<ExpenseChart apiData={dataEp?.data}/>}
           <TableContainer component={Paper}>
             <Table aria-label="simple table" color="Green">
               <TableHead>
@@ -322,7 +324,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!isLoadingEp &&
+                {!isLoadingEp &&  dataEp.data.length>0&&
                   dataEp.data.map((expense) => {
                     return (
                       <ExpenseCard

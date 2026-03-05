@@ -130,7 +130,7 @@ public class TravelService {
     public BasicResponse createUpdateTravelExpense(TravelExpenseDTO dto, List<MultipartFile> documents, Long id)
     {
         Traveler traveler=findTravelerById(dto.getTraveler());
-        Double maxAmount=maxRemaingAount(traveler);
+        Double maxAmount=maxRemaingAount(traveler,dto.getExpenseDate());
         if(documents.isEmpty())
         {
             log.info("expense need least one document");
@@ -418,14 +418,16 @@ public class TravelService {
     }
 
     // repeated code
-    public Double maxRemaingAount(Traveler traveler)
+    public Double maxRemaingAount(Traveler traveler,LocalDateTime date)
     {
         List<TravelExpense>travelExpenses=traveler.getTravelExpenses();
-        Double maxAmount=traveler.getTravelDetail().getMaxAmoutPerDay();
+        Double maxAmount=traveler.getTravelDetail().getMaxAmountPerDay();
 
         for(TravelExpense travelExpense:travelExpenses)
         {
-            maxAmount-=travelExpense.getAmount();
+            if(travelExpense.getExpenseDate().equals(date)) {
+                maxAmount -= travelExpense.getAmount();
+            }
         }
 
         return maxAmount;

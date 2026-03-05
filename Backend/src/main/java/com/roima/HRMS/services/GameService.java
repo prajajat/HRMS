@@ -37,6 +37,7 @@ public class GameService {
     private final NotificationRepository notificationRepository;
     private final EmailService emailService;
     private String gameUpdateMsg="Game booking Update";
+    private final GoogleCalendarService googleCalendarService;
 
 
     public List<GameResponseDTO> getAllGame(Long userId)
@@ -314,6 +315,13 @@ public class GameService {
             gameBooking.setStatus(StatusType.BookingStatus.BOOKED);
             log.info("Game booking is in booked state");
             gameSlots.forEach(x->x.setSlotStatus(StatusType.BookingStatus.BOOKED));
+
+            try {
+                googleCalendarService.bookEvent("Game booking-"+game.getGameName(), "play game", LocalDateTime.now(), LocalDateTime.now().plusMinutes(30));
+            }catch (Exception e)
+            {
+                log.info(String.valueOf(e));
+            }
         }
 
 

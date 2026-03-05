@@ -30,7 +30,7 @@ function ExpenseCard({ data, ownerType, refetch, currency }) {
     isError: isErrorINR,
     refetch: refetchINR,
   } = useGetCurrencyInINR();
-
+  console.log(data);
   const getAmount = (amount) => {
     console.log(dataINR?.data.inr);
     console.log(dataINR?.data.inr[currency], currency);
@@ -122,7 +122,8 @@ function ExpenseCard({ data, ownerType, refetch, currency }) {
         {data.updateByUserName ? data.updateByUserName : "N/A"}
       </TableCell>
       <TableCell align="right">
-        {data.documents.map((d) => {
+        { data.documents.length>0&&
+        data.documents.map((d) => {
           return (
             <Button onClick={() => window.open(d.url)}>{d.fileName} </Button>
           );

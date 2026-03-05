@@ -32,7 +32,7 @@ public class TravelDetail {
 
     @PositiveOrZero
     @Column(name = "max_amout_per_day",nullable = false)
-    private Double maxAmoutPerDay;
+    private Double maxAmountPerDay;
 
     @Column(name = "start_date",nullable = false)
     private LocalDateTime startDate;

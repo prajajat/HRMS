@@ -4,8 +4,15 @@ import {
   Input,
   InputLabel,
   CircularProgress,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { useCreateTravel, useGetAllTravel } from "../Query/useQueries";
+import {
+  useCreateTravel,
+  useGetAllCurrencies,
+  useGetAllTravel,
+  useGetCurrencyInINR,
+} from "../Query/useQueries";
 import TravelDetailCard from "../Components/TravelDetailCard";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -15,19 +22,44 @@ function TravelDetails() {
   const { isLoading, data, isError, refetch } = useGetAllTravel();
   const userId = useSelector((state) => state.user.userId);
   const [addState, setAddState] = useState(false);
-
+  const {
+    isLoading: isLoadingAllCurrencies,
+    data: dataAllCurrencies,
+    isError: isErrorAllCurrencies,
+    refetch: refetchCurrencies,
+  } = useGetAllCurrencies();
+  const [amountInINR, setAmountInINR] = useState(0);
+  const {
+    isLoading: isLoadingINR,
+    data: dataINR,
+    isError: isErrorINR,
+    refetch: refetchINR,
+  } = useGetCurrencyInINR();
   const { mutate, isPending: isPendingCreate } = useCreateTravel();
-  const { register, handleSubmit , formState:{errors}} = useForm({
-   
-    mode:"onSubmit"
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: "onSubmit",
   });
+  const watchAmount = watch("maxAmoutPerDay");
+  const watchCurrency = watch("currency", "inr");
+
+  const Converter = () => {
+    //console.log(dataINR?.data.inr);
+    console.log(dataINR?.data.inr[watchCurrency], watchCurrency);
+
+    return watchAmount / dataINR?.data.inr[watchCurrency];
+  };
 
   const onSubmit = (dto) => {
-    if(dto.endDate<dto.startDate)
-    {
+    if (dto.endDate < dto.startDate) {
       alert("start date must be before end date");
       return;
     }
+    dto.amount = amountInINR;
     mutate(dto, {
       onSuccess: (response) => {
         refetch();
@@ -71,15 +103,69 @@ function TravelDetails() {
               })}
             />
           </FormControl>
+          {!isLoadingAllCurrencies && dataAllCurrencies != undefined && (
+            <FormControl></FormControl>
+          )}
 
           <FormControl fullWidth size="small">
-            <label>Max amount per day</label>
+            <div className="flex flex-row justify-between w-full">
+              <div>
+                <label>Max amount per day</label>
+                <p className="text-green-800 text-sm">
+                  in INR {Math.round(100 * amountInINR) / 100}
+                </p>
+              </div>
+              <div>
+                <label>Currency</label>
+
+                <Select
+                  type="text"
+                  defaultValue=""
+                  className="m-2"
+                  {...register("currency")}
+                  onBlur={() => {
+                    console.log(watchCurrency);
+                    setAmountInINR(Converter());
+                  }}
+                >
+                  <MenuItem value={"inr"}>
+                    {" "}
+                    {dataAllCurrencies?.data.inr}
+                  </MenuItem>
+                  <MenuItem value={"aud"}>
+                    {" "}
+                    {dataAllCurrencies?.data.aud}
+                  </MenuItem>
+                  <MenuItem value={"eur"}>
+                    {" "}
+                    {dataAllCurrencies?.data.eur}
+                  </MenuItem>
+                  <MenuItem value={"jpy"}>
+                    {" "}
+                    {dataAllCurrencies?.data.jpy}
+                  </MenuItem>
+                  <MenuItem value={"mxn"}>
+                    {" "}
+                    {dataAllCurrencies?.data.mxn}
+                  </MenuItem>
+                  <MenuItem value={"cad"}>
+                    {" "}
+                    {dataAllCurrencies?.data.cad}
+                  </MenuItem>
+                </Select>
+              </div>
+            </div>
             <Input
               type="number"
+              defaultValue={0}
               {...register("maxAmoutPerDay", {
                 required: "Please enter maxAmoutPerDay",
                 min: { value: 0, message: "min value is 0" },
               })}
+              onBlur={() => {
+                console.log(watchAmount);
+                setAmountInINR(Converter());
+              }}
             />
           </FormControl>
 
@@ -101,11 +187,7 @@ function TravelDetails() {
             />
           </FormControl>
 
-          <input
-            type="hidden"
-            value={userId}
-            {...register("creadtedBy",)}
-          />
+          <input type="hidden" value={userId} {...register("creadtedBy")} />
 
           <Button
             type="submit"
@@ -115,7 +197,9 @@ function TravelDetails() {
           >
             {isPendingCreate ? "Submitting..." : "Add new travel"}
           </Button>
-          {errors.title&&<p className="text-red-500 text-sm">{errors.title.message}</p>}
+          {errors.title && (
+            <p className="text-red-500 text-sm">{errors.title.message}</p>
+          )}
         </form>
       )}
 
