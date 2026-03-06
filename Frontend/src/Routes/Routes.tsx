@@ -1,39 +1,48 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import Login from "../Pages/Login";
-import Error from "../Pages/Error";
-import EmpTravelDetails from "../Pages/EmpTravelDetails";
-import HRTravelDetails from "../Pages/HRTravelDetails";
-import EmpExpenseDocument from "../Pages/EmpExpenseDocument";
-import EmployeeDashboard from "../Pages/EmployeeDashboard";
-import EmployeeLayout from "../Layouts/EmployeeLayout";
-import HRLayout from "../Layouts/HRLayout";
-import HRDashboard from "../Pages/HRDashboard";
-import HRExpense from "../Pages/HRExpense";
-import HRDocument from "../Pages/HRDocument";
-import HRUpdate from "../Pages/HRUpdate";
-import Unauthorized from "../Pages/Unauthorized";
-import Header from "../Components/Header";
-import OrgChart from "../Pages/OrgChart";
+import Error from "../shared/Pages/Error"; 
+import Unauthorized from "../shared/Pages/Unauthorized";
  
-import ManagerLayout from "../Layouts/ManagerLayout";
-import ManagerDashboard from "../Pages/ManagerDashboard";
-import ManagerDocDetails from "../Pages/ManagerDocDetails";
-import RefreshPage from "../Pages/RefreshPage";
-import Game from "../Pages/Game";
-import GameDetails from "../Pages/GameDetails";
-import Notification from "../Pages/Notification";
-import NotificationLayout from "../Layouts/NotificationLayout";
-import GameConfig from "../Pages/GameConfig";
-import HRJobDashboard from "../Pages/HRJobDashboard";
-import EmployeeJobListing from "../Pages/EmployeeJobListing";
-import EmployeeJobReferrals from "../Pages/EmployeeJobReferrals";
-import EmployeeJobShares from "../Pages/EmployeeJobShares";
-import HRJobDetails from "../Pages/HRJobDetails";
-import EmployeeJobDetails from "../Pages/EmployeeJobDetails";
-import { PostDashboard } from "../Pages/PostDashboard";
-import { SystemConfig } from "../Pages/SystemConfig";
-import ManagerTeamMember from "../Pages/ManagerTeamMember";
+ 
+ 
+import ManagerLayout from "../dashboards/manager/layouts/ManagerLayout";
+ 
+import RefreshPage from "../shared/Pages/RefreshPage";
+ 
+import Notification from "../shared/Pages/Notification";
+import NotificationLayout from "../shared/Layouts/NotificationLayout";
+ 
+import EmployeeJobListing from "../modules/job/pages/EmployeeJobListing";
+import EmployeeJobReferrals from "../modules/job/pages/EmployeeJobReferrals";
+import EmployeeJobShares from "../modules/job/pages/EmployeeJobShares";
+ 
+import EmployeeJobDetails from "../modules/job/pages/EmployeeJobDetails";
+ 
+ 
+ 
+import Login from "../shared/Pages/Login";
+import HRLayout from "../dashboards/hr/layouts/HRLayout";
+import HRDashboard from "../dashboards/hr/pages/HRDashboard";
+import Game from "../modules/game/pages/Game";
+import GameConfig from "../modules/game/pages/GameConfig";
+import { PostDashboard } from "../modules/post/pages/PostDashboard";
+import HRTravelDetails from "../modules/travel/pages/HRTravelDetails";
+import HRExpense from "../modules/travel/pages/HRExpense";
+import HRDocument from "../modules/travel/pages/HRDocument";
+import HRUpdate from "../modules/travel/pages/HRUpdate";
+import EmployeeLayout from "../dashboards/employee/layouts/EmployeeLayout";
+import OrgChart from "../modules/org-chart/pages/OrgChart";
+import EmployeeDashboard from "../dashboards/employee/pages/EmployeeDashboard";
+import EmpTravelDetails from "../modules/travel/pages/EmpTravelDetails";
+import EmpExpenseDocument from "../modules/travel/pages/EmpExpenseDocument";
+import GameDetails from "../modules/game/pages/GameDetails";
+import ManagerDashboard from "../dashboards/manager/pages/ManagerDashboard";
+import ManagerDocDetails from "../modules/travel/pages/ManagerDocDetails";
+import HRJobDashboard from "../modules/job/pages/HRJobDashboard";
+import HRJobDetails from "../modules/job/pages/HRJobDetails";
+import Header from "../shared/Components/Header";
+import ManagerTeamMember from "../dashboards/manager/pages/ManagerTeamMember";
+import SystemConfig from "../shared/Pages/SystemConfig";
 
 const router = createBrowserRouter([
   {

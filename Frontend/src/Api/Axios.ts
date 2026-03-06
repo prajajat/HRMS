@@ -1,27 +1,70 @@
 import axios from "axios";
 import { store } from "../Store/Store.ts";
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: "http://localhost:8089",
   timeout: 10000,
 
   withCredentials: true,
 });
-const instanceForCurrencies = axios.create({
+export const instanceForCurrencies = axios.create({
   baseURL: "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/",
   timeout: 10000,
  
 });
 
+
+//dm
+export const getTeamMember = async () =>
+  await instance.get("/api/user/team-members").then((res) => res);
+//de
+export const getEmpDashboardInfo = async () =>
+  await instance.get(`/api/user/employee/dashboard`).then((res) => res);
+//dh
+export const getHrDashboardInfo = async () =>
+  await instance.get(`/api/user/hr/dashboard`).then((res) => res);
+
+
+//sheared
+
+
+export const updateSystemConfigWithDocument = async (configKey: string, file: File) => {
+  const formData = new FormData();
+  formData.append('configKey', configKey);
+  formData.append('file', file);
+  return await instance.post("/job/system-config-update-docs", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  }).then((res) => res);
+};
+
+export const getAllNotification = async () =>
+  await instance.get("/api/user/notification/all").then((res) => res);
+
+export const getNewNotificationCount = async () =>
+  await instance.get("/api/user/notification/count").then((res) => res);
+
+export const loginApi = async (data: any) =>
+  await instance.post("/auth/login", data).then((res) => res);
+
+
+export const Refresh = async () =>
+  await instance.get("/auth/refreshToken/").then((res) => res);
+
+
+export const getALLUser = async () =>
+  await instance.get(`/api/user/all`).then((res) => res);
+
+export const getAllEmp = async () =>
+  await instance.get("/api/user/employee/all").then((res) => res);
+
+//travel
 export const getAllCurrencies = async () =>
   await instanceForCurrencies.get("currencies.json").then((res) =>{return  res;});
 
 export const getCurrencyInINR= async () =>
   await instanceForCurrencies.get("currencies/inr.json").then((res) => res);
-
-
-export const loginApi = async (data: any) =>
-  await instance.post("/auth/login", data).then((res) => res);
 
 export const CreateTravel = async (data: any) =>
   await instance.post("/api/travel/details", data).then((res) => res);
@@ -32,31 +75,21 @@ export const AssignTravelEmp = async (data: any) =>
 export const CreateExpense = async (data: any) =>
   await instance.post("/api/travel/expense", data).then((res) => res);
 
-export const Refresh = async () =>
-  await instance.get("/auth/refreshToken/").then((res) => res);
-
-export const getGameConfigById = async (id) =>
-  await instance.get("/game/config/" + id).then((res) => res);
-
 export const CreateDocument = async (data: any) =>
   await instance.post("/api/travel/document", data).then((res) => res);
-
-export const updateGameConfig = async (data: any) =>
-  await instance.put("/game/", data).then((res) => res);
 
 export const RemoveTravelEmp = async (data) =>
   await instance
     .delete(`/api/travel/details/${data.travelId}/employee/${data.empId}`)
     .then((res) => res);
 
+    
 export const getAllTravelDetails = async () =>
   await instance.get("/api/travel/details/all").then((res) => res);
 
 export const getTravelDetailsById = async (id) =>
   await instance.get("/api/travel/details/" + id).then((res) => res);
 
-export const getAllEmp = async () =>
-  await instance.get("/api/user/employee/all").then((res) => res);
 
 export const getTravelByUser = async () =>
   await instance.get("/api/travel/details/traveler/all").then((res) => res);
@@ -78,29 +111,33 @@ export const getDocumentsBytraveler = async (id) =>
     .get("/api/travel/document/traveler/all/" + id)
     .then((res) => res);
 
+
+    
 export const getDocumentsByManager = async (id) =>
   await instance.get("/api/travel/document/manager/" + id).then((res) => res);
+
+
 
 export const getDocuments = async () =>
   await instance.get("/api/travel/document/uploader/all/").then((res) => res);
 
-export const getUserById = async (id) =>
-  await instance.get(`/api/user/${id}`).then((res) => res);
 
-export const getALLUser = async () =>
-  await instance.get(`/api/user/all`).then((res) => res);
+//game
+
+export const getGameConfigById = async (id) =>
+  await instance.get("/game/config/" + id).then((res) => res);
+
+
+export const updateGameConfig = async (data: any) =>
+  await instance.put("/game/", data).then((res) => res);
+
+
 
 export const getALLGames = async () =>
   await instance.get(`/game/all`).then((res) => res);
 
 export const getGameDetailsById = async (id) =>
   await instance.get(`/game/` + id).then((res) => res);
-
-export const getAllNotification = async () =>
-  await instance.get("/api/user/notification/all").then((res) => res);
-
-export const getNewNotificationCount = async () =>
-  await instance.get("/api/user/notification/count").then((res) => res);
 
 export const CreateBooking = async (data: any) =>
   await instance.post("/game/booking", data).then((res) => res);
@@ -110,6 +147,19 @@ export const cancelBooking = async (id) =>
 
 export const updateInterest = async (data) =>
   await instance.post(`/game/interest`,data).then((res) => res);
+
+
+
+//org
+
+export const getUserById = async (id) =>
+  await instance.get(`/api/user/${id}`).then((res) => res);
+
+
+
+
+//job
+
 
 export const createJob = async (data: any) =>
   await instance.post("/job/create", data).then((res) => res);
@@ -125,6 +175,7 @@ export const addReviewer = async (jobId, data: any) =>
 
 export const addHr = async (jobId, data: any) =>
   await instance.post(`/job/${jobId}/hr`, data).then((res) => res);
+
 
 export const getAllHr= async () =>
   await instance.get("/api/user/hr/all").then((res) => res);
@@ -150,16 +201,12 @@ export const getSystemConfig = async () =>
 export const updateSystemConfig = async (data: any) =>
   await instance.patch("/job/config", data).then((res) => res);
 
-export const updateSystemConfigWithDocument = async (configKey: string, file: File) => {
-  const formData = new FormData();
-  formData.append('configKey', configKey);
-  formData.append('file', file);
-  return await instance.post("/job/system-config-update-docs", formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  }).then((res) => res);
-};
+export const updateReferralStatus = async (data: any) =>
+  await instance.post("/job/refer/review", data).then((res) => res);
+
+//
+
+
 
 // Achievement APIs
 export const getAllPosts = async (filters: any) =>
@@ -216,19 +263,6 @@ export const getAllTags = async () =>
 export const createTag = async (data: any) =>
   await instance.post("/achievement/tag/create", data).then((res) => res);
 
-
-export const getTeamMember = async () =>
-  await instance.get("/api/user/team-members").then((res) => res);
-
-export const updateReferralStatus = async (data: any) =>
-  await instance.post("/job/refer/review", data).then((res) => res);
-
-
-export const getEmpDashboardInfo = async () =>
-  await instance.get(`/api/user/employee/dashboard`).then((res) => res);
-
-export const getHrDashboardInfo = async () =>
-  await instance.get(`/api/user/hr/dashboard`).then((res) => res);
 
 
 instance.interceptors.request.use((config) => {
