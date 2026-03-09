@@ -5,6 +5,7 @@ import { useGetHrDashboardInfo } from "../queries/HRDashboardQueries"
 function HRDashboard() {
   const { data, isLoading,isError } = useGetHrDashboardInfo();
   return (
+     <div className="p-4  bg-gray-100"> 
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" component="h1" sx={{ fontWeight: 600, mb: 1 }}>
@@ -79,6 +80,7 @@ function HRDashboard() {
         </div>
       )}
     </Container>
+    </div>
   );
 }
 export default HRDashboard;

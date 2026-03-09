@@ -49,7 +49,7 @@ function HRUpdate() {
   };
  
   return (
-    <>
+    <div className="p-4  bg-gray-100">
       {isLoading && (
           <div className="flex justify-center py-8">
                     <CircularProgress />
@@ -64,7 +64,8 @@ function HRUpdate() {
            </div>
        )}
       {!isLoading && data?.data && (
-        <div>
+        <div>  
+           <h3 className="font-bold">Travel Config</h3>
           <TravelDetailCard
             data={data.data}
             isSeeMore={false}
@@ -114,7 +115,7 @@ function HRUpdate() {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }
 export default HRUpdate;

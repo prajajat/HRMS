@@ -25,6 +25,7 @@ function Notification() {
  
 
   return (
+    <div className="p-4  bg-gray-100 mt-20 m-3">
     <Box sx={{ p: 2 }}>
       <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
         Notifications
@@ -77,6 +78,7 @@ function Notification() {
         )
       )}
     </Box>
+    </div>
   );
 }
 export default Notification;

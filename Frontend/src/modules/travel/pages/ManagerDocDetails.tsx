@@ -19,10 +19,11 @@ function ManagerDocDetails() {
   const { isLoading, data, isError, refetch } = useGetDocumentByManager(userId);
 
   return (
-    <div className="p-4">
+    <div className="p-4  bg-gray-100">
       <Typography fontSize={36}>Travel Documents</Typography>
       <hr />
       <br />
+       
 
       {isLoading && (
         <div className="flex justify-center py-8">
@@ -72,7 +73,7 @@ function ManagerDocDetails() {
             </TableBody>
           </Table>
         </TableContainer>
-      )}
+      )} 
     </div>
   );
 }

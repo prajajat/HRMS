@@ -25,7 +25,7 @@ function EmployeeJobListing() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-4">Available Jobs</h2>
 
       <div className="mb-6 max-w-md">

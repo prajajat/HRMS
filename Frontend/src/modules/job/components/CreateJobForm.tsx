@@ -18,7 +18,6 @@ function CreateJobForm({ onSuccess }) {
       setFile(files[0]);
     }
   };
-
   const onSubmit = (data) => {
     if (!file) {
       alert("Please select a job description file");
@@ -44,7 +43,7 @@ function CreateJobForm({ onSuccess }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4"
+      className="p-4 rounded-lg bg-blue-100 w-full max-w-2xl space-y-4"
     >
       <FormControl fullWidth size="small">
        

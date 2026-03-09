@@ -9,7 +9,7 @@ const ManagerLayout = () => {
       <Header />
       <div className="flex flex-row h-screen">
         <ManagerSidebar />
-        <main className="w-full flex flex-col justify-items-center aline-item-center">
+        <main className="w-full flex flex-col justify-items-center aline-item-center  ml-50 mt-20">
           <Outlet />
         </main>
       </div>

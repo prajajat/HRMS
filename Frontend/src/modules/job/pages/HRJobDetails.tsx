@@ -116,7 +116,7 @@ function HRJobDetails() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       {isLoading ? (
         <div className="flex justify-center py-8">
           <CircularProgress />
@@ -218,7 +218,7 @@ function HRJobDetails() {
               <Button onClick={() => setActiveTab("hr")}>Add HR</Button>
             </div>
 
-            <div className="p-6  ">
+            <div className="p-6  bg-blue-100 ">
               {activeTab === "reviewer" && (
                 <form
                   onSubmit={handleSubmit(handleAddReviewer)}

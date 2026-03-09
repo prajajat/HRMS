@@ -31,7 +31,7 @@ function Header() {
   }, [data]);
 
   return (
-    <div className="flex justify-between items-center bg-blue-400 w-full h-15 ">
+    <div className="flex justify-between items-center bg-blue-400 w-full h-15 fixed top-0 right-0 left-0">
       <div className="text-Black-800 ml-10 font-bold rounded p-3 flex flex-row justify-start">
         <img src="/letter-r.png" height={30} width={30}></img>Roima HRMS
       </div>

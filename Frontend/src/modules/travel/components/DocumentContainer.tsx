@@ -32,7 +32,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
  
   //console.log(dataTDoc);
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-200 p-4">
       <div className="flex flex-row justify-end mx-10">
         <Button
           onClick={() => {

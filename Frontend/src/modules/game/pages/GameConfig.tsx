@@ -36,7 +36,7 @@ function GameConfig() {
   };
 
   return (
-    <div className="p-4 flex items-center justify-center min-h-96">
+    <div className="p-4 flex items-center justify-center min-h-96 bg-gray-100">
       {isLoading &&data?.data ? (
         <CircularProgress />
       ) : (

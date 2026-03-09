@@ -7,8 +7,11 @@ function EmployeeJobShares() {
   const { isLoading, data, isError } = useGetUserShares();
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-4">Shared Jobs</h2>
+      <hr />
+      <br />
+      
 
       {isLoading && (
         <div className="flex justify-center py-8">

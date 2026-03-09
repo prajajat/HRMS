@@ -10,7 +10,7 @@ function EmployeeJobReferrals() {
   const [view, setView] = useState("myReferrals");
  
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <Typography fontSize={36}>Job Referrals</Typography>
       
       

@@ -10,7 +10,7 @@ const HRLayout = () => {
       <Header />
       <div className="flex flex-row h-screen">
         <HRSidebar />
-        <main className="w-full">
+        <main className="w-full  ml-50 mt-20">
           <Outlet />
         </main>
       </div>

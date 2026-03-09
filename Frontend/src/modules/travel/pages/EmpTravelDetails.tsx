@@ -8,7 +8,7 @@ function EmpTravelDetails() {
   const { isLoading, data, isError } = useGetTravelByUser();
  
   return (
-    <>
+    <div  className="p-4  bg-gray-100">
        <Typography fontSize={36}>Travel Details for you</Typography>
       <hr />
       <br />
@@ -34,7 +34,7 @@ function EmpTravelDetails() {
           </div>
       )}
      
-    </>
+    </div>
   );
 }
 export default EmpTravelDetails;

@@ -59,7 +59,7 @@ function TravelDetails() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-4">All Travels</h2>
 
       <button

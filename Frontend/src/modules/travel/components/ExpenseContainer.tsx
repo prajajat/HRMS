@@ -109,7 +109,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
   };
  
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-200 p-4">
       <div className="flex flex-row justify-between mx-10">
         {!isLoadingEp && (
           <Typography variant="h6" color="Green">
@@ -256,7 +256,7 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       
       {!isLoadingEp && (
         <div className="mx-20">
-          {dataEp?.data.length>0&&<ExpenseChart apiData={dataEp?.data}/>}
+          {/* {dataEp?.data.length>0&&<ExpenseChart apiData={dataEp?.data}/>} */}
           <TableContainer component={Paper}>
             <Table aria-label="simple table" color="Green">
               <TableHead>

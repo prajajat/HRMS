@@ -8,8 +8,9 @@ function Game({ view = "all" }) {
   const { isLoading, data, isError } = useGetAllGames();
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <h2 className="text-2xl font-semibold mb-4">Games</h2>
+      <hr/>
 
       {isLoading && (
         <div className="flex justify-center py-8">

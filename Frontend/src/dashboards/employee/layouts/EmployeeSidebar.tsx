@@ -5,7 +5,7 @@ function EmployeeSidebar() {
     const { userId } = useSelector((state) => state.user);
   return (
  
-      <div className="flex flex-col h-full bg-blue-300  w-45 ">
+      <div className="flex flex-col h-full bg-blue-300  w-45 fixed top-15 left-0 ">
      
     
       <NavLink

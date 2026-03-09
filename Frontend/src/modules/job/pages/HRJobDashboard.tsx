@@ -14,7 +14,7 @@ function HRJobDashboard() {
     const [createState, setCreateState] = useState(false); 
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100">
       <Typography fontSize={36}>Job Management </Typography>
       <hr />
       <br />

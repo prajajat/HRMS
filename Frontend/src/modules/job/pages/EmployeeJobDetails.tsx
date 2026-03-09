@@ -78,7 +78,7 @@ function EmployeeJobDetails() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4  bg-gray-100">
       {isLoading ? (
         <div className="flex justify-center py-8">
           <CircularProgress />
@@ -90,12 +90,14 @@ function EmployeeJobDetails() {
       ) : (
         <div>
           <Typography fontSize={36}>Job Details</Typography>
-          <hr />
+
           <br />
           <div className="max-w-4xl">
             <div className="bg-sky-100 rounded-lg p-6 mb-6">
-              <h2 className="mb-4">{job.title}</h2>
-              <hr />
+              <h2 className="mb-4">{job.title}
+                <hr />
+              </h2>
+              
               <div className="mb-6">
                 <p>{job.description || "No description"}</p>
               </div>
@@ -140,8 +142,8 @@ function EmployeeJobDetails() {
             </div>
 
             {activeAction === "referral" && (
-              <div className="bg-gray-100 rounded-lg p-6">
-                <h3 className="mb-4">Make a Referral</h3>
+              <div className="bg-blue-100 rounded-lg p-6">
+                <h3 className="mb-4 font-bold">Make a Referral</h3>
                 <p className="mb-4">Refer a friend for this job position</p>
 
                 <form
@@ -221,8 +223,8 @@ function EmployeeJobDetails() {
             )}
 
             {activeAction === "share" && (
-              <div className="bg-gray-100 rounded-lg p-6">
-                <h3 className="mb-4">Share This Job</h3>
+              <div className="bg-blue-100 rounded-lg p-6">
+                <h3 className="mb-4 font-bold">Share This Job</h3>
                 <p className="mb-4">Share this job opportunity with someone</p>
 
                 <form
