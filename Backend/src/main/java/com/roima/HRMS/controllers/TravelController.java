@@ -26,8 +26,6 @@ public class TravelController {
 
     private final TravelService travelService;
 
-
-
      //travel Details
 
     @PreAuthorize("hasAuthority('manage-travel')")
@@ -183,7 +181,7 @@ public class TravelController {
     @PreAuthorize("hasAuthority('access-travel') ")
     @PostMapping(value = "/document",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicResponse> createTravelerDocument(
-            @RequestParam("tarvelerDocumentData") String dto,
+            @RequestParam("travelerDocumentData") String dto,
             @RequestParam(value="document")MultipartFile document) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();

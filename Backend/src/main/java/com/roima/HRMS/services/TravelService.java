@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -76,21 +75,21 @@ public class TravelService {
 
     public BasicResponse createTravelDetail(TravelDetailDTO dto)
     {
-        User createdBy=findUserById(dto.getCreadtedBy());
+        User createdBy=findUserById(dto.getCreatedBy());
         TravelDetail travelDetail=modelMapper.map(dto,TravelDetail.class);
         travelDetail.setCreatedBy(createdBy);
         travelDetailRepository.save(travelDetail);
-        log.info("Created travel detail : {}-{}",travelDetail.getTarvelDetailId(),travelDetail.getTitle());
+        log.info("Created travel detail : {}-{}",travelDetail.getTravelDetailId(),travelDetail.getTitle());
         return new BasicResponse("Created successfully");
     }
 
     public BasicResponse updateTravelDetails(Long id, TravelDetailDTO dto) {
-        User createdBy=findUserById(dto.getCreadtedBy());
+        User createdBy=findUserById(dto.getCreatedBy());
         TravelDetail travelDetail= findTravelDetailById(id);
         travelDetail.setCreatedBy(createdBy);
         modelMapper.map(dto,travelDetail);
         travelDetailRepository.save(travelDetail);
-        log.info("Updated travel detail : {}-{}",travelDetail.getTarvelDetailId(),travelDetail.getTitle());
+        log.info("Updated travel detail : {}-{}",travelDetail.getTravelDetailId(),travelDetail.getTitle());
         return new BasicResponse("Updated  sucessfully");
     }
     public BasicResponse deleteTravelDetails(Long id) {
@@ -176,7 +175,7 @@ public class TravelService {
 
 
         TravelExpense travelExpense=modelMapper.map(dto,TravelExpense.class);
-        travelExpense.setStatus("pending");
+        travelExpense.setStatus("PENDING");
         travelExpense.setTraveler(traveler);
         travelExpense.setDocuments(newDocuments);
 
@@ -201,13 +200,21 @@ public class TravelService {
     {
         TravelExpense travelExpense=findTravelExpenseById(id);
         User user=findUserById(useId);
-        if(dto.getStatus().equals("Rejected")&&dto.getRemark().isEmpty())
+        if(dto.getStatus().equals("REJECTED")&& dto.getRemark().isEmpty())
         {
             throw new RuntimeException("For reject status, remark can't be empty");
         }
         modelMapper.map(dto,travelExpense);
         travelExpense.setUpdateBy(user);
         travelExpenseRepository.save(travelExpense);
+
+        Notification notification=new Notification();
+        notification.setDescription("you expense("+ travelExpense.getAmount()+"-"+travelExpense.getExpenseDate()+") update for travel :"+travelExpense.getTraveler().getTravelDetail().getTitle());
+        notification.setTitle("Travel expense status changes");
+        notification.setUser(travelExpense.getTraveler().getUser());
+        notificationRepository.save(notification);
+
+
        log.info("Updated Travel expense : {}",travelExpense.getTravelExpensesId());
         return new BasicResponse("Updated Travel expense successfully");
     }

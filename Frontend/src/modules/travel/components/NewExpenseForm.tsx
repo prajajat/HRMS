@@ -10,16 +10,16 @@ import {
   useGetAllCurrencies,
   useGetCurrencyInINR,
 } from "../queries/TravelQueries";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import {  useState } from "react"; 
 
-function NewExpenseForm({ travelerId, ownerType }) {
+function NewExpenseForm({ travelerId, ownerType,setView }) {
   
-  const { mutate, isPending, reset } =useCreateExpense(travelerId);
+  const { mutate, isPending,  } =useCreateExpense(travelerId);
   const { isLoading: isLoadingAllCurrencies,data: dataAllCurrencies, isError: isErrorAllCurrencies } = useGetAllCurrencies();
   const {isLoading: isLoadingINR,data: dataINR, isError: isErrorINR } = useGetCurrencyInINR();
 
-  const { register, handleSubmit, watch } = useForm({ shouldUseNativeValidation: true,});
+  const { register, handleSubmit, watch ,reset} = useForm({ shouldUseNativeValidation: true,});
   const watchAmount = watch("amount");
   const watchCurrency = watch("currency", "inr");
   const [fileList, setFileList] = useState([]);
@@ -77,6 +77,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
         console.log("success");
         alert("expense created");
         reset();
+        setView("");
       },
     });
   };
@@ -84,8 +85,9 @@ function NewExpenseForm({ travelerId, ownerType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-4  rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
-    >  Add new Expense
+      className="w-full max-w-lg p-4 border border-gray-300 rounded-lg bg-white space-y-4 flex flex-col"
+    > 
+    <h3 className="font-bold">Add new Expense</h3> 
     <hr />
        {
         isErrorAllCurrencies&& <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded">
@@ -97,7 +99,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
           <label>Currency</label>
           <Select
             type="text"
-            defaultValue=""
+            defaultValue="inr"
             className="mt-10 mb-10"
             {...register("currency")}
             onBlur={() => { 
@@ -180,12 +182,12 @@ function NewExpenseForm({ travelerId, ownerType }) {
         />
       </FormControl>
       {fileList.length > 0 && (
-        <div className="mt-4 mb-4 border p-4 rounded">
+        <div className="mt-4 mb-4 p-4 rounded">
           <h3 className="mb-3">Selected Files ({fileList.length})</h3>
           {fileList.map((fileItem, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 mb-3 p-3 border rounded bg-gray-50"
+              className="flex items-center gap-3 mb-3 p-3 "
             >
               <div className="flex-1">
                 <p className="text-sm text-gray-600 mb-1">
@@ -193,7 +195,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
                 </p>
                 <Input
                   type="text"
-                  placeholder="Enter file name (e.g., Receipt_Hotel_NYC)"
+                  placeholder="Enter file name"
                   value={fileItem.userName}
                   onChange={(e) => updateFileName(index, e.target.value)}
                   className="w-full"
@@ -204,7 +206,7 @@ function NewExpenseForm({ travelerId, ownerType }) {
         </div>
       )}
 
-      <Button type="submit" disabled={isPending}>
+      <Button type="submit" disabled={isPending} variant="contained">
         {isPending ? "Submitting..." : "Add New Travel Expense"}
       </Button>
     </form>

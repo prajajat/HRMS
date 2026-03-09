@@ -19,7 +19,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm({
-    shouldUseNativeValidation: true,
+    shouldUseNativeValidation: true, 
   });
 
   //functions
@@ -45,12 +45,12 @@ function Login() {
     });
   };
   return (
-     <div className="w-full  flex felx-row justify-center">
+     <div className="w-full  flex felx-row justify-center w-full">
         <div>
     
       <form
         onSubmit={handleSubmit(onSubmit)}
-       className="p-4 mt-4 rounded-lg bg-blue-100 w-full max-w-2xl space-y-4 flex flex-col"
+       className="p-4 mt-4 rounded-lg bg-blue-100 max-w-4xl space-y-4 flex flex-col"
       >  
         <Typography>Login</Typography>
         <br />

@@ -30,7 +30,7 @@ function TravelDetails() {
   const [addState, setAddState] = useState(false);
   const [amountInINR, setAmountInINR] = useState(0);
   const {register,handleSubmit,watch,formState: { errors },} = useForm({ mode: "onSubmit",});
-  const watchAmount = watch("maxAmoutPerDay");
+  const watchAmount = watch("maxAmountPerDay");
   const watchCurrency = watch("currency", "inr");
 
 
@@ -72,7 +72,7 @@ function TravelDetails() {
       {addState && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mb-6 p-4 border border-gray-300 rounded-lg bg-white space-y-4 max-w-md"
+          className="w-full max-w-lg p-4 border border-gray-300 rounded-lg bg-white space-y-4"
         >
           <FormControl fullWidth size="small">
             <label>Title</label>
@@ -119,7 +119,7 @@ function TravelDetails() {
                 {!isLoadingAllCurrencies&& dataAllCurrencies?.data &&
                 <Select
                   type="text"
-                  defaultValue=""
+                  defaultValue="inr"
                   className="m-2"
                   {...register("currency")}
                   onBlur={() => {
@@ -158,8 +158,8 @@ function TravelDetails() {
             <Input
               type="number"
               defaultValue={0}
-              {...register("maxAmoutPerDay", {
-                required: "Please enter maxAmoutPerDay",
+              {...register("maxAmountPerDay", {
+                required: "Please enter maxAmountPerDay",
                 min: { value: 0, message: "min value is 0" },
               })}
               onBlur={() => {
@@ -187,7 +187,7 @@ function TravelDetails() {
             />
           </FormControl>
 
-          <input type="hidden" value={userId} {...register("creadtedBy")} />
+          <input type="hidden" value={userId} {...register("createdBy")} />
 
           <Button
             type="submit"

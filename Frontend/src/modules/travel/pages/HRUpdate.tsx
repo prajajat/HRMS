@@ -29,7 +29,7 @@ function HRUpdate() {
   };
 
   const handelAssign = () => {
-    var dto = { employees: [], travelDetailsId: data.data.tarvelDetailId };
+    var dto = { employees: [], travelDetailsId: data?.data.travelDetailId ||0};
    // console.log(dto);
     dto.employees = emp.map((e) => {
       return e.userId;

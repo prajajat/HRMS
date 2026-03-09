@@ -55,6 +55,11 @@ function HRJobDetails() {
   const job = jobsData?.data?.find((j: any) => j.jobId === parseInt(id));
 
   const handleAddReviewer = async (formData: any) => {
+    if( formData.eid==null ||formData.eid==undefined)
+    {
+      alert("select reviewer");
+      return;
+    }
     const reviewerData = {
       userId: formData.eid,
     };
@@ -94,6 +99,11 @@ function HRJobDetails() {
     setEdit(!edit);
   };
   const handleAddHr = async (formData: any) => {
+     if( formData.eid==null|| formData.eid==undefined)
+    {
+      alert("select reviewer");
+      return;
+    }
     const hrData = {
       userId: formData.eid,
     };

@@ -37,13 +37,14 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
 
 
 
-  const [view, SetView] = useState("");
+  const [view, setView] = useState("");
   const [currency, setCurrency] = useState("inr");
   const [filterEmp, setFilterEmp] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [filterTravel, setFilterTravel] = useState("");
   const [filterStartDate, setFilterStartDate] = useState("");
   const [filterEndDate, setFilterEndDate] = useState("");
+  const [showChart,setShowChart]=useState(false);
 
   
   //functions
@@ -120,8 +121,8 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
         {ownerType != "HR" && (
           <Button
             onClick={() => {
-              if (view != "expense") SetView("expense");
-              else SetView("");
+              if (view != "expense") setView("expense");
+              else setView("");
             }}
           >
             {view != "expense" ? "Add new expense" : "cancel"}
@@ -130,12 +131,12 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       </div>
       <div className="flex flex-row justify-between my-4 w-full justify-center">
         {view == "expense" && (
-          <NewExpenseForm travelerId={travelerId} ownerType={ownerType} />
+          <NewExpenseForm travelerId={travelerId} ownerType={ownerType}  setview={setView}/>
         )}
       </div>
 
       {ownerType == "HR" && (
-        <div className="flex flex-row justify-between mb-5">
+        <div className="flex flex-row justify-between mb-5 m-10 w-9/10">
           <div className="flex flex-col justify-start border-b  border-cyan-700">
             <FormLabel>Select employee</FormLabel>
             <Select
@@ -161,7 +162,8 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
             <Select
               type="text"
               defaultValue=""
-              className="mt-2 mb-2"
+              className="mt-2 mb-2 size-sm"
+              
               onChange={(e) => {
                 setFilterTravel(
                   e.target.value.substring(0, e.target.value.indexOf("-")),
@@ -255,8 +257,11 @@ function ExpenseContainer({ travelerId = 0, ownerType }) {
       )}
       
       {!isLoadingEp && (
-        <div className="mx-20">
-          {/* {dataEp?.data.length>0&&<ExpenseChart apiData={dataEp?.data}/>} */}
+        <div className="mx-1">
+           {
+            <Button onClick={()=>setShowChart(!showChart)}>{!showChart?"See Chart":"Close Chart"}</Button>
+           }
+          {dataEp?.data.length>0 && showChart&&<ExpenseChart apiData={dataEp?.data}/>}
           <TableContainer component={Paper}>
             <Table aria-label="simple table" color="Green">
               <TableHead>

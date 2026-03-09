@@ -57,9 +57,9 @@ function ExpenseChart({ apiData }) {
   const sortDate = Object.keys(groupByDate).sort();
  
   return (
-    <div className="line my-8 relative bg-white m-1 p-3 w-full">
-      {render && (
-        <div className="flex -mx-2 items-end mb-2 h-[20rem] container w-full overflow-auto">
+    <div className="line my-8  bg-white m-1 p-3">
+      {render && ( 
+        <div className="flex -mx-2 items-end mb-2 h-[20rem] container w-200 overflow-y-scroll scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           {sortDate.map((date, indexOfDate) => {
             let totalAmount = groupByDate[date].reduce((acc, curr) => {
               return acc + curr.amount;

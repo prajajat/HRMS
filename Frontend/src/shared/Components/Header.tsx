@@ -31,11 +31,13 @@ function Header() {
   }, [data]);
 
   return (
-    <div className="flex justify-between items-center bg-blue-400 w-full h-15 fixed top-0 right-0 left-0">
+    <div className="flex justify-between items-center bg-blue-400 w-full h-15 fixed top-0 right-0 left-0 z-10" >
+     
       <div className="text-Black-800 ml-10 font-bold rounded p-3 flex flex-row justify-start">
         <img src="/letter-r.png" height={30} width={30}></img>Roima HRMS
       </div>
-      <div className="flex felx-row justify-end">
+       
+      <div className="flex felx-row justify-end overflow-x-auto">
         <List className="flex felx-row">
           {roles.map((r) => {
             return (
@@ -49,30 +51,26 @@ function Header() {
         </List>
 
         {userId != -1 && (
-          <>
-            {/* <Button
-              onClick={() => navigator("/org-chart/" + userId)}
-              sx={{ color: "#1c1c1f" }}
-            >
-              Org. Chart
-            </Button> */}
-            <Button onClick={() => navigator("/notification/all")}>
+        
+            
+            <Button onClick={() => navigator("/notification/all")}  >
               <img src="/bellBlack.png" className="h-6 w-6"></img>
               <div className="text-white mb-10 bg-green-700 rounded-full mt-3 w-5 h-5">
                 {notiicationCount}
               </div>
             </Button>
-          </>
+         
         )}
-        <div className="flex flex-col mt-10">
-          <div
+         
+          <Button
             onMouseEnter={() => setProfileHover(true)}
-            onClick={() => setProfileHover(false)}
+            onClick={() => setProfileHover(!profileHover)}
+          
           >
             <img src={imageUrl} className="h-10 w-10"></img>
-          </div>
+          </Button>
           {profileHover && (
-            <div className="sticky bg-blue-100  rounded-b-lg">
+            <div className="fixed top-15 right-3 bg-blue-100  rounded-b-lg">
               <div className="flex flex-row justify-center w-full">
                 <p>{userName}</p>
               </div>
@@ -83,8 +81,8 @@ function Header() {
             </div>
           )}
         </div>
-      </div>
-    </div>
+     </div>
+    
   );
 }
 export default Header;

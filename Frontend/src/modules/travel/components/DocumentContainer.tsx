@@ -28,7 +28,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
     refetch: refetchTDoc,
   } = useGetDocumentsBytraveler(travelerId);
 
-  const [view, SetView] = useState("");
+  const [view, setView] = useState("");
  
   //console.log(dataTDoc);
   return (
@@ -36,8 +36,8 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
       <div className="flex flex-row justify-end mx-10">
         <Button
           onClick={() => {
-            if (view != "doc") SetView("doc");
-            else SetView("");
+            if (view != "doc") setView("doc");
+            else setView("");
           }}
         >
           {view != "doc" ? "Add new doc" : "cancel"}
@@ -50,6 +50,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
             travelerId={travelerId}
             travelDetailId={travelDetailId}
             ownerType={ownerType}
+            setView={setView}
           />
         )}
          
@@ -69,7 +70,7 @@ function DocumentContainer({ travelerId, travelDetailId, ownerType }) {
                   </div>
     )}
     { !isLoadingTDoc && dataTDoc?.data &&
-      <div className="mx-20">
+      <div className="mx-20 p-3 my-5">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>

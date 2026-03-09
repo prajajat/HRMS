@@ -78,7 +78,7 @@ function EmployeeDashboard() {
                 <p className="text-xs text-slate-500  ">Share</p>
                 <p
                   id="dashboard-uptime"
-                  className="text-xl font-bold text-green-500  "
+                  className="text-xl font-bold text-gray-500  "
                 >
                   {data?.data.totalJobShare}
                 </p>
@@ -87,7 +87,7 @@ function EmployeeDashboard() {
                 <p className="text-xs text-slate-500 ">Referrals</p>
                 <p
                   id="dashboard-incidents"
-                  className="text-xl font-bold text-green-500  "
+                  className="text-xl font-bold text-gray-500  "
                 >
                   {data?.data.totalJobReferrals}
                 </p>
@@ -96,7 +96,7 @@ function EmployeeDashboard() {
                 <p className="text-xs text-slate-500 ">Referrals Reviewed</p>
                 <p
                   id="dashboard-downtime"
-                  className="text-xl font-bold  text-green-500 "
+                  className="text-xl font-bold  text-gray-500 "
                 >
                   {data?.data.totalJobReferralsReviewed}
                 </p>

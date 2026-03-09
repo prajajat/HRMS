@@ -11,12 +11,12 @@ import {
   useGetAllTravel,
 } from "../queries/TravelQueries";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useGetAllEmp } from "../../../shared/queries/CommonQueries";
 
-function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
+function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType,setView }) {
 
-  var fun =()=>{};
+  var fun =Math.random;
   if (ownerType == "HR") {
     fun = useGetAllTravel;
   }
@@ -37,12 +37,17 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   };
 
   const onSubmit = (data) => {
+    if(file==null)
+    {
+       alert("Please provide file");
+      return;
+    }
     if (data.fileName.length == 0) {
       alert("Please provide names for file");
       return;
     }
     const formData = new FormData();
-    const expenseDTO = {
+    const docDTO = {
       visibility: data.visibility,
       fileName: data.fileName,
       travelerId: data.travelerId,
@@ -51,16 +56,17 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
       travelDetailId: data.travelDetailId,
     };
     if (ownerType == "HR") {
-      expenseDTO.travelerId = data.eid;
-      expenseDTO.travelDetailId = data.tid;
-    }
-    formData.append("tarvelerDocumentData", JSON.stringify(expenseDTO));
+      docDTO.travelerId = data.eid;
+      docDTO.travelDetailId = data.tid;
+    } 
+    formData.append("travelerDocumentData", JSON.stringify(docDTO));
     formData.append("document", file);
     mutate(formData, {
       onSuccess: (response) => {
         console.log("success");
         alert("doc created");
         reset();
+        setView("");
       },
     });
   };
@@ -68,32 +74,41 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="rounded-lg bg-blue-100 max-w-2xl  p-3 flex flex-col justify-center"
+      className="w-full max-w-lg p-4 border border-gray-300 rounded-lg bg-white space-y-4 flex flex-col"
     >
       {!isLoadingEmp && !isLoadingTd && (
-        <> Add New Travel Document
+        <>  <h3 className="font-bold"> Add New Travel Document</h3> 
+       
           <FormControl>
-            <InputLabel>Visibility</InputLabel>
+            <label>Visibility</label>
             <Select
               type="text"
               defaultValue=""
-              className="mt-10 mb-10"
-              {...register("visibility")}
+              className="mt-3 mb-3"
+              {...register("visibility",
+                {
+                required: "Please select visibility",
+              }
+              )}
             >
-              {ownerType == "HR" && <MenuItem value="All">All</MenuItem>}
+              {ownerType == "HR" && <MenuItem value="All">All-traveler</MenuItem>}
               <MenuItem value="hr-emp">Hr-Emp</MenuItem>
             </Select>
             {ownerType == "HR" && (
               <FormControl>
-                <InputLabel>select travel</InputLabel>
+                <label>select travel</label>
                 <Select
                   type="number"
-                  className="mt-10 mb-10"
-                  {...register("tid")}
+                  className="mt-3 mb-3"
+                  {...register("tid" ,
+                    {
+                    required: "Please select travel",
+                  }
+                  )}
                 >
                   {dataTd.data.map((e) => {
                     return (
-                      <MenuItem value={e.tarvelDetailId}> {e.title}</MenuItem>
+                      <MenuItem value={e.travelDetailId}> {e.title}</MenuItem>
                     );
                   })}
                 </Select>
@@ -102,11 +117,15 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
 
             {ownerType == "HR" && visibility != "All" && (
               <FormControl>
-                <InputLabel>select Employee</InputLabel>
+                <label>select Employee</label>
                 <Select
                   type="number"
-                  className="mt-10 mb-10"
-                  {...register("eid")}
+                  className="mt-3 mb-3"
+                  {...register("eid",
+                     {
+                    required: "Please select employee",
+                  }
+                  )}
                 >
                   {dataEmp.data.map((emp) => {
                     return (
@@ -174,14 +193,14 @@ function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
             <InputLabel htmlFor="amount">File Name</InputLabel>
             <Input
               type="text"
-              className="mt-10 mb-10"
+              className="mt-3 mb-3"
               {...register("fileName", {
                 required: "Please enter fileName",
               })}
             />
           </FormControl>
 
-          <Button type="submit" disabled={isPending}>
+          <Button type="submit" disabled={isPending} variant="contained">
             {isPending ? "Submitting..." : "Add New Travel Document"}
           </Button>
         </>

@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import { CreatePostForm } from "../components/CreatePostForm";
 import { PostListing } from "../components/PostListing";
 import { CreateCommentForm } from "../components/CreateCommentForm";
+import { CommentCard } from "../components/CommentCard";
 
 interface PostDashboardProps {
   view: "hr" | "employee";

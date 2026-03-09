@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,13 +17,13 @@ public class TravelDetailDTO {
     private String description;
 
     @PositiveOrZero
-    private Long maxAmoutPerDay;
+    private Long maxAmountPerDay;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
     @NotNull
-    private Long creadtedBy;
+    private Long createdBy;
 
 }

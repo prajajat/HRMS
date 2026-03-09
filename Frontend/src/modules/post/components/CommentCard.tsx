@@ -230,8 +230,8 @@ export const CommentCard: React.FC<CommentCardProps> = ({
               postId={postId}
               view={view}
               onReply={onReply}
-              onEdit={onEdit}
-            />
+              onEdit={onEdit} 
+              reFetch={undefined}            />
           ))}
         </div>
       )}

@@ -24,7 +24,7 @@ function ExpenseCard({ data, ownerType, refetch, currency }) {
 
   const [edit, setEdit] = useState(false);
   const [status, setStatus] = useState(data.status);
-  const [remark, setRemark] = useState(data.remark);
+  const [remark, setRemark] = useState(data.remark||"");
   const userId = useSelector((state) => state.user.userId);
 
   
@@ -36,6 +36,11 @@ function ExpenseCard({ data, ownerType, refetch, currency }) {
     return amount * dataINR?.data.inr[currency];
   };
   const handleSave = () => {
+    if(status=="REJECTED"&& (remark==null|| remark.trim().length==0 ))
+    {
+       alert("Please enter remark for Rejecting this expense");
+       return;
+    }
     const dto = {
       status: status,
       remark: remark,

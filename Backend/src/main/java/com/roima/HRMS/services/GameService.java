@@ -317,7 +317,7 @@ public class GameService {
             gameSlots.forEach(x->x.setSlotStatus(StatusType.BookingStatus.BOOKED));
 
             try {
-                googleCalendarService.bookEvent("Game booking-"+game.getGameName(), "play game", LocalDateTime.now(), LocalDateTime.now().plusMinutes(30));
+              //  googleCalendarService.bookEvent("Game booking-"+game.getGameName(), "play game", LocalDateTime.now(), LocalDateTime.now().plusMinutes(30));
             }catch (Exception e)
             {
                 log.info(String.valueOf(e));

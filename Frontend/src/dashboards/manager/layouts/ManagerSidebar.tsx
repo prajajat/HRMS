@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 function ManagerSidebar() {
   return (
-    <div className="flex flex-col h-full max-h-screen bg-blue-300  w-45  fixed top-15 left-0 ">
+    <div className="flex flex-col h-full max-h-screen bg-blue-300  w-45  fixed top-15 left-0  z-10">
       <NavLink
         to="/manager/tarvel-document-detail"
         className={({ isActive }) =>

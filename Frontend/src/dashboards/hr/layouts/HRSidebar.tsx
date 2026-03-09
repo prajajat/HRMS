@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 function HRSidebar() {
   return (
-    <div className="flex flex-col h-full  bg-blue-300  w-45  fixed top-15 left-0 ">
+    <div className="flex flex-col h-full  bg-blue-300  w-45  fixed top-15 left-0  z-10">
       <NavLink
         to="/hr/travel/details"
         className={({ isActive }) =>

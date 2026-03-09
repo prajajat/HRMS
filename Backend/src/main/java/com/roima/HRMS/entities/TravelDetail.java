@@ -22,7 +22,7 @@ public class TravelDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pk_tarvel_detail_id")
-    private Long tarvelDetailId;
+    private Long travelDetailId;
 
     @Column(name = "title", length=25,nullable = false)
     private String title;

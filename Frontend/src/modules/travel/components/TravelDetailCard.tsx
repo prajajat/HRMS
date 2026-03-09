@@ -75,7 +75,7 @@ function TravelDetailCard({ data, isSeeMore = true, isDelete = false, refetch,})
                     <TravelerCard
                       data={t}
                       isDelete={isDelete}
-                      travelDetailsId={data.tarvelDetailId}
+                      travelDetailsId={data.travelDetailId}
                       refetch={refetch}
                     />
                   </ListItem>
