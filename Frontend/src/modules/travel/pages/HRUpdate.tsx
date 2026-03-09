@@ -1,14 +1,13 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import {
-  useAssignTravelEmp,
-  useGetAllEmp,
-  useGetALLUser,
+  useAssignTravelEmp, 
   useGetTravelById,
-} from "../../../Query/useQueries";
+} from "../queries/TravelQueries";
 import TravelDetailCard from "../Components/TravelDetailCard";
 import { Button, CircularProgress, List, ListItem, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useGetALLUser } from "../../../shared/queries/CommonQueries";
 
 function HRUpdate() {
 

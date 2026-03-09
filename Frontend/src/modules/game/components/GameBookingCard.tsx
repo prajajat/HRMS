@@ -14,7 +14,7 @@ import { Navigate, useNavigate } from "react-router-dom";
  
 import { useState } from "react";
  
-import { useCancelBooking } from "../../../Query/useQueries";
+import { useCancelBooking } from "../queries/GameQueries";
 import SlotCard from "./SlotCard";
 
 function GameBookingCard({ data, refetch }) {

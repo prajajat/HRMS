@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useGetTravelById } from "../../../Query/useQueries";
+import { useGetTravelById } from "../queries/TravelQueries";
 import { CircularProgress } from "@mui/material";
 import EmpTravelDetailCard from "../components/EmpTravelDetailCard";
 import ExpenseContainer from "../Components/ExpenseContainer";

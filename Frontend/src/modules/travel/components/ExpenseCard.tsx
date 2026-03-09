@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
  
 import { useState } from "react";
-import { useGetCurrencyInINR, usePatchExpense } from "../../../Query/useQueries";
+import { useGetCurrencyInINR, usePatchExpense } from "../queries/TravelQueries";
 import { useSelector } from "react-redux";
 
 function ExpenseCard({ data, ownerType, refetch, currency }) {

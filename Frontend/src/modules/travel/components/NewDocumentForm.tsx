@@ -7,13 +7,12 @@ import {
   Select,
 } from "@mui/material";
 import {
-  useCreateDocument,
-  useCreateExpense,
-  useGetAllEmp,
+  useCreateDocument, 
   useGetAllTravel,
-} from "../../../Query/useQueries";
+} from "../queries/TravelQueries";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useGetAllEmp } from "../../../shared/queries/CommonQueries";
 
 function NewDocumentForm({ travelerId = 0, travelDetailId = 0, ownerType }) {
 

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"; 
  
 import ManagerSidebar from "./ManagerSidebar";
-import Header from "../../../shared/Components/Header";
+import Header from "../../../shared/components/Header";
 
 const ManagerLayout = () => {
   return (

@@ -12,7 +12,7 @@ import {
   useGetAllCurrencies,
   useGetAllTravel,
   useGetCurrencyInINR,
-} from "../../../Query/useQueries";
+} from "../queries/TravelQueries";
  
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";

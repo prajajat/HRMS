@@ -12,9 +12,8 @@ import {
 } from "@mui/material";
  
 import {
-  useGetDocumentsBytraveler,
-  useGetExpenceBytraveler,
-} from "../../../Query/useQueries";
+  useGetDocumentsBytraveler, 
+} from "../queries/TravelQueries"
 import { useState } from "react";
  
 import DocumentCard from "./DocumentCard";

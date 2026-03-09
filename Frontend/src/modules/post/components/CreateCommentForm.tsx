@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAddComment, useReplyComment, useUpdateComment } from '../../../Query/useQueries';
+import { useAddComment, useReplyComment, useUpdateComment } from "../queries/PostQueries";
 import styles from "../../../Styles/achievement.module.css";
 
 interface CreateCommentFormProps {

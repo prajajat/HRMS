@@ -4,7 +4,7 @@ import {
   useUpdatePost,
   useGetAllTags,
   useCreateTag,
-} from "../../../Query/useQueries";
+} from "../queries/PostQueries";
 import styles from "../../../Styles/achievement.module.css";
 
 interface CreatePostFormProps {

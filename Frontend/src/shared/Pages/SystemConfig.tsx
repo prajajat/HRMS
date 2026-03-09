@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGetSystemConfig, useUpdateSystemConfig, useUpdateSystemConfigWithDocument } from '../../Query/useQueries';
+import { useGetSystemConfig, useUpdateSystemConfig, useUpdateSystemConfigWithDocument } from  "../queries/CommonQueries";
 import styles from '../../Styles/systemConfig.module.css';
 
 export const SystemConfig: React.FC = () => {

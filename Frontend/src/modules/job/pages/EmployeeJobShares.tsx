@@ -1,6 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { useGetUserShares } from "../../../Query/useQueries";
-import JobCard from "../components/JobCard";
+import { useGetUserShares } from "../queries/JobQueries"; 
 import JobShareCard from "../components/JobShareCard";
 
 function EmployeeJobShares() {

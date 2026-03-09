@@ -5,7 +5,7 @@ import {
   useGetAllJobs,
   useCreateJobReferral,
   useShareJob,
-} from "../../../Query/useQueries";
+} from "../queries/JobQueries";
 import { useForm } from "react-hook-form";
 
 function EmployeeJobDetails() {

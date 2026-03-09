@@ -1,8 +1,7 @@
 import {
   Button,
   FormControl,
-  Input,
-  InputLabel,
+  Input, 
   MenuItem,
   Select,
 } from "@mui/material";
@@ -10,10 +9,9 @@ import {
   useCreateExpense,
   useGetAllCurrencies,
   useGetCurrencyInINR,
-} from "../../../Query/useQueries";
+} from "../queries/TravelQueries";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { original } from "@reduxjs/toolkit";
+import {  useState } from "react"; 
 
 function NewExpenseForm({ travelerId, ownerType }) {
   

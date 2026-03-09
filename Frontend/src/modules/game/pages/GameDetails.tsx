@@ -5,7 +5,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { useGetGameDetailsById } from "../../../Query/useQueries";
+import { useGetGameDetailsById } from "../queries/GameQueries";
 import GameCard from "../Components/GameCard";
 import { useParams } from "react-router-dom";
 import { useState } from "react";

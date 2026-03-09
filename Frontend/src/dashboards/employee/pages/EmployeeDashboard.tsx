@@ -6,7 +6,8 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useGetEmpDashboardInfo } from "../../../Query/useQueries";
+import { useGetEmpDashboardInfo } from "../queries/EmployeeDashboardQueries";
+ 
  
 
 function EmployeeDashboard() {
@@ -122,7 +123,7 @@ function EmployeeDashboard() {
                 <tbody id="dashboard-incident-log">
                   {data?.data.games.map((game) => {
                     return (
-                      <tr className="border-b border-white/10 ">
+                      <tr className="border-b border-white/10 " key={game.gameName}>
                         <td className="px-2 py-1">{game.gameName}</td>
                         <td className="px-2 py-1">{game.totalSlotPlayed}</td>
                       </tr>

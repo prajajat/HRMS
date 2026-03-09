@@ -1,8 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
  
 import { CircularProgress } from "@mui/material";
-import { useGetALLUser, useGetUserById } from "../../../Query/useQueries";
+import {  useGetUserById } from "../queries/Org-ChartQueries";
 import ChartCard from "../components/ChartCard";
+import { useGetALLUser } from "../../../shared/queries/CommonQueries";
 
 function OrgChart() {
   const { id } = useParams();
@@ -50,7 +51,7 @@ function OrgChart() {
             </div>
           ) : isErrorUser ? (
             <div className="p-4 mb-4 bg-red-50 border border-red-200 rounded">
-              <p className="text-red-600">Failed to load</p>
+              <p className="text-red-600">Failed to load{isErrorUser }</p>
             </div>
           ) : (
             <div className="space-y-6">

@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useRemoveTravelEmp } from "../../../Query/useQueries";
+import { useRemoveTravelEmp } from "../queries/TravelQueries";
 
 function TravelerCard({data,isDelete = false,travelDetailsId = null,refetch = null,}) {
   const { mutate, isPending, isError, error } = useRemoveTravelEmp();

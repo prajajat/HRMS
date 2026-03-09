@@ -14,12 +14,11 @@ import {
   useGetAllJobs,
   useAddReviewer,
   useAddHr,
-  useGetAllEmp,
-  useGetALLUser,
   useUpdateJobStatus,
   useGetALLHr,
-} from "../../../Query/useQueries";
+} from "../queries/JobQueries";
 import { useForm } from "react-hook-form";
+import { useGetALLUser } from "../../../shared/queries/CommonQueries";
 
 function HRJobDetails() {
   const { id } = useParams();

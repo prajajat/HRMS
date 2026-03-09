@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Container, Grid, Paper, Typography } from "@mui/material";
-import { useGetHrDashboardInfo } from "../../../Query/useQueries";
+import { useGetHrDashboardInfo } from "../queries/HRDashboardQueries"
  
 
 function HRDashboard() {

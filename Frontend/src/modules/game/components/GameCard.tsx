@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import { useUpdateInterest } from "../../../Query/useQueries";
+import { useUpdateInterest } from "../queries/GameQueries";
 import { useSelector } from "react-redux";
 
 function GameCard({ data, isAllFields = false, view }) {

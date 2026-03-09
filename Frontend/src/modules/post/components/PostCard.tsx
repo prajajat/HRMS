@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useLikePost, useDeletePost, useUpdatePost } from "../../../Query/useQueries";
+import { useLikePost, useDeletePost, useUpdatePost } from "../queries/PostQueries";
 import styles from "../../../Styles/achievement.module.css"; 
 
 interface PostCardProps {

@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Typography } from "@mui/material";
-import { useGetUserReferrals } from "../../../Query/useQueries";
+import { useGetUserReferrals } from "../queries/JobQueries";
 import JobReferralCard from "../components/JobReferralCard";
 import { useState } from "react";
 

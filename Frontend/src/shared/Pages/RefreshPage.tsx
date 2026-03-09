@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useRefresh } from "../../Query/useQueries";
+import { useRefresh } from  "../queries/CommonQueries";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../Store/tokenSlice";
 

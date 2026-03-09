@@ -38,7 +38,7 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
             <div className="flex flex-row justify-between  bg-blue-200 m-1 h-10 w-full">
               <div className="  rounded-sm"> Max Amout Per Day </div>
               <div className=" rounded-sm">
-                {data.maxAmoutPerDay}
+                {data.maxAmountPerDay}
               </div>
             </div>
 
@@ -93,7 +93,7 @@ function EmpTravelDetailCard({ data, isSeeMore = true }) {
                   "/employee/travel/details/" +
                     data.travelerId +
                     "?tid=" +
-                    data.tarvelDetailId,
+                    data.travelDetailId,
                 )
               }
             >

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useCreateBooking, useGetALLUser } from "../../../Query/useQueries";
+import { useCreateBooking} from "../queries/GameQueries";
 import SlotCard from "./SlotCard";
 import { Button, List, ListItem, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useGetALLUser } from "../../../shared/queries/CommonQueries";
 
 function SlotContainer({ data, gameId, refetch, maxSlot, maxPlayer,setView }) {
  

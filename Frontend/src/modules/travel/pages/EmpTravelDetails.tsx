@@ -1,5 +1,5 @@
 import { CircularProgress, Grid, List, ListItem, Typography } from "@mui/material";
-import { useGetTravelByUser } from "../../../Query/useQueries";
+import { useGetTravelByUser } from "../queries/TravelQueries";
 import EmpTravelDetailCard from "../components/EmpTravelDetailCard";
  
 

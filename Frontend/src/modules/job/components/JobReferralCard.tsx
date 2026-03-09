@@ -1,6 +1,6 @@
 import { Button, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useState } from "react";
-import { useUpdateReferralStatus } from "../../../Query/useQueries";
+import { useUpdateReferralStatus } from "../queries/JobQueries";
 
 function JobReferralCard({ data ,view="all"}) {
 

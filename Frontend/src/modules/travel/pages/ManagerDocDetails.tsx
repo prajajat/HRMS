@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import DocumentCard from "../Components/DocumentCard";
-import { useGetDocumentByManager } from "../../../Query/useQueries";
+import { useGetDocumentByManager } from "../queries/TravelQueries";
 
 function ManagerDocDetails() {
   const userId = useSelector((state) => state.user.userId);

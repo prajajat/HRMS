@@ -1,16 +1,16 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import Error from "../shared/Pages/Error"; 
-import Unauthorized from "../shared/Pages/Unauthorized";
+import Error from "../shared/pages/Error"; 
+import Unauthorized from "../shared/pages/Unauthorized";
  
  
  
 import ManagerLayout from "../dashboards/manager/layouts/ManagerLayout";
  
-import RefreshPage from "../shared/Pages/RefreshPage";
+import RefreshPage from "../shared/pages/RefreshPage";
  
-import Notification from "../shared/Pages/Notification";
-import NotificationLayout from "../shared/Layouts/NotificationLayout";
+import Notification from "../shared/pages/Notification";
+import NotificationLayout from "../shared/layouts/NotificationLayout";
  
 import EmployeeJobListing from "../modules/job/pages/EmployeeJobListing";
 import EmployeeJobReferrals from "../modules/job/pages/EmployeeJobReferrals";
@@ -20,7 +20,7 @@ import EmployeeJobDetails from "../modules/job/pages/EmployeeJobDetails";
  
  
  
-import Login from "../shared/Pages/Login";
+import Login from "../shared/pages/Login";
 import HRLayout from "../dashboards/hr/layouts/HRLayout";
 import HRDashboard from "../dashboards/hr/pages/HRDashboard";
 import Game from "../modules/game/pages/Game";
@@ -40,9 +40,9 @@ import ManagerDashboard from "../dashboards/manager/pages/ManagerDashboard";
 import ManagerDocDetails from "../modules/travel/pages/ManagerDocDetails";
 import HRJobDashboard from "../modules/job/pages/HRJobDashboard";
 import HRJobDetails from "../modules/job/pages/HRJobDetails";
-import Header from "../shared/Components/Header";
+import Header from "../shared/components/Header";
 import ManagerTeamMember from "../dashboards/manager/pages/ManagerTeamMember";
-import SystemConfig from "../shared/Pages/SystemConfig";
+import SystemConfig from "../shared/pages/SystemConfig";
 
 const router = createBrowserRouter([
   {

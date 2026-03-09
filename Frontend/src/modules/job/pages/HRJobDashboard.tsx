@@ -2,7 +2,7 @@ import { CircularProgress, Button, Typography } from "@mui/material";
  
 
 import { useState } from "react";
-import { useGetAllJobs } from "../../../Query/useQueries";
+import { useGetAllJobs } from "../queries/JobQueries";
 import CreateJobForm from "../components/CreateJobForm";
 import JobCard from "../components/JobCard";
  

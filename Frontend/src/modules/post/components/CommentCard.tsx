@@ -6,7 +6,7 @@ import {
   useDeleteComment,
   useLikeComment,
   useUpdateComment,
-} from "../../../Query/useQueries";
+} from "../queries/PostQueries";
 
 interface CommentCardProps {
   comment: any;

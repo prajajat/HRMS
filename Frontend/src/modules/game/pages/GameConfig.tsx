@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useGetGameConfigById, useUpdateGameConfig } from "../../../Query/useQueries";
+import { useGetGameConfigById, useUpdateGameConfig } from "../queries/GameQueries";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 

@@ -4,7 +4,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { useGetActiveJobs } from "../../../Query/useQueries";
+import { useGetActiveJobs } from "../queries/JobQueries";
 import JobCard from "../components/JobCard";
 import { useEffect, useState } from "react";
 

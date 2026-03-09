@@ -11,7 +11,7 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-import { useGetAllNotification } from "../../Query/useQueries";
+import { useGetAllNotification } from  "../queries/CommonQueries";
 import { resetCount } from "../../Store/userSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";

@@ -1,16 +1,8 @@
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  Grid,
-  List,
-  ListItem,
   TableCell,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import TravelerCard from "./TravelerCard";
+  TableRow, 
+} from "@mui/material"; 
 import { useSelector } from "react-redux";
 
 function DocumentCard({ data,view="employee" }) {

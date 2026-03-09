@@ -9,8 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 
- 
-import { Navigate, useNavigate } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 import TravelerCard from "./TravelerCard";
 
 function TravelDetailCard({ data, isSeeMore = true, isDelete = false, refetch,}) {
@@ -38,7 +38,7 @@ function TravelDetailCard({ data, isSeeMore = true, isDelete = false, refetch,})
             <div className="flex flex-row justify-between  bg-blue-200 m-1 h-10 w-full">
               <div className="  rounded-sm"> Max Amout Per Day </div>
               <div className=" rounded-sm">
-                {data.maxAmoutPerDay}
+                {data.maxAmountPerDay}
               </div>
             </div>
 
@@ -88,7 +88,7 @@ function TravelDetailCard({ data, isSeeMore = true, isDelete = false, refetch,})
           {isSeeMore && (
             <Button
               size="small"
-              onClick={() => navigate("update/" + data.tarvelDetailId)}
+              onClick={() => navigate("update/" + data.travelDetailId)}
             >
               See more
             </Button>

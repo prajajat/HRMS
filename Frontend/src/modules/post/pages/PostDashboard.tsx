@@ -5,7 +5,7 @@ import {
   useGetAllPosts,
   useGetAllTags,
   useGetComments,
-} from "../../../Query/useQueries";
+} from "../queries/PostQueries";
  
 import { useSearchParams } from "react-router-dom";
 import { CreatePostForm } from "../components/CreatePostForm";

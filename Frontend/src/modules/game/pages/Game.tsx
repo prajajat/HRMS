@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { useGetAllGames } from "../../../Query/useQueries";
+import { useGetAllGames } from "../queries/GameQueries";
 import GameCard from "../Components/GameCard";
  
 

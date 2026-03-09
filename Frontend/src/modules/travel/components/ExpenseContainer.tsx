@@ -19,7 +19,7 @@ import {
   useGetAllExpence,
   useGetCurrencyInINR,
   useGetExpenceBytraveler,
-} from "../../../Query/useQueries";
+} from "../queries/TravelQueries";
 import { useEffect, useMemo, useState } from "react";
 import NewExpenseForm from "./NewExpenseForm";
 import ExpenseChart from "./ExpenseChart";

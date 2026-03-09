@@ -10,7 +10,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { useGetDocuments } from "../../../Query/useQueries";
+import { useGetDocuments } from "../queries/TravelQueries";
 import { useState } from "react";
 import DocumentCardForHr from "../components/DocumentCardForHr";
 import NewDocumentForm from "../components/NewDocumentForm";

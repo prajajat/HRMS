@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useGetTeamMember } from "../../../Query/useQueries";
+import { useGetTeamMember } from "../queries/ManagerDashboardQueries";
 
 import {
   Button,

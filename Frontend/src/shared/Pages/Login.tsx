@@ -9,7 +9,7 @@ import {
  
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useLogin } from "../../Query/useQueries";
+import { useLogin } from "../queries/CommonQueries";
 import { useForm } from "react-hook-form";
 import { login } from "../../Store/userSlice";
 import { setToken } from "../../Store/tokenSlice";

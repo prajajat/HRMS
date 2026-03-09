@@ -10,9 +10,7 @@ const ProtectedRoute = ({ allowedRoles, redirectTo = "/login" }) => {
   const isAllowed = roles?.some((role) =>
     allowedRoles.includes(role.title.toLowerCase()),
   );
-
-  console.log(allowedRoles);
-  console.log(roles);
+ 
   if (!isAllowed) {
     return <Navigate to="/unauthorized" replace />;
   }

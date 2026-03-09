@@ -1,5 +1,5 @@
 import { Button, FormControl, Input, InputLabel } from "@mui/material";
-import { useCreateJobReferral } from "../../../Query/useQueries";
+import { useCreateJobReferral } from "../queries/JobQueries";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 

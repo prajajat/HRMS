@@ -9,8 +9,7 @@ import {
   TableCell,
   TableRow,
   Typography,
-} from "@mui/material";
-import TravelerCard from "./TravelerCard";
+} from "@mui/material"; 
 import { useSelector } from "react-redux";
 
 function DocumentCardForHr({ data }) {

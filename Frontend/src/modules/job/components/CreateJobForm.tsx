@@ -1,9 +1,8 @@
 import { Button, FormControl, Input, InputLabel } from "@mui/material";
  
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useCreateJob } from "../../../Query/useQueries";
+import { useState } from "react"; 
+import { useCreateJob } from "../queries/JobQueries";
 
 function CreateJobForm({ onSuccess }) {
 
