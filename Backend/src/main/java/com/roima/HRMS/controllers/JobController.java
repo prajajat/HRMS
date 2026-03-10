@@ -54,6 +54,12 @@ public class JobController {
         log.info("Fetching all jobs with filter");
         return ResponseEntity.ok(jobService.getAllJobs(filter));
     }
+//    @PreAuthorize("hasAuthority('All-User')")
+//    @GetMapping("/all")
+//    public ResponseEntity<List<JobResponseDTO>> getAllJobs(@ModelAttribute JobFilterDTO filter) {
+//        log.info("Fetching all jobs with filter");
+//        return ResponseEntity.ok(jobService.getAllJobs(filter));
+//    }
 
     @PreAuthorize("hasAuthority('manage-job')")
     @PatchMapping("/{jobId}/status")

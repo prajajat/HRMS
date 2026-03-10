@@ -77,7 +77,11 @@ public class JobService {
 
         return new BasicResponse("Job created successfully");
     }
-
+    public JobResponseDTO getJobById(Long id)
+    {
+        Job job=findJobById(id);
+        return modelMapper.map(job,JobResponseDTO.class);
+    }
     public List<JobResponseDTO> getAllJobs(JobFilterDTO filter) {
         List<Job> jobs = new ArrayList<>(jobRepository.findAll());
         jobs.sort(Comparator.comparingLong(Job::getJobId).reversed());

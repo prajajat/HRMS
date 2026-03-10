@@ -21,16 +21,9 @@ import { useForm } from "react-hook-form";
 import { useGetALLUser } from "../../../shared/queries/CommonQueries";
 
 function HRJobDetails() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { data: jobsData, isLoading } = useGetAllJobs({});
-  const [activeTab, setActiveTab] = useState("details");
-  const [edit, setEdit] = useState(false);
-  const [status, setStatus] = useState("");
-  const { register, handleSubmit, reset } = useForm({
-    shouldUseNativeValidation: true,
-  });
+  const { id } = useParams(); 
 
+   const { data: jobsData, isLoading } = useGetAllJobs({});
   const {
     isLoading: isLoadingEmp,
     data: dataEmp,
@@ -51,8 +44,18 @@ function HRJobDetails() {
 
   const { mutate: updateStatusMutation, isPending: isUpdateStatusLoading } =
     useUpdateJobStatus();
+   
+  const [activeTab, setActiveTab] = useState("details");
+  const [edit, setEdit] = useState(false);
+  const [status, setStatus] = useState("");
+  const { register, handleSubmit, reset } = useForm({
+    shouldUseNativeValidation: true,
+  });
 
-  const job = jobsData?.data?.find((j: any) => j.jobId === parseInt(id));
+   const job = jobsData?.data?.find((j: any) => j.jobId === parseInt(id));
+  // const { data: job, isLoading:JobLoading } = useGetJobById();
+  
+  //functions
 
   const handleAddReviewer = async (formData: any) => {
     if( formData.eid==null ||formData.eid==undefined)

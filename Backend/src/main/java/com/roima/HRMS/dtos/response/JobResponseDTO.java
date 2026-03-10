@@ -28,4 +28,6 @@ public class JobResponseDTO {
     private List<UserBasicDTO> hrs;
 
     private String jobDescriptionUrl;
+
+
 }

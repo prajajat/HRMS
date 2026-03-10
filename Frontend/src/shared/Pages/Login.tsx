@@ -18,12 +18,8 @@ function Login() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm({
-    shouldUseNativeValidation: true, 
-  });
 
-  //functions
-  const onSubmit = async (data: any) => {
+   const onSubmit = async (data: any) => {
     //console.log(data);
     mutate(data, {
       onSuccess: (response: any) => {
@@ -44,6 +40,12 @@ function Login() {
       },
     });
   };
+  const { register, handleSubmit } = useForm({
+    shouldUseNativeValidation: true, mode:'onChange'
+  });
+
+  //functions
+ 
   return (
      <div className="w-full  flex felx-row justify-center w-full">
         <div>

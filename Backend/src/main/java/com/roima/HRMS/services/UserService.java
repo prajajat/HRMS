@@ -10,6 +10,7 @@ import com.roima.HRMS.repos.GameRepository;
 import com.roima.HRMS.repos.NotificationRepository;
 import com.roima.HRMS.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -66,8 +67,9 @@ public class UserService {
 
     public Long getNewNotificationCount(Long userId)
     {   User user=findUserById(userId);
-
-        return  notificationRepository.countByUserAndIsRead(user,false);
+        long response=notificationRepository.countByUserAndIsRead(user,false);
+        log.info("new notification {} for user {}",response,user.getUserName());
+        return  response;
     }
 
     public List<UserResponseForEmailDTO> getAllUser()

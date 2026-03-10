@@ -65,7 +65,7 @@ const handleEditSave=()=>{
           Phone: {data.phone || "N/A"}
         </div>
         <div className="bg-blue-100 flex flex-row rounded-sm m-1">
-          Time: {data.datetime || "N/A"}
+          Time: {data.datetime.replace('T',',') || "N/A"}
         </div>
       </div>
 

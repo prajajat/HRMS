@@ -61,19 +61,18 @@ function CreateJobForm({ onSuccess }) {
           {...register("description", {
             required: "Please enter job description",
           })}
-          className="p-2   rounded w-full"
+          className="p-2 rounded w-full"
           rows={4}
-          placeholder=" job desc"
+          placeholder="job desc"
         />
       </FormControl>
 
   
 
       <FormControl fullWidth size="small">
-        <InputLabel htmlFor="jd"> </InputLabel>
+        <label className="mb-1 bg-blue-200">ADD JD</label>
         <input
           type="file"
-        
           onChange={handleFileSelect}
           className="p-2  rounded"
         />

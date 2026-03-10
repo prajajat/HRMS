@@ -186,7 +186,7 @@ function EmployeeJobDetails() {
                   />
 
                   <div>
-                    <label className="mb-2">Upload Friend's CV (PDF)</label>
+                    <label className="mb-2 bg-blue-200" >Upload Friend's CV (PDF)</label>
                     <input
                       type="file"
                       required

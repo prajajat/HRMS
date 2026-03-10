@@ -1,6 +1,6 @@
 import { Button, List, ListItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { useGetNewNotificationCount } from "../queries/CommonQueries";
@@ -37,15 +37,19 @@ function Header() {
         <img src="/letter-r.png" height={30} width={30}></img>Roima HRMS
       </div>
        
-      <div className="flex felx-row justify-end overflow-x-auto">
-        <List className="flex felx-row">
+      <div className="flex felx-row justify-end overflow-x-auto items-center">
+        <List className=" flex felx-row ">
           {roles.map((r) => {
             return (
-              <ListItem key={r.roleId} onClick={() => navigator("/" + r.title)}>
-                <Button sx={{ color: "#1c1c1f" }}>
-                  {r.title + " dashboard"}
-                </Button>
-              </ListItem>
+                <NavLink
+                        to={"/" + r.title}
+                        className={({ isActive }) => 
+                          isActive ? "text-black-800 m-3 underline" : "text-black-900 m-3"
+                        }
+                      >
+                        {r.title + " dashboard"}
+                      </NavLink>
+               
             );
           })}
         </List>
